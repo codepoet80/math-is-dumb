@@ -24,9 +24,18 @@ const js   = fs.readFileSync(path.join(ROOT, 'assets/sheet.js'), 'utf8');
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-// inline markup: `code`, **bold**, *emphasis*. Bold runs first so the
-// single-asterisk pass only ever sees genuine emphasis.
-const md = s => esc(s)
+// Superscripts are real <sup> markup, never Unicode superscript characters:
+// U+1D43 and friends have no glyph on webOS 3.0.5 and render as tofu, while
+// <sup> is as old as HTML and needs no font coverage beyond plain ASCII.
+//   x^2        -> x<sup>2</sup>       (single alphanumeric, optionally signed)
+//   x^{a+b}    -> x<sup>a+b</sup>     (braces for anything longer)
+const sup = t => t
+  .replace(/\^\{([^}]*)\}/g, '<sup>$1</sup>')
+  .replace(/\^(-?[A-Za-z0-9]+)/g, '<sup>$1</sup>');
+
+// inline markup: x^2, `code`, **bold**, *emphasis*. Bold runs before the
+// single-asterisk pass so emphasis only ever sees genuine emphasis.
+const md = s => sup(esc(s))
   .replace(/`([^`]+)`/g, '<code>$1</code>')
   .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
   .replace(/\*([^*]+)\*/g, '<em>$1</em>');
@@ -50,7 +59,7 @@ function renderRule(r) {
   const flag = r.star ? '<span class="flag">load-bearing</span>' : '';
   if (!r.id) throw new Error('rule is missing a stable id: ' + r.rule);
   return `        <div class="rule${r.star ? ' star' : ''}" data-id="${esc(r.id)}">
-          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule">▴</button>
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
           <p class="r">${md(r.rule)}${flag}</p>
           <dl>
 ${rows}

@@ -82,9 +82,9 @@
   var tally    = document.getElementById('tally');
   var resetBtn = document.getElementById('reset-known');
 
-  var CARET_UP   = '\u25b4';   // expanded: click to collapse
-  var CARET_DOWN = '\u25be';   // collapsed: click to bring it back
-
+  /* The arrow itself is a CSS border triangle flipped by the .known class --
+     webOS 3.0.5 has no glyph for U+25B4/U+25BE, and a border triangle needs no
+     font coverage at all. So this only has to keep the labels honest. */
   function label(el, isKnown) {
     var btn = el.getElementsByTagName('button')[0];
     if (!btn) return;
@@ -92,7 +92,6 @@
     btn.setAttribute('aria-pressed', isKnown ? 'true' : 'false');
     btn.setAttribute('aria-label', text);
     btn.setAttribute('title', text);
-    btn.firstChild.nodeValue = isKnown ? CARET_DOWN : CARET_UP;
   }
 
   function render() {
@@ -128,7 +127,7 @@
 
     if (tally) {
       tally.firstChild.nodeValue = count === 0
-        ? 'Nothing marked yet \u2014 tap \u25b4 on any rule you already know.'
+        ? 'Nothing marked yet \u2014 tap the arrow on any rule you already know.'
         : count + ' of ' + total + ' marked · ' + (total - count) + ' still to learn';
     }
     if (resetBtn) resetBtn.style.display = count ? '' : 'none';

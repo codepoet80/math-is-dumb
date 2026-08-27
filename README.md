@@ -41,7 +41,10 @@ That's the best retention-per-minute on the sheet.
   changing one silently resets that rule for every device. Reword freely; never
   renumber. New rules get a fresh id; `build.js` throws on a missing or duplicate one.
 - `star: true` marks a **load-bearing** rule — one that *generates* other rules.
-- Inline markup is deliberately tiny: `` `code` ``, `**bold**`, `*emphasis*`. Nothing else.
+- Inline markup is deliberately tiny: `` `code` ``, `**bold**`, `*emphasis*`, and
+  `^` for superscripts — `x^2` and `x^{a+b}`. Nothing else.
+- **Never paste a Unicode superscript** (`x²`, `xᵃ`, `x⁽ᵃ⁺ᵇ⁾`). Write `x^2`, `x^a`,
+  `x^{a+b}` and let the renderer emit `<sup>`. See Design notes for why.
 - Sections are in **dependency order**. Renumbering happens automatically from array order.
 
 ## Build
@@ -159,6 +162,25 @@ color: #14181c; color: var(--ink);
 This is not redundancy — the TouchPad's WebKit 534 has no CSS custom properties.
 Old browsers take the literal (light theme), current ones take the token and get
 dark mode. Don't "clean this up."
+
+### Glyphs, not just CSS
+
+The TouchPad's font stack is from 2011 and has no coverage for rare codepoints.
+Anything outside Latin-1 is a gamble; anything in Phonetic Extensions or
+Superscripts & Subscripts is a loss. Two consequences:
+
+- **Superscripts are `<sup>` markup, never characters.** `x^2` / `x^{a+b}` in the
+  JSON become real `<sup>` elements built from plain ASCII. `xᵃ` (U+1D43) rendered
+  as an empty box on the device.
+- **The collapse arrow is a CSS border triangle**, not `▴`/`▾` (U+25B4/U+25BE),
+  which also had no glyph. It's a real `<span class="tri">` with `width: 0;
+  height: 0` and asymmetric borders — no font, no image, no pseudo-element, and it
+  flips direction off the `.known` class so the JS never touches it.
+
+Characters still in play that are *probably* fine but were never confirmed on the
+device: `−` (U+2212 minus), `√` (U+221A), `→` (U+2192), and curly quotes. If any of
+them box out, the fixes are ASCII `-`, a `<span class="radical">`, `->`, and straight
+quotes respectively.
 
 The same trick covers flexbox, and there it's load-bearing rather than cosmetic:
 

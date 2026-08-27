@@ -18,7 +18,7 @@
           "rule": "**Term** = chunk separated by `+` or `−`. **Factor** = chunk separated by `×`. **Coefficient** = the number stuck to the front.",
           "why": "Almost every rule cares which one you're looking at, and almost every mistake is treating a term like a factor.",
           "when": "Before applying any rule, ask: am I looking at terms or factors?",
-          "example": "In `3x² + 5x`, there are 2 terms. In `3x²`, the factors are 3, x, and x."
+          "example": "In `3x^2 + 5x`, there are 2 terms. In `3x^2`, the factors are 3, x, and x."
         },
         {
           "id": "gr-number-touching-letter",
@@ -71,8 +71,8 @@
         },
         {
           "id": "ng-different-things",
-          "rule": "`−x²` and `(−x)²` are different things.",
-          "why": "The exponent grabs tighter than the minus sign, so `−3²` = `−(3²)` = `−9`, but `(−3)²` = `9`.",
+          "rule": "`−x^2` and `(−x)^2` are different things.",
+          "why": "The exponent grabs tighter than the minus sign, so `−3^2` = `−(3^2)` = `−9`, but `(−3)^2` = `9`.",
           "when": "If you want the negative squared, the parentheses are not optional."
         }
       ]
@@ -131,42 +131,42 @@
       "rules": [
         {
           "id": "ex-multiplying-so-add",
-          "rule": "`xᵃ · xᵇ` = `x⁽ᵃ⁺ᵇ⁾` — multiplying, so **add** the exponents.",
-          "why": "`x² · x³` writes down 2 x's then 3 x's. Now count them: 5.",
-          "trap": "Only works when the base is the same. `x² · y³` doesn't combine."
+          "rule": "`x^a · x^b` = `x^{a+b}` — multiplying, so **add** the exponents.",
+          "why": "`x^2 · x^3` writes down 2 x's then 3 x's. Now count them: 5.",
+          "trap": "Only works when the base is the same. `x^2 · y^3` doesn't combine."
         },
         {
           "id": "ex-dividing-so-subtract",
-          "rule": "`xᵃ / xᵇ` = `x⁽ᵃ⁻ᵇ⁾` — dividing, so **subtract**.",
+          "rule": "`x^a / x^b` = `x^{a-b}` — dividing, so **subtract**.",
           "why": "Each x on the bottom cancels one on top. You're just counting the leftovers."
         },
         {
           "id": "ex-power-power-so",
-          "rule": "`(xᵃ)ᵇ` = `x⁽ᵃᵇ⁾` — power of a power, so **multiply**.",
+          "rule": "`(x^a)^b` = `x^{ab}` — power of a power, so **multiply**.",
           "why": "b groups of (a copies of x). That's a·b copies."
         },
         {
           "id": "ex-anything-zero",
-          "rule": "`x⁰ = 1`. Anything to the zero is 1.",
-          "why": "`x³/x³` is obviously 1, and the subtract rule says it's `x⁰`. Both are true, so `x⁰ = 1`.",
+          "rule": "`x^0 = 1`. Anything to the zero is 1.",
+          "why": "`x^3/x^3` is obviously 1, and the subtract rule says it's `x^0`. Both are true, so `x^0 = 1`.",
           "trap": "It's 1, not 0. The 1 is the multiplicative starting point, the way 0 is for addition."
         },
         {
           "id": "ex-negative-exponent-means",
-          "rule": "`x⁻ᵃ` = `1/xᵃ`. A negative exponent means **flip it**, not “make it negative.”",
+          "rule": "`x^{-a}` = `1/x^a`. A negative exponent means **flip it**, not “make it negative.”",
           "why": "Walk the pattern down: 8, 4, 2, 1, ½, ¼. Each step down divides by 2 — nothing ever turns negative.",
           "star": true
         },
         {
           "id": "ex-fractional-exponent-root",
-          "rule": "`x^(1/2)` = `√x`. A fractional exponent is a root.",
-          "why": "`x^½ · x^½ = x¹` by the add rule — so `x^½` is the thing that gives x when multiplied by itself. That's the square root."
+          "rule": "`x^{1/2}` = `√x`. A fractional exponent is a root.",
+          "why": "`x^{1/2} · x^{1/2} = x^1` by the add rule — so `x^{1/2}` is the thing that gives x when multiplied by itself. That's the square root."
         },
         {
           "id": "ex-but",
-          "rule": "`(ab)ⁿ` = `aⁿbⁿ`, but `(a+b)ⁿ` is **NOT** `aⁿ + bⁿ`.",
-          "why": "Exponents distribute over multiplication only. `(2+3)² = 25`, while `2² + 3² = 13`.",
-          "trap": "This is the single most common algebra error there is. `(a+b)² = a² + 2ab + b²` — FOIL it, don't guess.",
+          "rule": "`(ab)^n` = `a^n b^n`, but `(a+b)^n` is **NOT** `a^n + b^n`.",
+          "why": "Exponents distribute over multiplication only. `(2+3)^2 = 25`, while `2^2 + 3^2 = 13`.",
+          "trap": "This is the single most common algebra error there is. `(a+b)^2 = a^2 + 2ab + b^2` — FOIL it, don't guess.",
           "star": true
         }
       ]
@@ -192,8 +192,8 @@
         {
           "id": "ds-combine-like-terms",
           "rule": "Combine like terms only: **same letter, same exponent**.",
-          "why": "`3x + 2x²` is like `3 feet + 2 square feet` — different units, so it doesn't collapse.",
-          "example": "`3x + 5x = 8x`. But `3x + 5x²` stays as it is."
+          "why": "`3x + 2x^2` is like `3 feet + 2 square feet` — different units, so it doesn't collapse.",
+          "example": "`3x + 5x = 8x`. But `3x + 5x^2` stays as it is."
         },
         {
           "id": "ds-factor-out-greatest",
@@ -203,7 +203,7 @@
         },
         {
           "id": "ds-difference-squares",
-          "rule": "Difference of squares: `a² − b²` = `(a + b)(a − b)`",
+          "rule": "Difference of squares: `a^2 − b^2` = `(a + b)(a − b)`",
           "why": "FOIL it back: the two middle terms are `+ab` and `−ab`, which cancel.",
           "when": "Two perfect squares with a minus between them. Recognize it on sight — it shows up constantly."
         }
@@ -264,8 +264,8 @@
         },
         {
           "id": "rt-rule",
-          "rule": "`√(x²)` = `|x|`",
-          "why": "The radical symbol means “the positive one.” `√((−3)²)` = `√9` = `3`, not `−3`."
+          "rule": "`√(x^2)` = `|x|`",
+          "why": "The radical symbol means “the positive one.” `√((−3)^2)` = `√9` = `3`, not `−3`."
         }
       ]
     },
