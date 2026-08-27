@@ -105,17 +105,22 @@ CSS custom properties and no modern flexbox. That's what the fallbacks in
 
 ## Deploying
 
-**Syncing the repo is the deploy.** `index.html` and `assets/` sit at the repo root
-where the server already wants them, so point the webroot (or a vhost alias) at the
-synced directory and it works. Nothing is built on the server, and no PHP runs at
-request time.
+**The deploy is `git pull` on the server.** The repo root is the webroot:
+`index.html` and `assets/` sit exactly where the server wants them. Nothing is built
+on the server and no PHP runs at request time.
 
 ```sh
-TARGET=you@host:/var/www/math/ ./deploy.sh
+# on the server
+cd /path/to/webroot && git pull
 ```
 
-Or set `TARGET` at the top of `deploy.sh` and just run it. It rebuilds first, then
-rsyncs with `--delete`, excluding `.git/`, `build/`, and the shell scripts.
+Remote: `git@github.com:codepoet80/math-is-dumb.git`
+
+Because the whole repo lands in the webroot, `build.js`, `README.md`, `tools/` and
+the shell scripts are served too. See *What actually lands on the server* below.
+
+`deploy.sh` is an rsync-based alternative for a host without git. It is **not** the
+path in use, and its exclude list has no effect on a `git pull` deploy.
 
 Because `index.html` is generated but must exist on the server, **it is committed**.
 Run `node build.js` before syncing or you'll ship a stale page — `deploy.sh` does
@@ -123,28 +128,30 @@ this for you, which is the main reason to use it over a bare rsync.
 
 ### What actually lands on the server
 
-Files the site doesn't serve are excluded in `deploy.sh` rather than hidden by
-server config, so this behaves identically on any web server and there's no rule to
-keep in sync. The upload is exactly eight entries:
+A `git pull` deploy publishes the entire working tree, so everything tracked is
+reachable over HTTP. Verified against the live site:
 
-```
-index.html  standalone.html  assets/sheet.css  assets/sheet.js  content/rules.json
-```
+| path | status |
+|---|---|
+| `.git/HEAD`, `.git/config`, `.git/index` | **403** — blocked by an existing server rule |
+| `index.html`, `assets/`, `content/rules.json` | 200 — intended |
+| `README.md`, `build.js`, `tools/`, `*.sh` | 200 — served but unused |
 
-`build.js`, `README.md`, `tools/`, `build/` and the shell scripts stay local.
-`content/rules.json` is deliberately published — it's the source of truth and it's
-useful to be able to curl it.
-
-**Nothing in this repo is secret.** It's a static maths reference: no credentials,
-no personal data, no infrastructure details (`deploy.sh` holds the deploy target and
-is never uploaded). Excluding the rest is tidiness, not security.
-
-The one thing deploy-time excludes *can't* cover is **directory listing** — that's
-server-side. Most servers default to off (nginx `autoindex` and Caddy `file_server
-browse` are both off unless enabled). Worth confirming once:
+**`.git/` is the only exposure that would genuinely matter**, since it lets anyone
+reconstruct the full repo and history, and it is already denied. Re-check it after
+any server change:
 
 ```sh
-curl -sI https://your.host/math/assets/ | head -1   # want 403 or 404, not 200
+curl -s -o /dev/null -w '%{http_code}\n' https://apps.jonandnic.com/math/.git/config
+```
+
+Nothing else in the repo is secret — no credentials, no personal data, no host
+details. Serving `build.js` and `README.md` is untidy, not risky.
+
+Also worth confirming directory listing is off, which no deploy method can control:
+
+```sh
+curl -sI https://apps.jonandnic.com/math/assets/ | head -1   # want 403/404, not 200
 ```
 
 PHP only becomes useful later, if you want server-side search or study progress that
