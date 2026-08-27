@@ -399,10 +399,26 @@ html.js .rule .know { display: block; }
 
 /* ---------- collapsed state ---------- */
 .rule:after { content: ""; display: block; clear: both; }
-.rule.known { border-left-color: #dde4e9; border-left-color: var(--hair); border-left-width: 2px; }
+.rule.known {
+  margin-bottom: .3rem;
+  border-left-color: #dde4e9; border-left-color: var(--hair);
+  border-left-width: 2px;
+}
 .rule.known dl,
 .rule.known .flag { display: none; }
-.rule.known .r { color: #8b98a3; color: var(--ink-faint); }
+.rule.known .know { margin-bottom: 0; }
+
+/* One line, clipped with an ellipsis. `overflow: hidden` also establishes a block
+   formatting context, which is what keeps the text from running underneath the
+   right-floated button -- a BFC box shrinks to avoid floats instead of sliding
+   under them. Without it, nowrap text would disappear behind the arrow. */
+.rule.known .r {
+  color: #8b98a3; color: var(--ink-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: .4rem;
+}
 .rule.known .r code { background: none; }
 
 html.hiding .rule.known,
@@ -422,7 +438,13 @@ html.hiding .section.all-known { display: none; }
 @media print {
   .controls, .rule .know { display: none !important; }
   /* a known rule still prints its one-line rule; in hide mode it prints nothing */
-  .rule.known .r { color: #444; }
+  .rule.known .r {
+    color: #444;
+    white-space: normal;      /* paper has no disclosure -- show the whole line */
+    overflow: visible;
+    text-overflow: clip;
+    padding-right: 0;
+  }
   .rule.known { border-left-color: #ddd; }
   .section > h2 .scount { display: none; }
 }

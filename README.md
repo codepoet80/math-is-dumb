@@ -124,8 +124,9 @@ want on paper).
 
 ## "I already know this"
 
-Each rule has a caret toggle on the right: **▴ collapses** a rule you already know,
-**▾ brings it back**. Marking one collapses it to its single rule line;
+Each rule has a caret toggle on the right: **up collapses** a rule you already know,
+**down brings it back**. A collapsed rule shrinks to one ellipsis-truncated line
+(122px → 30px for a long rule);
 ticking *Hide what I know* drops the marked rules out of the page **and out of the
 printout**, so the sheet gets shorter as you learn. A section whose rules are all
 marked disappears wholesale.
@@ -146,6 +147,11 @@ Two non-obvious constraints in the CSS around that toggle:
   button also carries `position: relative; z-index: 1` as a second line of defence.
 - The marked state is a faint tint, not a solid fill. A saturated button beside dimmed
   grey text makes the rules you *know* the loudest thing on the page, which is backwards.
+- The collapsed line gets `overflow: hidden` for the ellipsis, and that *also* does the
+  layout work: it establishes a block formatting context, and a BFC box shrinks to avoid
+  floats instead of sliding under them. Without it the `nowrap` text would run behind the
+  arrow. Print overrides it back to `white-space: normal` — paper has no disclosure
+  control, so truncating there would just lose information.
 
 `assets/sheet.js` is ES5 with no libraries and no DOM API newer than WebKit 534. No
 `let`/`const`, no arrows, no `classList`, no `dataset`, no `NodeList.forEach`, no
