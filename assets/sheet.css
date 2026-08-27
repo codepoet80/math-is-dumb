@@ -220,11 +220,12 @@ body {
 .trap { color: #a3391e; color: var(--caution); }
 .when, .example, .mnemonic { color: #5b6772; color: var(--ink-soft); }
 
-sup {
+sup, sub {
   font-size: .72em;
-  line-height: 0;          /* keep superscripts from inflating the line box */
-  vertical-align: super;
+  line-height: 0;          /* keep them from inflating the line box */
 }
+sup { vertical-align: super; }
+sub { vertical-align: sub; }
 
 code {
   font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;

@@ -9,12 +9,15 @@ Two structural things carry real information, so they're worth knowing. They use
 to be printed at the bottom of the page; they were cluttering the UI, so they live
 here now.
 
+The sheet covers **pre-algebra fundamentals (01-08)** and then **Algebra I
+(09-15)**, with word-problem translation last because it applies to all of it.
+
 **Sections are numbered in dependency order.** `01 The Grammar Nobody Teaches` is
 assumed by everything after it, and each section leans on the ones before. If a
 later rule won't stick, the missing piece is usually earlier — go back rather than
 re-reading the rule.
 
-**Nine rules are flagged load-bearing.** Those aren't the *most important* rules,
+**Twenty rules are flagged load-bearing.** Those aren't the *most important* rules,
 they're the ones that **generate** other rules. "The denominator is the name of the
 piece, not a quantity" is one sentence that makes four other fraction rules stop
 needing to be memorised. They get a heavier left rail and a `load-bearing` tag.
@@ -41,8 +44,12 @@ That's the best retention-per-minute on the sheet.
   changing one silently resets that rule for every device. Reword freely; never
   renumber. New rules get a fresh id; `build.js` throws on a missing or duplicate one.
 - `star: true` marks a **load-bearing** rule — one that *generates* other rules.
-- Inline markup is deliberately tiny: `` `code` ``, `**bold**`, `*emphasis*`, and
-  `^` for superscripts — `x^2` and `x^{a+b}`. Nothing else.
+- Inline markup is deliberately tiny: `` `code` ``, `**bold**`, `*emphasis*`,
+  `^`/`_` for super- and subscripts (`x^2`, `x^{a+b}`, `y_1`), and `#{section-id}`
+  for a cross-reference. Nothing else.
+- **Cross-reference sections as `#{section-id}`, never by number.** It resolves to
+  the section's position at build time, so reordering can't leave a stale "see 06"
+  behind. An unknown id fails the build rather than rendering wrong.
 - **Never paste a Unicode superscript** (`x²`, `xᵃ`, `x⁽ᵃ⁺ᵇ⁾`). Write `x^2`, `x^a`,
   `x^{a+b}` and let the renderer emit `<sup>`. See Design notes for why.
 - Sections are in **dependency order**. Renumbering happens automatically from array order.
@@ -201,6 +208,12 @@ visible error. Any rule that turns an element *on* needs a pre-flex fallback.
 
 ## Not built yet
 
+- **Statistics** — the actual destination. Summation notation, mean/median/SD, the
+  mu-vs-x-bar and sigma-vs-s distinction, z-scores, distributions, correlation,
+  t-tests, p-values, effect size. Section 10 (lines) and 15 (scientific notation)
+  were written with this in mind: a regression line is `y = mx + b` in different
+  letters, and p-values arrive in scientific notation.
+- Logarithms and exponential functions
 - EPUB export (opens in the reader already on both devices)
 - Study/flashcard mode — rule on the front, why on the back (the `known` state is
   the obvious input: drill what isn't marked)

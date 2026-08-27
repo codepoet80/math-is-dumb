@@ -1,6 +1,6 @@
 {
   "title": "Dumb Math Rules",
-  "subtitle": "Pre-algebra fundamentals. Every rule carries its reason.",
+  "subtitle": "Pre-algebra and algebra fundamentals. Every rule carries its reason.",
   "sections": [
     {
       "id": "grammar",
@@ -300,6 +300,270 @@
           "id": "pc-ratio-just-fraction",
           "rule": "A ratio `a : b` is just the fraction `a/b`.",
           "why": "Different notation, same object. If ratios feel hard, rewrite them as fractions and use the fraction rules."
+        }
+      ]
+    },
+    {
+      "id": "functions",
+      "title": "Functions & f(x) Notation",
+      "blurb": "A function is a machine: put a number in, get exactly one number out. Nearly all the difficulty here is notation, not concept.",
+      "rules": [
+        {
+          "id": "fn-not-times",
+          "rule": "`f(x)` does **not** mean f times x. It means \"the machine f, applied to x.\"",
+          "why": "This is the one place in algebra where parentheses don't mean multiply — they mean \"fed into.\"",
+          "trap": "You spent all of section #{distributing} learning that `2(x+1)` means multiply. `f(x+1)` does not. The rule changed and nobody said so.",
+          "star": true
+        },
+        {
+          "id": "fn-same-as-y",
+          "rule": "`f(x)` and `y` are the same thing.",
+          "why": "Both name the output. `y = 2x + 1` and `f(x) = 2x + 1` are identical; the f version just tells you which machine made it.",
+          "when": "When a problem switches between them mid-question, nothing has changed. Keep going."
+        },
+        {
+          "id": "fn-evaluate-replace",
+          "rule": "To find `f(3)`, replace **every** x with 3.",
+          "why": "x is a blank to be filled, not a value. The function is a recipe with a hole in it.",
+          "example": "If `f(x) = x^2 + 1`, then `f(3) = 3^2 + 1 = 10`."
+        },
+        {
+          "id": "fn-whole-thing-in",
+          "rule": "`f(x+1)` means put `x+1` into every blank. It is **not** `f(x) + 1`.",
+          "why": "Whatever sits in the parentheses is the input, however complicated it looks.",
+          "trap": "If `f(x) = x^2`, then `f(x+1) = (x+1)^2`, not `x^2 + 1`.",
+          "star": true
+        },
+        {
+          "id": "fn-domain-range",
+          "rule": "**Domain** = what you're allowed to put in. **Range** = what can come out.",
+          "why": "Only two things ever break a function at this level: dividing by zero, and even roots of negatives. Check for those and the domain is everything else.",
+          "mnemonic": "Domain is the Door (in). Range is the Result (out)."
+        },
+        {
+          "id": "fn-vertical-line",
+          "rule": "A graph is a function if no vertical line crosses it twice.",
+          "why": "One input must give exactly one output — two crossings means one x produced two y's, so it isn't a machine."
+        }
+      ]
+    },
+    {
+      "id": "lines",
+      "title": "The Coordinate Plane & Straight Lines",
+      "blurb": "This section pays off later: a regression line in statistics is exactly y = mx + b wearing different letters.",
+      "rules": [
+        {
+          "id": "ln-point-order",
+          "rule": "A point is `(x, y)` — always across first, then up.",
+          "why": "Alphabetical order, x before y. That's the whole reason; there isn't a deeper one.",
+          "mnemonic": "Into the house, then up the stairs."
+        },
+        {
+          "id": "ln-slope-formula",
+          "rule": "Slope `m = rise / run = (y_2 - y_1) / (x_2 - x_1)`",
+          "why": "Slope is a rate: how much y changes for every 1 that x moves. Every other line rule follows from that one sentence.",
+          "trap": "Keep the points in the same order top and bottom. If y_2 came first, x_2 comes first too.",
+          "star": true
+        },
+        {
+          "id": "ln-slope-intercept",
+          "rule": "`y = mx + b` — m is the slope, b is where the line crosses the y-axis.",
+          "why": "Set x to 0: the `mx` term vanishes and you're left with `y = b`. So b is literally the value at the crossing.",
+          "star": true
+        },
+        {
+          "id": "ln-slope-signs",
+          "rule": "Positive slope climbs left-to-right. Negative falls. Zero is flat. Vertical is **undefined**.",
+          "why": "It's rise over run: no rise gives 0, and no run gives division by zero, which isn't a number.",
+          "trap": "Zero slope and undefined slope are opposites, not synonyms. Flat line: `m = 0`. Vertical line: no m at all."
+        },
+        {
+          "id": "ln-parallel-perp",
+          "rule": "Parallel lines have the **same** slope. Perpendicular slopes are **negative reciprocals**.",
+          "why": "Turning a line 90° swaps rise and run and flips the direction — so `2/3` becomes `-3/2`.",
+          "example": "Perpendicular to `m = 2` is `m = -1/2`."
+        },
+        {
+          "id": "ln-graph-from-b",
+          "rule": "To graph it: plot `b` first, then count the slope as rise-over-run to get the next point.",
+          "why": "b hands you one free point, and the slope is a set of directions from any point to another."
+        },
+        {
+          "id": "ln-x-intercept",
+          "rule": "y-intercept: set `x = 0`. x-intercept: set `y = 0`.",
+          "why": "An intercept is where the *other* coordinate is zero — that's what touching an axis means."
+        }
+      ]
+    },
+    {
+      "id": "systems",
+      "title": "Systems of Equations",
+      "blurb": "Two equations, two unknowns. The answer is the one point that satisfies both — which on a graph is where the lines cross.",
+      "rules": [
+        {
+          "id": "sy-crossing-point",
+          "rule": "A solution must make **both** equations true at once.",
+          "why": "That's why the answer is the crossing point: it's the only place that sits on both lines.",
+          "star": true
+        },
+        {
+          "id": "sy-substitution",
+          "rule": "**Substitution**: solve one equation for one variable, then put that into the other.",
+          "why": "It converts a two-unknown problem into a one-unknown problem, which you already know how to solve.",
+          "when": "Best when a variable is already alone, or has a coefficient of 1."
+        },
+        {
+          "id": "sy-elimination",
+          "rule": "**Elimination**: add or subtract the two equations so one variable cancels.",
+          "why": "You're allowed to add equals to equals — both scales stay balanced, so the combined statement is still true.",
+          "when": "Best when the same variable has matching or opposite coefficients. Multiply one equation through to make that happen."
+        },
+        {
+          "id": "sy-no-solution",
+          "rule": "Variables all vanish? A **false** statement (`0 = 5`) means no solution. A **true** one (`0 = 0`) means infinitely many.",
+          "why": "No solution means the lines are parallel and never meet. Infinite means they're the same line drawn twice.",
+          "trap": "Getting `0 = 0` feels like you did something wrong. You didn't — it's an answer."
+        }
+      ]
+    },
+    {
+      "id": "inequalities",
+      "title": "Inequalities & Absolute Value",
+      "blurb": "Absolute value means distance from zero. Every rule here is that one idea applied to a number line.",
+      "rules": [
+        {
+          "id": "iq-distance-from-zero",
+          "rule": "`|x|` is the **distance** from zero, so it's never negative.",
+          "why": "Distance has no direction. Going 5 left and 5 right are both a trip of 5.",
+          "star": true
+        },
+        {
+          "id": "iq-two-answers",
+          "rule": "`|x| = 5` has **two** answers: `5` and `-5`.",
+          "why": "Both sit 5 units from zero, and the bars threw away which side you were on.",
+          "trap": "Losing the negative answer is the single most common absolute-value mistake.",
+          "star": true
+        },
+        {
+          "id": "iq-less-thand",
+          "rule": "`|x| < 5` means `-5 < x < 5` (a band). `|x| > 5` means `x < -5` **or** `x > 5` (two pieces).",
+          "why": "\"Less than 5 away from zero\" is the stretch around zero. \"More than 5 away\" is everything outside it.",
+          "mnemonic": "Less thAND, greatOR.",
+          "star": true
+        },
+        {
+          "id": "iq-isolate-bars-first",
+          "rule": "Get the absolute value alone **before** you split it into two cases.",
+          "why": "The bars apply to whatever is inside them, so anything still stuck outside hasn't been dealt with yet.",
+          "example": "`2|x| + 1 = 11` becomes `|x| = 5` first, then `x = 5` or `x = -5`."
+        },
+        {
+          "id": "iq-open-closed",
+          "rule": "Graphing: open circle for `<` and `>`, filled circle for `<=` and `>=`.",
+          "why": "Filled means the endpoint itself counts. Open means \"up to here but not this.\""
+        },
+        {
+          "id": "iq-negative-flip-ref",
+          "rule": "Multiplying or dividing an inequality by a negative still flips it — see #{solving}.",
+          "why": "Same reason as before: multiplying by a negative mirrors the number line, so bigger becomes smaller.",
+          "when": "It applies inside absolute-value cases too, and that's where people forget it."
+        }
+      ]
+    },
+    {
+      "id": "quadratics",
+      "title": "Quadratics",
+      "blurb": "Anything with an `x^2`. It graphs as a parabola — a U — because squaring turns negatives positive, so the curve has to turn around.",
+      "rules": [
+        {
+          "id": "qd-zero-product",
+          "rule": "**Zero Product Property**: if `A · B = 0`, then `A = 0` or `B = 0`.",
+          "why": "The only way to multiply to zero is for something to already be zero. This is the entire reason factoring solves equations.",
+          "trap": "It only works against **zero**. `A · B = 6` tells you nothing about A or B — get everything to one side first.",
+          "star": true
+        },
+        {
+          "id": "qd-factor-trinomial",
+          "rule": "To factor `x^2 + bx + c`: find two numbers that **multiply to c** and **add to b**.",
+          "why": "It's FOIL backwards — the Last terms multiply to c, and the Outside plus Inside add to b.",
+          "example": "`x^2 + 5x + 6`: 2 and 3 multiply to 6, add to 5. So `(x+2)(x+3)`.",
+          "star": true
+        },
+        {
+          "id": "qd-formula",
+          "rule": "Quadratic formula: `x = (-b ± √(b^2 - 4ac)) / (2a)`",
+          "why": "It's completing the square done once, in general, so nobody ever has to do it by hand again.",
+          "when": "When factoring doesn't work — which is most of the time outside a textbook.",
+          "trap": "The whole `-b ± √(b^2 - 4ac)` sits over `2a` — the `-b` included, not just the root."
+        },
+        {
+          "id": "qd-plus-minus",
+          "rule": "`±` means work it twice: once with `+`, once with `-`.",
+          "why": "A square root has two answers, so the formula hands you both at once."
+        },
+        {
+          "id": "qd-discriminant",
+          "rule": "The discriminant `b^2 - 4ac` counts the real answers: positive → 2, zero → 1, negative → 0.",
+          "why": "It lives under the square root. A negative under a root has no real answer, so the parabola never crosses the x-axis.",
+          "when": "Useful when a question only asks *how many* solutions — you can skip the rest of the formula."
+        },
+        {
+          "id": "qd-standard-form",
+          "rule": "Get it to `ax^2 + bx + c = 0` before doing anything else.",
+          "why": "Both factoring and the formula assume one side is zero. Neither works otherwise."
+        }
+      ]
+    },
+    {
+      "id": "rational",
+      "title": "Rational Expressions",
+      "blurb": "Fractions with letters in them. There are no new rules here — section #{fractions} already covers all of it. The only new skill is factoring first.",
+      "rules": [
+        {
+          "id": "re-same-rules",
+          "rule": "Every fraction rule from #{fractions} applies unchanged. Letters change nothing.",
+          "why": "A fraction is a fraction. `x/y · a/b` multiplies straight across for exactly the same reason `1/2 · 1/3` does."
+        },
+        {
+          "id": "re-factor-then-cancel",
+          "rule": "**Factor first, then cancel.** Never cancel before factoring.",
+          "why": "You can only cancel factors, never terms — and factoring is the operation that turns terms into factors.",
+          "example": "`(x^2 - 4)/(x + 2)` → `((x+2)(x-2))/(x+2)` → `x - 2`.",
+          "star": true
+        },
+        {
+          "id": "re-cannot-be-zero",
+          "rule": "The denominator can never be zero. Note which x values are banned.",
+          "why": "Division by zero is undefined, so those inputs are removed from the domain — even if they cancel away later.",
+          "trap": "In the example above, `x = -2` stays banned even though the `(x+2)` cancelled. The cancelling doesn't un-ban it."
+        },
+        {
+          "id": "re-common-denominator",
+          "rule": "Adding or subtracting still needs a common denominator — factor to find it.",
+          "why": "Same reason as numbers: you can't count pieces of different sizes. The factored form shows you what's missing."
+        }
+      ]
+    },
+    {
+      "id": "scinot",
+      "title": "Scientific Notation",
+      "blurb": "Short section, but you will need it the moment you meet a p-value.",
+      "rules": [
+        {
+          "id": "sn-form",
+          "rule": "`a × 10^n`, where a is at least 1 and less than 10.",
+          "why": "Forcing exactly one digit before the decimal makes any two numbers instantly comparable by their exponent."
+        },
+        {
+          "id": "sn-sign-of-exponent",
+          "rule": "Positive exponent → big number. Negative exponent → small number.",
+          "why": "The exponent counts how many places the decimal moves, and negative exponents mean divide — see #{exponents}.",
+          "example": "`1.2 × 10^{-5}` is `0.000012`. That's a very small p-value."
+        },
+        {
+          "id": "sn-move-decimal",
+          "rule": "Move the decimal `n` places: right for positive n, left for negative.",
+          "why": "Multiplying by 10 shifts every digit one column up. Doing it n times shifts n columns."
         }
       ]
     },

@@ -229,11 +229,12 @@ body {
 .trap { color: #a3391e; color: var(--caution); }
 .when, .example, .mnemonic { color: #5b6772; color: var(--ink-soft); }
 
-sup {
+sup, sub {
   font-size: .72em;
-  line-height: 0;          /* keep superscripts from inflating the line box */
-  vertical-align: super;
+  line-height: 0;          /* keep them from inflating the line box */
 }
+sup { vertical-align: super; }
+sub { vertical-align: sub; }
 
 code {
   font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
@@ -468,11 +469,11 @@ html.hiding .section.all-known { display: none; }
     <header class="masthead">
       <div>
         <h1>Dumb Math Rules</h1>
-        <p class="sub">Pre-algebra fundamentals. Every rule carries its reason.</p>
+        <p class="sub">Pre-algebra and algebra fundamentals. Every rule carries its reason.</p>
       </div>
       <div class="stamp">
         Rev. 2026-08-27<br>
-        44 rules &middot; 9 sections<br>
+        80 rules &middot; 16 sections<br>
         Prints to letter, 2 col.
       </div>
     </header>
@@ -486,7 +487,14 @@ html.hiding .section.all-known { display: none; }
         <li><a id="toc-solving" href="#solving"><span class="n">06</span>Solving for x</a></li>
         <li><a id="toc-roots" href="#roots"><span class="n">07</span>Roots</a></li>
         <li><a id="toc-percent" href="#percent"><span class="n">08</span>Percents, Decimals &amp; Ratios</a></li>
-        <li><a id="toc-translate" href="#translate"><span class="n">09</span>Word Problem Translation</a></li>
+        <li><a id="toc-functions" href="#functions"><span class="n">09</span>Functions &amp; f(x) Notation</a></li>
+        <li><a id="toc-lines" href="#lines"><span class="n">10</span>The Coordinate Plane &amp; Straight Lines</a></li>
+        <li><a id="toc-systems" href="#systems"><span class="n">11</span>Systems of Equations</a></li>
+        <li><a id="toc-inequalities" href="#inequalities"><span class="n">12</span>Inequalities &amp; Absolute Value</a></li>
+        <li><a id="toc-quadratics" href="#quadratics"><span class="n">13</span>Quadratics</a></li>
+        <li><a id="toc-rational" href="#rational"><span class="n">14</span>Rational Expressions</a></li>
+        <li><a id="toc-scinot" href="#scinot"><span class="n">15</span>Scientific Notation</a></li>
+        <li><a id="toc-translate" href="#translate"><span class="n">16</span>Word Problem Translation</a></li>
     </ul>
 
     <div class="controls">
@@ -857,8 +865,319 @@ html.hiding .section.all-known { display: none; }
         </div>
       </section>
 
+      <section class="section" id="functions">
+        <h2><span class="n">09</span>Functions &amp; f(x) Notation<span class="scount"> </span></h2>
+        <p class="blurb">A function is a machine: put a number in, get exactly one number out. Nearly all the difficulty here is notation, not concept.</p>
+        <div class="rule star" data-id="fn-not-times">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><code>f(x)</code> does <strong>not</strong> mean f times x. It means "the machine f, applied to x."<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">This is the one place in algebra where parentheses don't mean multiply — they mean "fed into."</dd>
+          <dt>Trap</dt><dd class="trap">You spent all of section 05 learning that <code>2(x+1)</code> means multiply. <code>f(x+1)</code> does not. The rule changed and nobody said so.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="fn-same-as-y">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><code>f(x)</code> and <code>y</code> are the same thing.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Both name the output. <code>y = 2x + 1</code> and <code>f(x) = 2x + 1</code> are identical; the f version just tells you which machine made it.</dd>
+          <dt>When</dt><dd class="when">When a problem switches between them mid-question, nothing has changed. Keep going.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="fn-evaluate-replace">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">To find <code>f(3)</code>, replace <strong>every</strong> x with 3.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">x is a blank to be filled, not a value. The function is a recipe with a hole in it.</dd>
+          <dt>Ex.</dt><dd class="example">If <code>f(x) = x<sup>2</sup> + 1</code>, then <code>f(3) = 3<sup>2</sup> + 1 = 10</code>.</dd>
+          </dl>
+        </div>
+        <div class="rule star" data-id="fn-whole-thing-in">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><code>f(x+1)</code> means put <code>x+1</code> into every blank. It is <strong>not</strong> <code>f(x) + 1</code>.<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">Whatever sits in the parentheses is the input, however complicated it looks.</dd>
+          <dt>Trap</dt><dd class="trap">If <code>f(x) = x<sup>2</sup></code>, then <code>f(x+1) = (x+1)<sup>2</sup></code>, not <code>x<sup>2</sup> + 1</code>.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="fn-domain-range">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><strong>Domain</strong> = what you're allowed to put in. <strong>Range</strong> = what can come out.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Only two things ever break a function at this level: dividing by zero, and even roots of negatives. Check for those and the domain is everything else.</dd>
+          <dt>Hook</dt><dd class="mnemonic">Domain is the Door (in). Range is the Result (out).</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="fn-vertical-line">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">A graph is a function if no vertical line crosses it twice.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">One input must give exactly one output — two crossings means one x produced two y's, so it isn't a machine.</dd>
+          </dl>
+        </div>
+      </section>
+
+      <section class="section" id="lines">
+        <h2><span class="n">10</span>The Coordinate Plane &amp; Straight Lines<span class="scount"> </span></h2>
+        <p class="blurb">This section pays off later: a regression line in statistics is exactly y = mx + b wearing different letters.</p>
+        <div class="rule" data-id="ln-point-order">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">A point is <code>(x, y)</code> — always across first, then up.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Alphabetical order, x before y. That's the whole reason; there isn't a deeper one.</dd>
+          <dt>Hook</dt><dd class="mnemonic">Into the house, then up the stairs.</dd>
+          </dl>
+        </div>
+        <div class="rule star" data-id="ln-slope-formula">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Slope <code>m = rise / run = (y<sub>2</sub> - y<sub>1</sub>) / (x<sub>2</sub> - x<sub>1</sub>)</code><span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">Slope is a rate: how much y changes for every 1 that x moves. Every other line rule follows from that one sentence.</dd>
+          <dt>Trap</dt><dd class="trap">Keep the points in the same order top and bottom. If y<sub>2</sub> came first, x<sub>2</sub> comes first too.</dd>
+          </dl>
+        </div>
+        <div class="rule star" data-id="ln-slope-intercept">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><code>y = mx + b</code> — m is the slope, b is where the line crosses the y-axis.<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">Set x to 0: the <code>mx</code> term vanishes and you're left with <code>y = b</code>. So b is literally the value at the crossing.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="ln-slope-signs">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Positive slope climbs left-to-right. Negative falls. Zero is flat. Vertical is <strong>undefined</strong>.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">It's rise over run: no rise gives 0, and no run gives division by zero, which isn't a number.</dd>
+          <dt>Trap</dt><dd class="trap">Zero slope and undefined slope are opposites, not synonyms. Flat line: <code>m = 0</code>. Vertical line: no m at all.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="ln-parallel-perp">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Parallel lines have the <strong>same</strong> slope. Perpendicular slopes are <strong>negative reciprocals</strong>.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Turning a line 90° swaps rise and run and flips the direction — so <code>2/3</code> becomes <code>-3/2</code>.</dd>
+          <dt>Ex.</dt><dd class="example">Perpendicular to <code>m = 2</code> is <code>m = -1/2</code>.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="ln-graph-from-b">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">To graph it: plot <code>b</code> first, then count the slope as rise-over-run to get the next point.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">b hands you one free point, and the slope is a set of directions from any point to another.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="ln-x-intercept">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">y-intercept: set <code>x = 0</code>. x-intercept: set <code>y = 0</code>.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">An intercept is where the <em>other</em> coordinate is zero — that's what touching an axis means.</dd>
+          </dl>
+        </div>
+      </section>
+
+      <section class="section" id="systems">
+        <h2><span class="n">11</span>Systems of Equations<span class="scount"> </span></h2>
+        <p class="blurb">Two equations, two unknowns. The answer is the one point that satisfies both — which on a graph is where the lines cross.</p>
+        <div class="rule star" data-id="sy-crossing-point">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">A solution must make <strong>both</strong> equations true at once.<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">That's why the answer is the crossing point: it's the only place that sits on both lines.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="sy-substitution">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><strong>Substitution</strong>: solve one equation for one variable, then put that into the other.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">It converts a two-unknown problem into a one-unknown problem, which you already know how to solve.</dd>
+          <dt>When</dt><dd class="when">Best when a variable is already alone, or has a coefficient of 1.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="sy-elimination">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><strong>Elimination</strong>: add or subtract the two equations so one variable cancels.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">You're allowed to add equals to equals — both scales stay balanced, so the combined statement is still true.</dd>
+          <dt>When</dt><dd class="when">Best when the same variable has matching or opposite coefficients. Multiply one equation through to make that happen.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="sy-no-solution">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Variables all vanish? A <strong>false</strong> statement (<code>0 = 5</code>) means no solution. A <strong>true</strong> one (<code>0 = 0</code>) means infinitely many.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">No solution means the lines are parallel and never meet. Infinite means they're the same line drawn twice.</dd>
+          <dt>Trap</dt><dd class="trap">Getting <code>0 = 0</code> feels like you did something wrong. You didn't — it's an answer.</dd>
+          </dl>
+        </div>
+      </section>
+
+      <section class="section" id="inequalities">
+        <h2><span class="n">12</span>Inequalities &amp; Absolute Value<span class="scount"> </span></h2>
+        <p class="blurb">Absolute value means distance from zero. Every rule here is that one idea applied to a number line.</p>
+        <div class="rule star" data-id="iq-distance-from-zero">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><code>|x|</code> is the <strong>distance</strong> from zero, so it's never negative.<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">Distance has no direction. Going 5 left and 5 right are both a trip of 5.</dd>
+          </dl>
+        </div>
+        <div class="rule star" data-id="iq-two-answers">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><code>|x| = 5</code> has <strong>two</strong> answers: <code>5</code> and <code>-5</code>.<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">Both sit 5 units from zero, and the bars threw away which side you were on.</dd>
+          <dt>Trap</dt><dd class="trap">Losing the negative answer is the single most common absolute-value mistake.</dd>
+          </dl>
+        </div>
+        <div class="rule star" data-id="iq-less-thand">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><code>|x| &lt; 5</code> means <code>-5 &lt; x &lt; 5</code> (a band). <code>|x| &gt; 5</code> means <code>x &lt; -5</code> <strong>or</strong> <code>x &gt; 5</code> (two pieces).<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">"Less than 5 away from zero" is the stretch around zero. "More than 5 away" is everything outside it.</dd>
+          <dt>Hook</dt><dd class="mnemonic">Less thAND, greatOR.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="iq-isolate-bars-first">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Get the absolute value alone <strong>before</strong> you split it into two cases.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">The bars apply to whatever is inside them, so anything still stuck outside hasn't been dealt with yet.</dd>
+          <dt>Ex.</dt><dd class="example"><code>2|x| + 1 = 11</code> becomes <code>|x| = 5</code> first, then <code>x = 5</code> or <code>x = -5</code>.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="iq-open-closed">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Graphing: open circle for <code>&lt;</code> and <code>&gt;</code>, filled circle for <code>&lt;=</code> and <code>&gt;=</code>.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Filled means the endpoint itself counts. Open means "up to here but not this."</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="iq-negative-flip-ref">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Multiplying or dividing an inequality by a negative still flips it — see 06.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Same reason as before: multiplying by a negative mirrors the number line, so bigger becomes smaller.</dd>
+          <dt>When</dt><dd class="when">It applies inside absolute-value cases too, and that's where people forget it.</dd>
+          </dl>
+        </div>
+      </section>
+
+      <section class="section" id="quadratics">
+        <h2><span class="n">13</span>Quadratics<span class="scount"> </span></h2>
+        <p class="blurb">Anything with an <code>x<sup>2</sup></code>. It graphs as a parabola — a U — because squaring turns negatives positive, so the curve has to turn around.</p>
+        <div class="rule star" data-id="qd-zero-product">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><strong>Zero Product Property</strong>: if <code>A · B = 0</code>, then <code>A = 0</code> or <code>B = 0</code>.<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">The only way to multiply to zero is for something to already be zero. This is the entire reason factoring solves equations.</dd>
+          <dt>Trap</dt><dd class="trap">It only works against <strong>zero</strong>. <code>A · B = 6</code> tells you nothing about A or B — get everything to one side first.</dd>
+          </dl>
+        </div>
+        <div class="rule star" data-id="qd-factor-trinomial">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">To factor <code>x<sup>2</sup> + bx + c</code>: find two numbers that <strong>multiply to c</strong> and <strong>add to b</strong>.<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">It's FOIL backwards — the Last terms multiply to c, and the Outside plus Inside add to b.</dd>
+          <dt>Ex.</dt><dd class="example"><code>x<sup>2</sup> + 5x + 6</code>: 2 and 3 multiply to 6, add to 5. So <code>(x+2)(x+3)</code>.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="qd-formula">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Quadratic formula: <code>x = (-b ± √(b<sup>2</sup> - 4ac)) / (2a)</code></p>
+          <dl>
+          <dt>Why</dt><dd class="why">It's completing the square done once, in general, so nobody ever has to do it by hand again.</dd>
+          <dt>When</dt><dd class="when">When factoring doesn't work — which is most of the time outside a textbook.</dd>
+          <dt>Trap</dt><dd class="trap">The whole <code>-b ± √(b<sup>2</sup> - 4ac)</code> sits over <code>2a</code> — the <code>-b</code> included, not just the root.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="qd-plus-minus">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><code>±</code> means work it twice: once with <code>+</code>, once with <code>-</code>.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">A square root has two answers, so the formula hands you both at once.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="qd-discriminant">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">The discriminant <code>b<sup>2</sup> - 4ac</code> counts the real answers: positive → 2, zero → 1, negative → 0.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">It lives under the square root. A negative under a root has no real answer, so the parabola never crosses the x-axis.</dd>
+          <dt>When</dt><dd class="when">Useful when a question only asks <em>how many</em> solutions — you can skip the rest of the formula.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="qd-standard-form">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Get it to <code>ax<sup>2</sup> + bx + c = 0</code> before doing anything else.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Both factoring and the formula assume one side is zero. Neither works otherwise.</dd>
+          </dl>
+        </div>
+      </section>
+
+      <section class="section" id="rational">
+        <h2><span class="n">14</span>Rational Expressions<span class="scount"> </span></h2>
+        <p class="blurb">Fractions with letters in them. There are no new rules here — section 03 already covers all of it. The only new skill is factoring first.</p>
+        <div class="rule" data-id="re-same-rules">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Every fraction rule from 03 applies unchanged. Letters change nothing.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">A fraction is a fraction. <code>x/y · a/b</code> multiplies straight across for exactly the same reason <code>1/2 · 1/3</code> does.</dd>
+          </dl>
+        </div>
+        <div class="rule star" data-id="re-factor-then-cancel">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><strong>Factor first, then cancel.</strong> Never cancel before factoring.<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">You can only cancel factors, never terms — and factoring is the operation that turns terms into factors.</dd>
+          <dt>Ex.</dt><dd class="example"><code>(x<sup>2</sup> - 4)/(x + 2)</code> → <code>((x+2)(x-2))/(x+2)</code> → <code>x - 2</code>.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="re-cannot-be-zero">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">The denominator can never be zero. Note which x values are banned.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Division by zero is undefined, so those inputs are removed from the domain — even if they cancel away later.</dd>
+          <dt>Trap</dt><dd class="trap">In the example above, <code>x = -2</code> stays banned even though the <code>(x+2)</code> cancelled. The cancelling doesn't un-ban it.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="re-common-denominator">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Adding or subtracting still needs a common denominator — factor to find it.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Same reason as numbers: you can't count pieces of different sizes. The factored form shows you what's missing.</dd>
+          </dl>
+        </div>
+      </section>
+
+      <section class="section" id="scinot">
+        <h2><span class="n">15</span>Scientific Notation<span class="scount"> </span></h2>
+        <p class="blurb">Short section, but you will need it the moment you meet a p-value.</p>
+        <div class="rule" data-id="sn-form">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><code>a × 10<sup>n</sup></code>, where a is at least 1 and less than 10.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Forcing exactly one digit before the decimal makes any two numbers instantly comparable by their exponent.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="sn-sign-of-exponent">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Positive exponent → big number. Negative exponent → small number.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">The exponent counts how many places the decimal moves, and negative exponents mean divide — see 04.</dd>
+          <dt>Ex.</dt><dd class="example"><code>1.2 × 10<sup>-5</sup></code> is <code>0.000012</code>. That's a very small p-value.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="sn-move-decimal">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Move the decimal <code>n</code> places: right for positive n, left for negative.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Multiplying by 10 shifts every digit one column up. Doing it n times shifts n columns.</dd>
+          </dl>
+        </div>
+      </section>
+
       <section class="section" id="translate">
-        <h2><span class="n">09</span>Word Problem Translation<span class="scount"> </span></h2>
+        <h2><span class="n">16</span>Word Problem Translation<span class="scount"> </span></h2>
         <p class="blurb">Word problems are a translation exercise, not a math exercise. Convert to symbols first, then solve.</p>
         <div class="rule" data-id="tr-was-per-each">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>

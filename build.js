@@ -29,19 +29,32 @@ const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(
 // <sup> is as old as HTML and needs no font coverage beyond plain ASCII.
 //   x^2        -> x<sup>2</sup>       (single alphanumeric, optionally signed)
 //   x^{a+b}    -> x<sup>a+b</sup>     (braces for anything longer)
+//   x_1        -> x<sub>1</sub>       (same syntax, same reason)
 const sup = t => t
   .replace(/\^\{([^}]*)\}/g, '<sup>$1</sup>')
-  .replace(/\^(-?[A-Za-z0-9]+)/g, '<sup>$1</sup>');
+  .replace(/\^(-?[A-Za-z0-9]+)/g, '<sup>$1</sup>')
+  .replace(/_\{([^}]*)\}/g, '<sub>$1</sub>')
+  .replace(/_(-?[A-Za-z0-9]+)/g, '<sub>$1</sub>');
 
-// inline markup: x^2, `code`, **bold**, *emphasis*. Bold runs before the
+// inline markup: x^2, x_1, #{section-id}, `code`, **bold**, *emphasis*. Bold runs before the
 // single-asterisk pass so emphasis only ever sees genuine emphasis.
-const md = s => sup(esc(s))
+const md = s => xref(sup(esc(s)))
   .replace(/`([^`]+)`/g, '<code>$1</code>')
   .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
   .replace(/\*([^*]+)\*/g, '<em>$1</em>');
 
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const pad  = n => String(n).padStart(2, '0');
+
+// Content refers to other sections as #{section-id}; the number is resolved at
+// build time so reordering sections can never leave a stale "see 06" behind.
+const sectionNumbers = {};
+data.sections.forEach((s, i) => { sectionNumbers[s.id || slug(s.title)] = pad(i + 1); });
+
+const xref = t => t.replace(/#\{([a-z0-9-]+)\}/g, (_, id) => {
+  if (!(id in sectionNumbers)) throw new Error('cross-reference to unknown section: ' + id);
+  return sectionNumbers[id];
+});
 
 const FIELDS = [
   ['why',      'Why'],
