@@ -3,6 +3,23 @@
 A pre-algebra reference where **every rule carries a one-line reason**. Built for
 someone whose brain discards bare rules but keeps causes.
 
+## How the sheet is organised
+
+Two structural things carry real information, so they're worth knowing. They used
+to be printed at the bottom of the page; they were cluttering the UI, so they live
+here now.
+
+**Sections are numbered in dependency order.** `01 The Grammar Nobody Teaches` is
+assumed by everything after it, and each section leans on the ones before. If a
+later rule won't stick, the missing piece is usually earlier — go back rather than
+re-reading the rule.
+
+**Nine rules are flagged load-bearing.** Those aren't the *most important* rules,
+they're the ones that **generate** other rules. "The denominator is the name of the
+piece, not a quantity" is one sentence that makes four other fraction rules stop
+needing to be memorised. They get a heavier left rail and a `load-bearing` tag.
+That's the best retention-per-minute on the sheet.
+
 ## The content model
 
 `content/rules.json` is the single source of truth. Every entry is the same shape:

@@ -229,15 +229,6 @@ code {
   white-space: nowrap;
 }
 
-.colophon {
-  margin-top: 2.5rem;
-  padding-top: .8rem;
-  border-top: 1px solid #dde4e9; border-top-color: var(--hair);
-  font-size: .78rem;
-  color: #5b6772; color: var(--ink-soft);
-}
-.colophon strong { font-weight: 600; }
-
 /* ---------- PRINT: dense, two columns, ink-cheap ---------- */
 @media print {
   @page { size: letter portrait; margin: .45in .4in; }
@@ -251,7 +242,7 @@ code {
     padding: 0;
   }
   .wrap { max-width: none; padding: 0; border: 0; background: #fff; }
-  .toc, .colophon { display: none; }
+  .toc { display: none; }
 
   .masthead { margin-bottom: .5rem; padding-bottom: .18rem; border-bottom-width: 1.5pt; }
   .masthead h1 { font-size: 15pt; }

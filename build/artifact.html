@@ -233,15 +233,6 @@ code {
   white-space: nowrap;
 }
 
-.colophon {
-  margin-top: 2.5rem;
-  padding-top: .8rem;
-  border-top: 1px solid #dde4e9; border-top-color: var(--hair);
-  font-size: .78rem;
-  color: #5b6772; color: var(--ink-soft);
-}
-.colophon strong { font-weight: 600; }
-
 /* ---------- PRINT: dense, two columns, ink-cheap ---------- */
 @media print {
   @page { size: letter portrait; margin: .45in .4in; }
@@ -255,7 +246,7 @@ code {
     padding: 0;
   }
   .wrap { max-width: none; padding: 0; border: 0; background: #fff; }
-  .toc, .colophon { display: none; }
+  .toc { display: none; }
 
   .masthead { margin-bottom: .5rem; padding-bottom: .18rem; border-bottom-width: 1.5pt; }
   .masthead h1 { font-size: 15pt; }
@@ -837,22 +828,6 @@ html.hiding .section.all-known { display: none; }
         </div>
       </section>
     </div>
-
-    <p class="colophon">
-      <strong>Sections are numbered in dependency order</strong> &mdash; 01 is assumed by everything after it,
-      and each one leans on the ones before. If a later rule won&rsquo;t stick, the missing piece is usually earlier.
-      <br><br>
-      <strong>9 rules are marked load-bearing.</strong> Those aren&rsquo;t the most important rules,
-      they&rsquo;re the ones that <em>generate</em> other rules &mdash; understand those and several neighbours
-      stop needing to be memorised at all.
-      <br><br>
-      <strong>&ldquo;Got it&rdquo; collapses a rule</strong> to its one line and remembers it on this device only &mdash;
-      what you know on the phone is tracked separately from what you know on the TouchPad. Tick
-      <em>Hide what I know</em> and the marked rules drop out of the page <em>and</em> out of the printout,
-      so the sheet gets shorter as you learn. Nothing leaves the device; nothing syncs.
-      <br><br>
-      Print with background graphics off. It is designed to come out plain black on white, two columns, letter portrait.
-    </p>
   </div>
 <script>
 /* sheet.js — per-device "I already know this" state.
