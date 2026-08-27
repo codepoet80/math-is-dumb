@@ -149,7 +149,7 @@ body {
 
 /* ---------- sections ---------- */
 .section { margin: 0 0 2rem; break-inside: auto; }
-.section > h2 {
+.section h2 {
   font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
   font-weight: 700;
   font-size: .82rem;
@@ -162,7 +162,7 @@ body {
   align-items: baseline;
   gap: .6rem;
 }
-.section > h2 .n {
+.section h2 .n {
   color: #1f5c8b; color: var(--accent);
   font-variant-numeric: tabular-nums;
 }
@@ -171,6 +171,14 @@ body {
   font-style: italic;
   color: #5b6772; color: var(--ink-soft);
   margin: .55rem 0 1.05rem;
+}
+
+/* Heading + blurb + first rule travel as one unit. See build.js: this exists
+   because WebKit ignores break-after: avoid, and Safari prints this sheet. */
+.sechead {
+  page-break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid;
 }
 
 /* ---------- the rule block ---------- */
@@ -263,14 +271,14 @@ code {
   }
 
   .section { margin-bottom: .85rem; }
-  .section > h2 {
+  .section h2 {
     font-size: 6.8pt; letter-spacing: .12em; border-bottom-width: .8pt;
     /* never leave a heading stranded at the foot of a column */
     page-break-after: avoid;
     -webkit-column-break-after: avoid;
     break-after: avoid;
   }
-  .blurb, .section > h2 { break-inside: avoid; }
+  .blurb, .section h2 { break-inside: avoid; }
   .blurb {
     page-break-after: avoid;
     -webkit-column-break-after: avoid;
@@ -278,7 +286,7 @@ code {
   }
   /* line-level safety net inside anything that can still wrap */
   p, dd { orphans: 2; widows: 2; }
-  .section > h2 .n, .why, .rule .flag { color: #000; }
+  .section h2 .n, .why, .rule .flag { color: #000; }
   .blurb { font-size: 6.6pt; margin: .18rem 0 .4rem; }
 
   .rule { margin-bottom: .4rem; padding-left: .3rem; border-left-width: 1pt; border-left-color: #ccc; }
@@ -438,7 +446,7 @@ html.hiding .section.all-known { display: none; }
 .toc a.muted { opacity: .45; text-decoration: line-through; }
 
 /* running count in each section header */
-.section > h2 .scount {
+.section h2 .scount {
   margin-left: auto;
   font-size: .62rem;
   letter-spacing: .1em;
@@ -457,7 +465,7 @@ html.hiding .section.all-known { display: none; }
     padding-right: 0;
   }
   .rule.known { border-left-color: #ddd; }
-  .section > h2 .scount { display: none; }
+  .section h2 .scount { display: none; }
 }
 
 @media screen and (max-width: 46rem) {

@@ -82,10 +82,19 @@ ${rows}
 
 function renderSection(s, i) {
   const id = s.id || slug(s.title);
+  const [first, ...rest] = s.rules;
+  // The heading, blurb and first rule are wrapped in one box so they physically
+  // cannot be separated by a column or page break. `break-after: avoid` would be
+  // the tidy way to say this, but WebKit largely ignores it -- and Safari is what
+  // actually prints this sheet. `break-inside: avoid` on a real box is honoured
+  // everywhere, so the keep-together group has to BE a box.
   return `      <section class="section" id="${esc(id)}">
-        <h2><span class="n">${pad(i + 1)}</span>${md(s.title)}<span class="scount"> </span></h2>
-        ${s.blurb ? `<p class="blurb">${md(s.blurb)}</p>` : ''}
-${s.rules.map(renderRule).join('\n')}
+        <div class="sechead">
+          <h2><span class="n">${pad(i + 1)}</span>${md(s.title)}<span class="scount"> </span></h2>
+          ${s.blurb ? `<p class="blurb">${md(s.blurb)}</p>` : ''}
+${renderRule(first)}
+        </div>
+${rest.map(renderRule).join('\n')}
       </section>`;
 }
 

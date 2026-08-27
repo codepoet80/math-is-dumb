@@ -1,7 +1,20 @@
 # Dumb Math Rules
 
-A pre-algebra reference where **every rule carries a one-line reason**. Built for
-someone whose brain discards bare rules but keeps causes.
+A pre-algebra and Algebra I reference where **every rule carries a one-line
+reason**. Built for someone whose brain discards bare rules but keeps causes.
+
+```
+content/rules.json    the whole sheet — the only file you edit to add material
+assets/sheet.css      one stylesheet: screen, print, phone
+assets/sheet.js       "I already know this" state (ES5, webOS-safe)
+build.js              renders the JSON to HTML.  node build.js
+index.html            GENERATED — the sheet. Committed because the server serves it
+standalone.html       GENERATED — CSS+JS inlined, one file, works offline
+build/artifact.html   GENERATED — fragment for the Claude Code Artifact publisher
+serve.sh              rebuild + serve on the LAN for phone/TouchPad testing
+deploy.sh             rebuild + rsync the repo to the web server
+tools/                print-verification harness; never deployed
+```
 
 ## How the sheet is organised
 
@@ -108,16 +121,31 @@ Because `index.html` is generated but must exist on the server, **it is committe
 Run `node build.js` before syncing or you'll ship a stale page — `deploy.sh` does
 this for you, which is the main reason to use it over a bare rsync.
 
-`.htaccess` turns off directory listing and denies `build.js`, `README.md` and the
-shell scripts. Nothing there is secret; there's just no reason to serve it. On nginx
-the equivalent is:
+### What actually lands on the server
 
-```nginx
-location ~ ^/(build\.js|README\.md|.*\.sh)$ { return 404; }
+Files the site doesn't serve are excluded in `deploy.sh` rather than hidden by
+server config, so this behaves identically on any web server and there's no rule to
+keep in sync. The upload is exactly eight entries:
+
+```
+index.html  standalone.html  assets/sheet.css  assets/sheet.js  content/rules.json
 ```
 
-`content/rules.json` stays readable on purpose — it's the source of truth and it's
+`build.js`, `README.md`, `tools/`, `build/` and the shell scripts stay local.
+`content/rules.json` is deliberately published — it's the source of truth and it's
 useful to be able to curl it.
+
+**Nothing in this repo is secret.** It's a static maths reference: no credentials,
+no personal data, no infrastructure details (`deploy.sh` holds the deploy target and
+is never uploaded). Excluding the rest is tidiness, not security.
+
+The one thing deploy-time excludes *can't* cover is **directory listing** — that's
+server-side. Most servers default to off (nginx `autoindex` and Caddy `file_server
+browse` are both off unless enabled). Worth confirming once:
+
+```sh
+curl -sI https://your.host/math/assets/ | head -1   # want 403 or 404, not 200
+```
 
 PHP only becomes useful later, if you want server-side search or study progress that
 follows you between devices.
@@ -127,19 +155,58 @@ follows you between devices.
 Nothing is ever split across a column or a page:
 
 - `.rule` carries `break-inside: avoid` (plus the `page-break-` and
-  `-webkit-column-break-` spellings, because the modern property alone isn't
-  enough on older engines).
-- `.section > h2` and `.blurb` carry `break-after: avoid`, so a heading is never
-  stranded at the foot of a column with its first rule in the next one. This was a
-  real bug — before the `break-after` rules, a heading was orphaned at every column
-  height tested.
+  `-webkit-column-break-` spellings).
+- **`.sechead` wraps the heading, blurb and first rule in one box** that also
+  carries `break-inside: avoid`, so a heading can never be stranded at the foot of
+  a column with its first rule in the next one.
+- `.section > h2` and `.blurb` also carry `break-after: avoid`. That is belt and
+  braces for Chrome; it is **not** what makes this work.
 - `p, dd { orphans: 2; widows: 2 }` as a line-level safety net.
 
-Verified by forcing 63 column boundaries across five column heights under emulated
-print media and measuring `getClientRects()` on all 80 rules: a fragmented box
-returns rects in more than one column. Zero rules fragmented, zero headings
-stranded. (Comparing PDF page counts with and without the rules was *not* a useful
-check — both came out at 4 pages, so the constraint wasn't binding on page count.)
+### Why the wrapper, and not just `break-after: avoid`
+
+**Firefox ignores `break-after: avoid`** (a long-standing Gecko gap). Chrome honours
+it — which is exactly how this got missed: a Chrome-only test reported a clean bill
+of health while the real Firefox printout had three stranded headings.
+
+`break-inside: avoid` *is* honoured by Gecko, so the keep-together group has to be
+an actual box rather than a hint on its neighbours.
+
+Don't identify the engine from a PDF's `Producer` string. `macOS Version 15.7.9`
+is the macOS print pipeline, which Firefox, Safari and anything else using the
+system print dialog all go through. It says nothing about the renderer.
+
+**Don't unwrap `.sechead` to tidy up the markup.** It is load-bearing for print.
+
+### Verifying print breaks
+
+`pdftotext -bbox-layout` gives real page geometry, which is the only way to see
+page breaks — CSS emulation in a viewport cannot paginate. A heading is stranded
+when no `WHY` label follows it in the same column:
+
+`tools/ffprint.py` prints a page to PDF using **real Firefox**, driven through the
+Marionette socket built into the browser (no geckodriver needed). Use it rather than
+simulating another engine's quirks:
+
+```sh
+python3 tools/ffprint.py file:///path/to/index.html out.pdf
+python3 tools/checkbreaks.py out.pdf
+```
+
+| PDF (real Firefox, 4 pages) | headings | stranded |
+|---|---|---|
+| Real printout, before the fix | 16 | 3 |
+| Control: `.sechead` neutralised | 16 | 3 *(same three sections)* |
+| Fixed | 16 | **0** |
+
+Two ways this test lied before it was trusted:
+
+- An early checker located **1 of 16** headings and cheerfully reported "0 stranded".
+  Headings tokenise differently per engine — Firefox emits `10` as its own text run,
+  Chrome merges it into `10The Coordinate Plane`. **Always confirm it found all 16.**
+- A control page written outside the repo couldn't resolve `assets/sheet.css`, so it
+  rendered unstyled: 14 pages, every heading "stranded", conclusion worthless. Keep
+  control copies in the repo root.
 
 `Cmd-P` from any of the HTML outputs. The print stylesheet takes over: two dense
 columns, letter portrait, black on white, ~8pt. Turn **background graphics off** in
@@ -231,6 +298,8 @@ visible error. Any rule that turns an element *on* needs a pre-flex fallback.
   were written with this in mind: a regression line is `y = mx + b` in different
   letters, and p-values arrive in scientific notation.
 - Logarithms and exponential functions
+- A `#{rule-id}` cross-reference to complement `#{section-id}`, for the several
+  places one rule leans directly on another
 - EPUB export (opens in the reader already on both devices)
 - Study/flashcard mode — rule on the front, why on the back (the `known` state is
   the obvious input: drill what isn't marked)
