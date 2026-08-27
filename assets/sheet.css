@@ -1,0 +1,415 @@
+/* ============================================================
+   DUMB MATH RULES — one stylesheet, three media.
+   Direction: engineer's field manual. Blueprint-cool paper,
+   technical-drawing lettering, one signal colour for traps.
+
+   Every token also ships a literal fallback so the TouchPad's
+   WebKit 534 (no custom properties) still renders the light
+   theme correctly:   color: #14181c; color: var(--ink);
+   ============================================================ */
+
+:root {
+  --ground:   #e6ebef;
+  --grid:     rgba(31,92,139,.09);
+  --surface:  #fbfcfd;
+  --ink:      #14181c;
+  --ink-soft: #5b6772;   /* grey biased toward the blueprint accent */
+  --ink-faint:#8b98a3;
+  --rule:     #c6d0d8;
+  --hair:     #dde4e9;
+  --accent:   #1f5c8b;   /* blueprint blue — carries the WHY */
+  --caution:  #a3391e;   /* semantic only: traps */
+  --code-bg:  rgba(31,92,139,.075);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:   #0e1318;
+    --grid:     rgba(111,179,224,.07);
+    --surface:  #151c23;
+    --ink:      #dfe6ec;
+    --ink-soft: #94a3af;
+    --ink-faint:#6c7c88;
+    --rule:     #2c3740;
+    --hair:     #232d35;
+    --accent:   #7ab8e4;
+    --caution:  #e5977a;
+    --code-bg:  rgba(122,184,228,.12);
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground:   #0e1318;
+  --grid:     rgba(111,179,224,.07);
+  --surface:  #151c23;
+  --ink:      #dfe6ec;
+  --ink-soft: #94a3af;
+  --ink-faint:#6c7c88;
+  --rule:     #2c3740;
+  --hair:     #232d35;
+  --accent:   #7ab8e4;
+  --caution:  #e5977a;
+  --code-bg:  rgba(122,184,228,.12);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 2rem 1rem 4rem;
+  font-family: "Source Serif 4", "Charter", "Georgia", serif;
+  font-size: 17px;
+  line-height: 1.5;
+  color: #14181c; color: var(--ink);
+  background-color: #e6ebef; background-color: var(--ground);
+  background-image:
+    linear-gradient(rgba(31,92,139,.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31,92,139,.09) 1px, transparent 1px);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 26px 26px;
+  background-position: -1px -1px;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+.wrap {
+  max-width: 58rem;
+  margin: 0 auto;
+  padding: 2.4rem 2.6rem 3rem;
+  background: #fbfcfd; background: var(--surface);
+  border: 1px solid #c6d0d8; border-color: var(--rule);
+}
+
+/* ---------- masthead: a spec-sheet header block ---------- */
+.masthead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: .7rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #14181c; border-bottom-color: var(--ink);
+}
+.masthead h1 {
+  font-family: "Archivo Narrow", "Helvetica Neue Condensed", "Arial Narrow", sans-serif;
+  font-weight: 700;
+  font-size: 2.35rem;
+  line-height: .95;
+  letter-spacing: -.015em;
+  text-transform: uppercase;
+  margin: 0;
+  text-wrap: balance;
+}
+.masthead .sub {
+  font-size: .82rem;
+  font-style: italic;
+  color: #5b6772; color: var(--ink-soft);
+  margin: .45rem 0 0;
+  max-width: 32em;
+}
+.stamp {
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: .6rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-align: right;
+  line-height: 1.7;
+  color: #8b98a3; color: var(--ink-faint);
+  white-space: nowrap;
+  flex: none;
+}
+
+/* ---------- index ---------- */
+.toc {
+  margin: 0 0 2.2rem;
+  padding: 0;
+  list-style: none;
+  display: block;      /* WebKit 534 fallback — it drops the flex line below */
+  display: flex;
+  flex-wrap: wrap;
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: .72rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.toc li { display: inline-block; margin: 0 .5rem .35rem 0; }
+.toc a {
+  display: block;
+  padding: .22rem .55rem;
+  color: #14181c; color: var(--ink);
+  text-decoration: none;
+  border: 1px solid #dde4e9; border-color: var(--hair);
+}
+.toc a:hover, .toc a:focus-visible {
+  border-color: #1f5c8b; border-color: var(--accent);
+  color: #1f5c8b; color: var(--accent);
+}
+.toc .n { color: #8b98a3; color: var(--ink-faint); margin-right: .35em; }
+
+/* ---------- sections ---------- */
+.section { margin: 0 0 2rem; break-inside: auto; }
+.section > h2 {
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  margin: 0;
+  padding-bottom: .28rem;
+  border-bottom: 1.5px solid #14181c; border-bottom-color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: .6rem;
+}
+.section > h2 .n {
+  color: #1f5c8b; color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.blurb {
+  font-size: .84rem;
+  font-style: italic;
+  color: #5b6772; color: var(--ink-soft);
+  margin: .55rem 0 1.05rem;
+  max-width: 34em;
+}
+
+/* ---------- the rule block ---------- */
+.rule {
+  margin: 0 0 1rem;
+  padding: 0 0 0 .85rem;
+  border-left: 2px solid #dde4e9; border-left-color: var(--hair);
+  page-break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid;
+}
+.rule.star {
+  border-left-width: 3px;
+  border-left-color: #1f5c8b; border-left-color: var(--accent);
+}
+.rule .r { margin: 0; font-size: 1rem; line-height: 1.4; }
+
+.rule .flag {
+  display: inline-block;
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: .54rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  vertical-align: .28em;
+  margin-left: .5em;
+  padding: .1em .4em;
+  color: #1f5c8b; color: var(--accent);
+  border: 1px solid #1f5c8b; border-color: var(--accent);
+}
+
+.rule dl { margin: .35rem 0 0; font-size: .87rem; }
+.rule dt {
+  float: left;
+  clear: left;
+  width: 4em;
+  padding-top: .35em;
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: .6rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #8b98a3; color: var(--ink-faint);
+}
+.rule dd { margin: 0 0 .18rem 4.5em; }
+.rule dd:after { content: ""; display: block; clear: both; }
+
+.why  { font-style: italic; color: #1f5c8b; color: var(--accent); }
+.trap { color: #a3391e; color: var(--caution); }
+.when, .example, .mnemonic { color: #5b6772; color: var(--ink-soft); }
+
+code {
+  font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+  font-size: .86em;
+  font-style: normal;
+  background: rgba(31,92,139,.075); background: var(--code-bg);
+  padding: .08em .3em;
+  white-space: nowrap;
+}
+
+.colophon {
+  margin-top: 2.5rem;
+  padding-top: .8rem;
+  border-top: 1px solid #dde4e9; border-top-color: var(--hair);
+  font-size: .78rem;
+  color: #5b6772; color: var(--ink-soft);
+  max-width: 42em;
+}
+.colophon strong { font-weight: 600; }
+
+/* ---------- PRINT: dense, two columns, ink-cheap ---------- */
+@media print {
+  @page { size: letter portrait; margin: .45in .4in; }
+
+  body {
+    background: #fff;
+    background-image: none;
+    color: #000;
+    font-size: 8.3pt;
+    line-height: 1.32;
+    padding: 0;
+  }
+  .wrap { max-width: none; padding: 0; border: 0; background: #fff; }
+  .toc, .colophon { display: none; }
+
+  .masthead { margin-bottom: .5rem; padding-bottom: .18rem; border-bottom-width: 1.5pt; }
+  .masthead h1 { font-size: 15pt; }
+  .masthead .sub { font-size: 6.8pt; margin-top: .15rem; }
+  .stamp { font-size: 5.4pt; line-height: 1.5; }
+
+  .columns {
+    -webkit-column-count: 2; -moz-column-count: 2; column-count: 2;
+    -webkit-column-gap: .3in; -moz-column-gap: .3in; column-gap: .3in;
+    -webkit-column-rule: .5pt solid #bbb; column-rule: .5pt solid #bbb;
+  }
+
+  .section { margin-bottom: .85rem; }
+  .section > h2 { font-size: 6.8pt; letter-spacing: .12em; border-bottom-width: .8pt; }
+  .section > h2 .n, .why, .rule .flag { color: #000; }
+  .blurb { font-size: 6.6pt; margin: .18rem 0 .4rem; }
+
+  .rule { margin-bottom: .4rem; padding-left: .3rem; border-left-width: 1pt; border-left-color: #ccc; }
+  .rule.star { border-left-width: 2.5pt; border-left-color: #000; }
+  .rule .r { font-size: 8.3pt; }
+  .rule .flag { font-size: 4.8pt; border-color: #000; padding: 0 .25em; }
+  .rule dl { font-size: 7.2pt; margin-top: .12rem; }
+  .rule dt { width: 3.3em; font-size: 5.2pt; color: #777; padding-top: .38em; }
+  .rule dd { margin-left: 3.5em; margin-bottom: .04rem; }
+  .trap { color: #000; font-weight: 700; }
+  .when, .example, .mnemonic { color: #000; }
+
+  code { background: none; padding: 0; border-bottom: .4pt dotted #888; }
+  a { color: #000; text-decoration: none; }
+}
+
+/* ---------- PHONE ---------- */
+@media screen and (max-width: 46rem) {
+  body { padding: .75rem .5rem 3rem; font-size: 17px; background-size: 22px 22px; }
+  .wrap { padding: 1.35rem 1.15rem 2rem; }
+  .masthead { flex-direction: column; align-items: flex-start; gap: .5rem; }
+  .masthead h1 { font-size: 1.85rem; }
+  .stamp { text-align: left; }
+  .rule dt { float: none; width: auto; padding-top: .55em; }
+  .rule dd { margin-left: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* ============================================================
+   "I ALREADY KNOW THIS" — per-device state (see assets/sheet.js)
+   Progressive enhancement: without JS the .js class is never set,
+   the controls stay hidden, and the sheet renders exactly as before.
+   ============================================================ */
+
+.controls,
+.rule .know { display: none; }
+
+html.js .controls { display: block; display: flex; }
+html.js .rule .know { display: block; }
+
+/* ---------- control strip ---------- */
+.controls {
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 0 2rem;
+  padding: .6rem .85rem;
+  border: 1px solid #c6d0d8; border-color: var(--rule);
+  border-left: 3px solid #1f5c8b; border-left-color: var(--accent);
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: .78rem;
+  letter-spacing: .04em;
+}
+.controls > * { margin: .15rem 1.1rem .15rem 0; }
+.controls > *:last-child { margin-right: 0; }
+.controls label {
+  display: inline-block; display: flex;
+  align-items: center; gap: .45rem;
+  text-transform: uppercase; letter-spacing: .1em; font-size: .7rem;
+  cursor: pointer; white-space: nowrap;
+}
+.controls input[type="checkbox"] { width: 15px; height: 15px; margin: 0; flex: none; }
+.tally {
+  color: #5b6772; color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  flex: 1 1 14rem;
+}
+.linkish {
+  font: inherit;
+  text-transform: uppercase; letter-spacing: .1em; font-size: .7rem;
+  color: #a3391e; color: var(--caution);
+  background: none; border: 0; padding: .2rem; cursor: pointer;
+  border-bottom: 1px solid currentColor; border-radius: 0;
+}
+
+/* ---------- the per-rule toggle ---------- */
+.rule .know {
+  float: right;
+  position: relative;   /* keep it above the .r block box that runs under the float */
+  z-index: 1;
+  margin: 0 0 .25rem .6rem;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 28px;
+  text-align: center;
+  color: #8b98a3; color: var(--ink-faint);
+  background: transparent;
+  border: 1px solid #c6d0d8; border-color: var(--rule);
+  border-radius: 0;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+.rule .know:hover {
+  color: #1f5c8b; color: var(--accent);
+  border-color: #1f5c8b; border-color: var(--accent);
+}
+.rule .know:focus-visible { outline: 2px solid #1f5c8b; outline-color: var(--accent); outline-offset: 2px; }
+.rule.known .know {
+  color: #1f5c8b; color: var(--accent);
+  background: rgba(31,92,139,.075); background: var(--code-bg);
+  border-color: #c6d0d8; border-color: var(--rule);
+}
+.rule.known .know:hover { border-color: #1f5c8b; border-color: var(--accent); }
+
+/* ---------- collapsed state ---------- */
+.rule:after { content: ""; display: block; clear: both; }
+.rule.known { border-left-color: #dde4e9; border-left-color: var(--hair); border-left-width: 2px; }
+.rule.known dl,
+.rule.known .flag { display: none; }
+.rule.known .r { color: #8b98a3; color: var(--ink-faint); }
+.rule.known .r code { background: none; }
+
+html.hiding .rule.known,
+html.hiding .section.all-known { display: none; }
+
+.toc a.muted { opacity: .45; text-decoration: line-through; }
+
+/* running count in each section header */
+.section > h2 .scount {
+  margin-left: auto;
+  font-size: .62rem;
+  letter-spacing: .1em;
+  color: #8b98a3; color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+@media print {
+  .controls, .rule .know { display: none !important; }
+  /* a known rule still prints its one-line rule; in hide mode it prints nothing */
+  .rule.known .r { color: #444; }
+  .rule.known { border-left-color: #ddd; }
+  .section > h2 .scount { display: none; }
+}
+
+@media screen and (max-width: 46rem) {
+  .rule .know { width: 40px; height: 40px; line-height: 38px; font-size: 17px; }
+  .controls > * { margin-right: .8rem; }
+}

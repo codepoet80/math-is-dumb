@@ -1,0 +1,22 @@
+# Apache only. Harmless if the server is nginx — see README for the equivalent.
+#
+# The repo root is the webroot, so the build script and the shell scripts sit in
+# the same directory the server is publishing. Nothing here is secret, but there
+# is no reason to serve it either.
+
+Options -Indexes
+
+DirectoryIndex index.html
+
+<FilesMatch "^(build\.js|README\.md|.*\.sh)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# content/rules.json stays readable on purpose — it is the source of truth and
+# it is useful to be able to curl it.

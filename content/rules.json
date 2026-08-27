@@ -1,0 +1,331 @@
+{
+  "title": "Dumb Math Rules",
+  "subtitle": "Pre-algebra fundamentals. Every rule carries its reason.",
+  "sections": [
+    {
+      "id": "grammar",
+      "title": "The Grammar Nobody Teaches",
+      "blurb": "These are the unstated conventions the rest of math is built on. Most “I can't do algebra” is actually “nobody told me what the notation meant.”",
+      "rules": [
+        {
+          "id": "gr-means-both-sides",
+          "rule": "`=` means “both sides weigh the same.” It is a scale, not “answer goes here.”",
+          "why": "Every legal move in algebra is just “keep the scale level” — that one idea generates all of solving.",
+          "trap": "On a calculator `=` means “go.” In algebra it never does."
+        },
+        {
+          "id": "gr-term-chunk-separated",
+          "rule": "**Term** = chunk separated by `+` or `−`. **Factor** = chunk separated by `×`. **Coefficient** = the number stuck to the front.",
+          "why": "Almost every rule cares which one you're looking at, and almost every mistake is treating a term like a factor.",
+          "when": "Before applying any rule, ask: am I looking at terms or factors?",
+          "example": "In `3x² + 5x`, there are 2 terms. In `3x²`, the factors are 3, x, and x."
+        },
+        {
+          "id": "gr-number-touching-letter",
+          "rule": "A number touching a letter means multiply. `3x` = `3 · x`. `2(x+1)` = `2 × (x+1)`.",
+          "why": "The × symbol looks exactly like the letter x, so mathematicians just stopped writing it."
+        },
+        {
+          "id": "gr-pemdas-parentheses-exponents",
+          "rule": "**PEMDAS** — Parentheses, Exponents, Multiply/Divide, Add/Subtract.",
+          "why": "Multiplication is repeated addition, so it's the “bigger” operation and has to be collapsed into addition before you can add.",
+          "trap": "M and D are the **same rank** — do them left to right. Same for A and S. `8 ÷ 2 × 4 = 16`, not 1.",
+          "mnemonic": "Please Excuse My Dear Aunt Sally — but Mom & Dad are twins, and so are Aunt & Sally."
+        },
+        {
+          "id": "gr-minus-sign-has",
+          "rule": "The minus sign has three different jobs: subtract (`5 − 3`), negative (`−3`), and opposite (`−x`).",
+          "why": "`−x` is not “a negative number” — it's “the opposite of whatever x is.” If x = −4, then −x = **4**.",
+          "trap": "This one trips up more people than anything else on this sheet."
+        }
+      ]
+    },
+    {
+      "id": "negatives",
+      "title": "Negatives",
+      "blurb": "Think of −1 as an instruction: “flip to the other side of zero.” Everything here falls out of that.",
+      "rules": [
+        {
+          "id": "ng-subtracting-adding-opposite",
+          "rule": "Subtracting is adding the opposite. `a − b` = `a + (−b)`.",
+          "why": "It lets you stop tracking two different operations and just add signed numbers all day.",
+          "when": "Any time a string of +/− signs is confusing you, rewrite the whole thing as addition first."
+        },
+        {
+          "id": "ng-same-signs-add",
+          "rule": "Same signs: add and keep the sign. Different signs: subtract and take the sign of the bigger one.",
+          "why": "Same direction = piling up. Opposite directions = tug of war, and the stronger side wins.",
+          "example": "`−7 + 3 = −4` (tug of war, 7 wins, 7−3=4, negative)."
+        },
+        {
+          "id": "ng-negative-negative-positive",
+          "rule": "Negative × negative = positive. Negative × positive = negative.",
+          "why": "×(−1) means “flip across zero.” Flip twice and you're back where you started.",
+          "mnemonic": "Two wrongs make a right — but only in multiplication."
+        },
+        {
+          "id": "ng-distributing-negative-flips",
+          "rule": "Distributing a negative flips **every** sign inside. `−(a − b)` = `−a + b`.",
+          "why": "That minus out front is really a `−1` multiplying each term separately.",
+          "trap": "Forgetting the second sign. `−(x − 5)` = `−x + 5`, not `−x − 5`."
+        },
+        {
+          "id": "ng-different-things",
+          "rule": "`−x²` and `(−x)²` are different things.",
+          "why": "The exponent grabs tighter than the minus sign, so `−3²` = `−(3²)` = `−9`, but `(−3)²` = `9`.",
+          "when": "If you want the negative squared, the parentheses are not optional."
+        }
+      ]
+    },
+    {
+      "id": "fractions",
+      "title": "Fractions",
+      "blurb": "One idea unlocks this whole section: the bottom number is a NAME, not a quantity.",
+      "rules": [
+        {
+          "id": "fr-denominator-names-size",
+          "rule": "The denominator names the **size** of the piece. The numerator **counts** them.",
+          "why": "`3/4` is “three pieces, and the pieces are called fourths” — the 4 is a unit label, like “feet.”",
+          "when": "Every other fraction rule below is a consequence of this. When stuck, come back here.",
+          "star": true
+        },
+        {
+          "id": "fr-multiply-straight-across",
+          "rule": "Multiply straight across. `a/b × c/d` = `ac/bd`.",
+          "why": "Multiplying fractions is taking *a piece of a piece* — half of a third is a sixth, so the pieces get smaller and the names multiply.",
+          "example": "`1/2 × 1/3 = 1/6`"
+        },
+        {
+          "id": "fr-adding-subtracting-needs",
+          "rule": "Adding or subtracting needs a **common denominator** first.",
+          "why": "You can't count pieces of different sizes — same reason `3 feet + 2 meters` isn't 5 of anything until you convert.",
+          "trap": "`2/3 + 1/3 = 3/3`, not `3/6`. You're counting thirds; the name doesn't change.",
+          "star": true
+        },
+        {
+          "id": "fr-dividing-multiply-reciprocal",
+          "rule": "Dividing = multiply by the reciprocal (flip the second one).",
+          "why": "“How many halves fit into 3?” is asking how many times you multiply up — so you flip and multiply.",
+          "mnemonic": "Keep, Change, Flip.",
+          "example": "`3 ÷ 1/2` = `3 × 2/1` = `6`"
+        },
+        {
+          "id": "fr-can-cancel-factors",
+          "rule": "You can cancel **factors**. You can never cancel **terms**.",
+          "why": "Canceling is secretly dividing top and bottom by the same thing, which only works if that thing is multiplying *everything*.",
+          "trap": "`(x+2)/2` is NOT `x`. But `2x/2` IS `x`.",
+          "star": true
+        },
+        {
+          "id": "fr-cross-multiply",
+          "rule": "`a/b = c/d`  →  `ad = bc` (cross-multiply).",
+          "why": "It isn't a trick — it's just multiplying both sides by b and then by d, and watching things cancel.",
+          "when": "Two fractions set equal to each other. Proportions, unit conversion, scaling recipes."
+        }
+      ]
+    },
+    {
+      "id": "exponents",
+      "title": "Exponents",
+      "blurb": "An exponent is a tally of how many copies got written down. Every rule here is just counting them.",
+      "rules": [
+        {
+          "id": "ex-multiplying-so-add",
+          "rule": "`xᵃ · xᵇ` = `x⁽ᵃ⁺ᵇ⁾` — multiplying, so **add** the exponents.",
+          "why": "`x² · x³` writes down 2 x's then 3 x's. Now count them: 5.",
+          "trap": "Only works when the base is the same. `x² · y³` doesn't combine."
+        },
+        {
+          "id": "ex-dividing-so-subtract",
+          "rule": "`xᵃ / xᵇ` = `x⁽ᵃ⁻ᵇ⁾` — dividing, so **subtract**.",
+          "why": "Each x on the bottom cancels one on top. You're just counting the leftovers."
+        },
+        {
+          "id": "ex-power-power-so",
+          "rule": "`(xᵃ)ᵇ` = `x⁽ᵃᵇ⁾` — power of a power, so **multiply**.",
+          "why": "b groups of (a copies of x). That's a·b copies."
+        },
+        {
+          "id": "ex-anything-zero",
+          "rule": "`x⁰ = 1`. Anything to the zero is 1.",
+          "why": "`x³/x³` is obviously 1, and the subtract rule says it's `x⁰`. Both are true, so `x⁰ = 1`.",
+          "trap": "It's 1, not 0. The 1 is the multiplicative starting point, the way 0 is for addition."
+        },
+        {
+          "id": "ex-negative-exponent-means",
+          "rule": "`x⁻ᵃ` = `1/xᵃ`. A negative exponent means **flip it**, not “make it negative.”",
+          "why": "Walk the pattern down: 8, 4, 2, 1, ½, ¼. Each step down divides by 2 — nothing ever turns negative.",
+          "star": true
+        },
+        {
+          "id": "ex-fractional-exponent-root",
+          "rule": "`x^(1/2)` = `√x`. A fractional exponent is a root.",
+          "why": "`x^½ · x^½ = x¹` by the add rule — so `x^½` is the thing that gives x when multiplied by itself. That's the square root."
+        },
+        {
+          "id": "ex-but",
+          "rule": "`(ab)ⁿ` = `aⁿbⁿ`, but `(a+b)ⁿ` is **NOT** `aⁿ + bⁿ`.",
+          "why": "Exponents distribute over multiplication only. `(2+3)² = 25`, while `2² + 3² = 13`.",
+          "trap": "This is the single most common algebra error there is. `(a+b)² = a² + 2ab + b²` — FOIL it, don't guess.",
+          "star": true
+        }
+      ]
+    },
+    {
+      "id": "distributing",
+      "title": "Distributing & Factoring",
+      "blurb": "These are the same move run in opposite directions. Distributing takes parentheses apart; factoring puts them back.",
+      "rules": [
+        {
+          "id": "ds-rule",
+          "rule": "`a(b + c)` = `ab + ac`",
+          "why": "3 bags each holding (2 apples + 1 pear) gives you 6 apples and 3 pears. The 3 reaches everything inside.",
+          "trap": "It has to reach *every* term. `2(x + 3)` = `2x + 6`, not `2x + 3`."
+        },
+        {
+          "id": "ds-foil",
+          "rule": "**FOIL** — `(a+b)(c+d)` = `ac + ad + bc + bd`",
+          "why": "It's just distributing twice: every term on the left has to meet every term on the right.",
+          "mnemonic": "First, Outside, Inside, Last.",
+          "when": "Two binomials multiplied. For anything bigger than 2×2 terms, forget FOIL and just make sure everything meets everything."
+        },
+        {
+          "id": "ds-combine-like-terms",
+          "rule": "Combine like terms only: **same letter, same exponent**.",
+          "why": "`3x + 2x²` is like `3 feet + 2 square feet` — different units, so it doesn't collapse.",
+          "example": "`3x + 5x = 8x`. But `3x + 5x²` stays as it is."
+        },
+        {
+          "id": "ds-factor-out-greatest",
+          "rule": "Factor out the greatest common factor: `ab + ac` = `a(b + c)`",
+          "why": "Distribution running backwards. You're pulling the shared piece out front.",
+          "when": "First thing to try on any factoring problem, always."
+        },
+        {
+          "id": "ds-difference-squares",
+          "rule": "Difference of squares: `a² − b²` = `(a + b)(a − b)`",
+          "why": "FOIL it back: the two middle terms are `+ab` and `−ab`, which cancel.",
+          "when": "Two perfect squares with a minus between them. Recognize it on sight — it shows up constantly."
+        }
+      ]
+    },
+    {
+      "id": "solving",
+      "title": "Solving for x",
+      "blurb": "You are unwrapping a package. Whatever was wrapped last comes off first.",
+      "rules": [
+        {
+          "id": "sv-whatever-do-one",
+          "rule": "Whatever you do to one side, do to the other.",
+          "why": "The `=` is a balance scale. Change one pan without the other and it stops being true.",
+          "star": true
+        },
+        {
+          "id": "sv-undo-operations-reverse",
+          "rule": "Undo operations in **reverse** PEMDAS order: A/S first, then M/D, then exponents, then parentheses.",
+          "why": "Wrapping a gift you go box → paper → ribbon. Unwrapping goes ribbon → paper → box. Solving is unwrapping.",
+          "example": "`3x + 5 = 20` → subtract 5 → `3x = 15` → divide by 3 → `x = 5`",
+          "star": true
+        },
+        {
+          "id": "sv-move-something-do",
+          "rule": "To move something, do the **opposite** operation.",
+          "why": "`+` and `−` undo each other; `×` and `÷` undo each other. That's the only reason it works.",
+          "trap": "You're not “moving it to the other side and flipping the sign” — you're doing the same thing to both sides and one side cancels. Same result, but the second story is the one you can rebuild when you forget."
+        },
+        {
+          "id": "sv-flip-inequality-when",
+          "rule": "**Flip the inequality** when you multiply or divide by a negative.",
+          "why": "Multiplying by a negative mirrors the number line, so bigger becomes smaller. `2 < 3`, but `−2 > −3`.",
+          "trap": "Only for × and ÷ by a negative. Adding or subtracting a negative doesn't flip anything."
+        },
+        {
+          "id": "sv-substitute-answer-back",
+          "rule": "Substitute your answer back in and check.",
+          "why": "It's the only step that catches a sign error, and sign errors are what actually cost you points.",
+          "when": "Always. Especially on a test."
+        }
+      ]
+    },
+    {
+      "id": "roots",
+      "title": "Roots",
+      "rules": [
+        {
+          "id": "rt-but",
+          "rule": "`√a · √b` = `√(ab)`, but `√(a+b)` is **NOT** `√a + √b`.",
+          "why": "Roots are just exponents in a hat — they distribute over multiplication only, same as every exponent rule.",
+          "example": "`√(9+16) = √25 = 5`, but `√9 + √16 = 3 + 4 = 7`."
+        },
+        {
+          "id": "rt-simplify-pulling-out",
+          "rule": "Simplify by pulling out perfect-square factors. `√50` = `√(25·2)` = `5√2`.",
+          "why": "The multiply rule run backwards: split off the part that has a clean root and walk it out from under the radical."
+        },
+        {
+          "id": "rt-rule",
+          "rule": "`√(x²)` = `|x|`",
+          "why": "The radical symbol means “the positive one.” `√((−3)²)` = `√9` = `3`, not `−3`."
+        }
+      ]
+    },
+    {
+      "id": "percent",
+      "title": "Percents, Decimals & Ratios",
+      "rules": [
+        {
+          "id": "pc-percent-means-per",
+          "rule": "Percent means **per hundred**. `35%` = `35/100` = `0.35`.",
+          "why": "“cent” = hundred, same root as century and cents-per-dollar. A percent is always a fraction wearing a hat.",
+          "star": true
+        },
+        {
+          "id": "pc-decimal-percent-move",
+          "rule": "Decimal → percent: move the point 2 places **right**. Percent → decimal: 2 places **left**.",
+          "why": "That's multiplying or dividing by 100, which is the entire definition of percent."
+        },
+        {
+          "id": "pc-x-y-means",
+          "rule": "“x% **of** y” means multiply.",
+          "why": "“Of” is the English word for multiplication. It never means anything else.",
+          "example": "20% of 60 = `0.20 × 60` = `12`"
+        },
+        {
+          "id": "pc-percent-change",
+          "rule": "Percent change = `(new − old) / old`",
+          "why": "You're measuring the change against **where you started**, so the starting value always goes on the bottom.",
+          "trap": "Going 100 → 150 is +50%. Going 150 → 100 is −33%, not −50%. The denominator changed."
+        },
+        {
+          "id": "pc-ratio-just-fraction",
+          "rule": "A ratio `a : b` is just the fraction `a/b`.",
+          "why": "Different notation, same object. If ratios feel hard, rewrite them as fractions and use the fraction rules."
+        }
+      ]
+    },
+    {
+      "id": "translate",
+      "title": "Word Problem Translation",
+      "blurb": "Word problems are a translation exercise, not a math exercise. Convert to symbols first, then solve.",
+      "rules": [
+        {
+          "id": "tr-was-per-each",
+          "rule": "**of** = `×` · **is / are / was** = `=` · **per / for each** = `÷` · **and / more than / sum** = `+` · **difference / less** = `−`",
+          "why": "These are fixed. They never mean anything else, which makes them the one part of word problems you can do mechanically."
+        },
+        {
+          "id": "tr-less-than-x",
+          "rule": "“5 **less than** x” is `x − 5`. **Backwards from how you read it.**",
+          "why": "“Less than” and “more than” describe a change *to* the thing named after them, so that thing comes first.",
+          "trap": "This wording is chosen specifically to trip you up. Slow down every single time you see it.",
+          "star": true
+        },
+        {
+          "id": "tr-name-unknown-out",
+          "rule": "Name the unknown out loud before you write anything. “Let x = the number of hours.”",
+          "why": "Half of word-problem failure is solving correctly for the wrong quantity. Writing the units down prevents it."
+        }
+      ]
+    }
+  ]
+}
