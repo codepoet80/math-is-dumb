@@ -107,7 +107,6 @@ body {
   font-style: italic;
   color: #5b6772; color: var(--ink-soft);
   margin: .45rem 0 0;
-  max-width: 32em;
 }
 .stamp {
   font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
@@ -172,7 +171,6 @@ body {
   font-style: italic;
   color: #5b6772; color: var(--ink-soft);
   margin: .55rem 0 1.05rem;
-  max-width: 34em;
 }
 
 /* ---------- the rule block ---------- */
@@ -237,7 +235,6 @@ code {
   border-top: 1px solid #dde4e9; border-top-color: var(--hair);
   font-size: .78rem;
   color: #5b6772; color: var(--ink-soft);
-  max-width: 42em;
 }
 .colophon strong { font-weight: 600; }
 
