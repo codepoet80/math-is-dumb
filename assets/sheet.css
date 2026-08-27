@@ -263,7 +263,21 @@ code {
   }
 
   .section { margin-bottom: .85rem; }
-  .section > h2 { font-size: 6.8pt; letter-spacing: .12em; border-bottom-width: .8pt; }
+  .section > h2 {
+    font-size: 6.8pt; letter-spacing: .12em; border-bottom-width: .8pt;
+    /* never leave a heading stranded at the foot of a column */
+    page-break-after: avoid;
+    -webkit-column-break-after: avoid;
+    break-after: avoid;
+  }
+  .blurb, .section > h2 { break-inside: avoid; }
+  .blurb {
+    page-break-after: avoid;
+    -webkit-column-break-after: avoid;
+    break-after: avoid;
+  }
+  /* line-level safety net inside anything that can still wrap */
+  p, dd { orphans: 2; widows: 2; }
   .section > h2 .n, .why, .rule .flag { color: #000; }
   .blurb { font-size: 6.6pt; margin: .18rem 0 .4rem; }
 

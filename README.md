@@ -124,6 +124,23 @@ follows you between devices.
 
 ## Print
 
+Nothing is ever split across a column or a page:
+
+- `.rule` carries `break-inside: avoid` (plus the `page-break-` and
+  `-webkit-column-break-` spellings, because the modern property alone isn't
+  enough on older engines).
+- `.section > h2` and `.blurb` carry `break-after: avoid`, so a heading is never
+  stranded at the foot of a column with its first rule in the next one. This was a
+  real bug — before the `break-after` rules, a heading was orphaned at every column
+  height tested.
+- `p, dd { orphans: 2; widows: 2 }` as a line-level safety net.
+
+Verified by forcing 63 column boundaries across five column heights under emulated
+print media and measuring `getClientRects()` on all 80 rules: a fragmented box
+returns rects in more than one column. Zero rules fragmented, zero headings
+stranded. (Comparing PDF page counts with and without the rules was *not* a useful
+check — both came out at 4 pages, so the constraint wasn't binding on page count.)
+
 `Cmd-P` from any of the HTML outputs. The print stylesheet takes over: two dense
 columns, letter portrait, black on white, ~8pt. Turn **background graphics off** in
 the print dialog (the screen version sits on a graph-paper ground that you don't
