@@ -37,6 +37,14 @@
           "rule": "The minus sign has three different jobs: subtract (`5 − 3`), negative (`−3`), and opposite (`−x`).",
           "why": "`−x` is not “a negative number” — it's “the opposite of whatever x is.” If x = −4, then −x = **4**.",
           "trap": "This one trips up more people than anything else on this sheet."
+        },
+        {
+          "id": "gr-simplify-not-operation",
+          "rule": "**“Simplify” is not an operation.** It means “write this in the shortest standard form,” and which moves that takes depends on what you're holding.",
+          "why": "Expanding and factoring are moves. Simplifying is a destination. That's why the same word can mean opposite moves on different problems.",
+          "when": "First ask *what kind of thing is this?* — the type picks the tool.",
+          "example": "**Brackets** → expand, combine like terms, highest power first (#{distributing}). **Fraction** → factor, cancel shared factors (#{fractions}). **Root** → pull out perfect squares (#{roots}). **Exponents** → apply the rules until each base appears once (#{exponents}).",
+          "trap": "For a polynomial, simplified means *expanded*. For a fraction, simplified means *factored*. Same word, opposite directions."
         }
       ]
     },
@@ -177,6 +185,14 @@
       "blurb": "These are the same move run in opposite directions. Distributing takes parentheses apart; factoring puts them back.",
       "rules": [
         {
+          "id": "ds-factoring-is-multiplication",
+          "rule": "**Factoring** = rewriting a sum as a **multiplication**. That's the whole definition. Length has nothing to do with it.",
+          "why": "A product is something you can grab: it's zero only when one factor is zero (#{quadratics}), and you can cancel factors (#{fractions}). A sum gives you neither.",
+          "trap": "It is not “writing it out long.” `x^2 − 1` → `(x − 1)(x + 1)` gets longer; `x^2 + 2x + 1` → `(x + 1)^2` gets shorter. Both are factoring.",
+          "when": "Ask: is the top level of this expression things *added* or things *multiplied*? Factoring turns the first into the second.",
+          "star": true
+        },
+        {
           "id": "ds-rule",
           "rule": "`a(b + c)` = `ab + ac`",
           "why": "3 bags each holding (2 apples + 1 pear) gives you 6 apples and 3 pears. The 3 reaches everything inside.",
@@ -203,9 +219,11 @@
         },
         {
           "id": "ds-difference-squares",
-          "rule": "Difference of squares: `a^2 − b^2` = `(a + b)(a − b)`",
-          "why": "FOIL it back: the two middle terms are `+ab` and `−ab`, which cancel.",
-          "when": "Two perfect squares with a minus between them. Recognize it on sight — it shows up constantly."
+          "rule": "Difference of squares: `a^2 − b^2` = `(a − b)(a + b)`. Take the root of each term; one bracket subtracts them, the other adds them.",
+          "why": "FOIL it back: the middle terms are `+ab` and `−ab`, which cancel, and `(−b)(+b)` is what makes `b^2` come out negative. Only the mixed-sign pair does both.",
+          "when": "Two perfect squares with a minus between them. Recognize it on sight — it shows up constantly.",
+          "example": "`9y^2 − 25x^2`: roots are `3y` and `5x`, so it's `(3y − 5x)(3y + 5x)`. FOIL it to check: the `15xy` terms cancel.",
+          "trap": "Only a *difference*. `a^2 + b^2` doesn't factor — with two plus signs the middle terms can't cancel."
         }
       ]
     },

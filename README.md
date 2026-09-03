@@ -13,6 +13,8 @@ standalone.html       GENERATED — CSS+JS inlined, one file, works offline
 build/artifact.html   GENERATED — fragment for the Claude Code Artifact publisher
 serve.sh              rebuild + serve on the LAN for phone/TouchPad testing
 deploy.sh             rebuild + rsync the repo to the web server
+state.php             the one server-side piece: reads/writes the "I know this" marks
+data/                 state.json lives here at runtime; never committed
 tools/                print-verification harness; never deployed
 ```
 
@@ -30,7 +32,7 @@ assumed by everything after it, and each section leans on the ones before. If a
 later rule won't stick, the missing piece is usually earlier — go back rather than
 re-reading the rule.
 
-**Twenty rules are flagged load-bearing.** Those aren't the *most important* rules,
+**Twenty-one rules are flagged load-bearing.** Those aren't the *most important* rules,
 they're the ones that **generate** other rules. "The denominator is the name of the
 piece, not a quantity" is one sentence that makes four other fraction rules stop
 needing to be memorised. They get a heavier left rail and a `load-bearing` tag.
@@ -53,9 +55,9 @@ That's the best retention-per-minute on the sheet.
 ```
 
 - `rule` and `why` are required. Everything else is optional and only renders if present.
-- `id` is **stable and permanent**. It keys the per-device "I know this" state, so
-  changing one silently resets that rule for every device. Reword freely; never
-  renumber. New rules get a fresh id; `build.js` throws on a missing or duplicate one.
+- `id` is **stable and permanent**. It keys the "I know this" state, both in
+  `data/state.json` on the server and in each browser's cache, so changing one
+  silently resets that rule everywhere. Reword freely; never renumber. New rules get a fresh id; `build.js` throws on a missing or duplicate one.
 - `star: true` marks a **load-bearing** rule — one that *generates* other rules.
 - Inline markup is deliberately tiny: `` `code` ``, `**bold**`, `*emphasis*`,
   `^`/`_` for super- and subscripts (`x^2`, `x^{a+b}`, `y_1`), and `#{section-id}`
@@ -95,6 +97,11 @@ It prints a `http://192.168.x.x:8000/` URL — open that on either device. Both 
 on the same Wi-Fi, so nothing needs deploying to iterate. It serves the repo root,
 which is exactly what the web server publishes, so what you test is what you get.
 
+It uses `php -S` when `php` is installed, so `state.php` runs and the cross-device
+sync is testable locally (state lands in `data/state.json`, which is gitignored).
+Without PHP it falls back to Python's static server and the tally shows
+*not synced*.
+
 The local server is plain HTTP simply because it's a throwaway LAN server. HTTPS
 works fine on the deployed site for both devices — the TouchPad's TLS stack and root
 store are patched.
@@ -107,7 +114,7 @@ CSS custom properties and no modern flexbox. That's what the fallbacks in
 
 **The deploy is `git pull` on the server.** The repo root is the webroot:
 `index.html` and `assets/` sit exactly where the server wants them. Nothing is built
-on the server and no PHP runs at request time.
+on the server. The only request-time code is `state.php` (see *Cross-device state*).
 
 ```sh
 # on the server
@@ -135,6 +142,8 @@ reachable over HTTP. Verified against the live site:
 |---|---|
 | `.git/HEAD`, `.git/config`, `.git/index` | **403** — blocked by an existing server rule |
 | `index.html`, `assets/`, `content/rules.json` | 200 — intended |
+| `state.php` | 200 — intended; the sync endpoint |
+| `data/state.json` | should be **403** (`data/.htaccess`, Apache only) — not secret either way |
 | `README.md`, `build.js`, `tools/`, `*.sh` | 200 — served but unused |
 
 **`.git/` is the only exposure that would genuinely matter**, since it lets anyone
@@ -154,8 +163,31 @@ Also worth confirming directory listing is off, which no deploy method can contr
 curl -sI https://apps.jonandnic.com/math/assets/ | head -1   # want 403/404, not 200
 ```
 
-PHP only becomes useful later, if you want server-side search or study progress that
-follows you between devices.
+### Cross-device state
+
+`state.php` keeps the "I know this" marks in `data/state.json` so they follow you
+between the phone, the TouchPad and the desktop. One-time setup on the server:
+
+```sh
+cd /path/to/webroot && mkdir -p data && chmod 775 data   # or chown to the PHP user
+curl -s https://apps.jonandnic.com/math/state.php        # want {"known":{},"hide":false,...}
+```
+
+`state.php` creates `data/` itself if it can, but on most hosts the PHP user can't
+write to the webroot, so the `chmod`/`chown` is the step that matters. If it isn't
+writable, the page still works and the tally says *not synced*.
+
+The protocol is deliberately delta-based. `GET` returns the whole state; `POST` sends
+only what changed — `{"set":{"rule-id":1}}`, `{"hide":true}` or `{"reset":true}` — and
+the server merges it under a lock and returns the full state, which the page adopts.
+**Why deltas:** two devices with the page open would otherwise race, and the second
+one to save would wipe whatever the first had marked. A per-rule merge makes the
+worst case "the rule you clicked", never "everything you marked yesterday".
+
+Rule ids are validated against `content/rules.json` on the server, so nothing that
+isn't a rule can be stored. There is no login on purpose: the state is a list of
+which rules Jon knows. That isn't worth a password, and the validation caps what a
+stranger could do to "toggle some marks".
 
 ## Print
 
@@ -229,13 +261,20 @@ ticking *Hide what I know* drops the marked rules out of the page **and out of t
 printout**, so the sheet gets shorter as you learn. A section whose rules are all
 marked disappears wholesale.
 
-State lives in `localStorage` under `dmr.known.v1` / `dmr.hide.v1`, falling back to a
-cookie when storage throws (Safari private browsing, webOS with site data off). Worst
-case is ~1.2 KB of ids, comfortably inside the 4 KB cookie limit.
+The server is the source of truth (see *Cross-device state* above). `localStorage`
+under `dmr.known.v1` / `dmr.hide.v1` is only a cache, falling back to a cookie when
+storage throws (Safari private browsing, webOS with site data off). Worst case is
+~1.2 KB of ids, comfortably inside the 4 KB cookie limit. The cache exists so the
+page paints correctly *before* the fetch returns, and so `standalone.html`, `file://`
+and a PHP-less host keep working on their own.
 
-It is **per-device on purpose** — nothing syncs, nothing leaves the device. What you
-know on the phone is tracked separately from what you know on the TouchPad, which is
-the honest model: recall on a 4-inch screen at a bus stop is not recall in an exam.
+Load order is: paint from the cache, fetch from the server, adopt whatever it says.
+Every click posts its own delta and adopts the reply. Returning focus to a tab after
+5 s re-fetches, so marks made on another device show up without a reload. If the
+first fetch fails the page stays local and the tally says *not synced*; a later
+click on that page is then not sent, and the next successful load takes the server's
+version. That trade — a lost click on a flaky connection rather than a stale device
+overwriting the server — is the intended one.
 
 Two non-obvious constraints in the CSS around that toggle:
 

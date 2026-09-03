@@ -1,0 +1,3 @@
+# state.json is only meant to be read through state.php. Apache-only; harmless
+# elsewhere, and the file is not secret either way.
+Require all denied

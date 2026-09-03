@@ -17,8 +17,8 @@
         <p class="sub">Pre-algebra and algebra fundamentals. Every rule carries its reason.</p>
       </div>
       <div class="stamp">
-        Rev. 2026-08-27<br>
-        80 rules &middot; 16 sections<br>
+        Rev. 2026-09-03<br>
+        82 rules &middot; 16 sections<br>
         Prints to letter, 2 col.
       </div>
     </header>
@@ -93,6 +93,16 @@
           <dl>
           <dt>Why</dt><dd class="why"><code>−x</code> is not “a negative number” — it's “the opposite of whatever x is.” If x = −4, then −x = <strong>4</strong>.</dd>
           <dt>Trap</dt><dd class="trap">This one trips up more people than anything else on this sheet.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="gr-simplify-not-operation">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><strong>“Simplify” is not an operation.</strong> It means “write this in the shortest standard form,” and which moves that takes depends on what you're holding.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Expanding and factoring are moves. Simplifying is a destination. That's why the same word can mean opposite moves on different problems.</dd>
+          <dt>When</dt><dd class="when">First ask <em>what kind of thing is this?</em> — the type picks the tool.</dd>
+          <dt>Trap</dt><dd class="trap">For a polynomial, simplified means <em>expanded</em>. For a fraction, simplified means <em>factored</em>. Same word, opposite directions.</dd>
+          <dt>Ex.</dt><dd class="example"><strong>Brackets</strong> → expand, combine like terms, highest power first (05). <strong>Fraction</strong> → factor, cancel shared factors (03). <strong>Root</strong> → pull out perfect squares (07). <strong>Exponents</strong> → apply the rules until each base appears once (04).</dd>
           </dl>
         </div>
       </section>
@@ -263,6 +273,16 @@
         <div class="sechead">
           <h2><span class="n">05</span>Distributing &amp; Factoring<span class="scount"> </span></h2>
           <p class="blurb">These are the same move run in opposite directions. Distributing takes parentheses apart; factoring puts them back.</p>
+        <div class="rule star" data-id="ds-factoring-is-multiplication">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><strong>Factoring</strong> = rewriting a sum as a <strong>multiplication</strong>. That's the whole definition. Length has nothing to do with it.<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">A product is something you can grab: it's zero only when one factor is zero (13), and you can cancel factors (03). A sum gives you neither.</dd>
+          <dt>When</dt><dd class="when">Ask: is the top level of this expression things <em>added</em> or things <em>multiplied</em>? Factoring turns the first into the second.</dd>
+          <dt>Trap</dt><dd class="trap">It is not “writing it out long.” <code>x<sup>2</sup> − 1</code> → <code>(x − 1)(x + 1)</code> gets longer; <code>x<sup>2</sup> + 2x + 1</code> → <code>(x + 1)<sup>2</sup></code> gets shorter. Both are factoring.</dd>
+          </dl>
+        </div>
+        </div>
         <div class="rule" data-id="ds-rule">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
           <p class="r"><code>a(b + c)</code> = <code>ab + ac</code></p>
@@ -270,7 +290,6 @@
           <dt>Why</dt><dd class="why">3 bags each holding (2 apples + 1 pear) gives you 6 apples and 3 pears. The 3 reaches everything inside.</dd>
           <dt>Trap</dt><dd class="trap">It has to reach <em>every</em> term. <code>2(x + 3)</code> = <code>2x + 6</code>, not <code>2x + 3</code>.</dd>
           </dl>
-        </div>
         </div>
         <div class="rule" data-id="ds-foil">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
@@ -299,10 +318,12 @@
         </div>
         <div class="rule" data-id="ds-difference-squares">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Difference of squares: <code>a<sup>2</sup> − b<sup>2</sup></code> = <code>(a + b)(a − b)</code></p>
+          <p class="r">Difference of squares: <code>a<sup>2</sup> − b<sup>2</sup></code> = <code>(a − b)(a + b)</code>. Take the root of each term; one bracket subtracts them, the other adds them.</p>
           <dl>
-          <dt>Why</dt><dd class="why">FOIL it back: the two middle terms are <code>+ab</code> and <code>−ab</code>, which cancel.</dd>
+          <dt>Why</dt><dd class="why">FOIL it back: the middle terms are <code>+ab</code> and <code>−ab</code>, which cancel, and <code>(−b)(+b)</code> is what makes <code>b<sup>2</sup></code> come out negative. Only the mixed-sign pair does both.</dd>
           <dt>When</dt><dd class="when">Two perfect squares with a minus between them. Recognize it on sight — it shows up constantly.</dd>
+          <dt>Trap</dt><dd class="trap">Only a <em>difference</em>. <code>a<sup>2</sup> + b<sup>2</sup></code> doesn't factor — with two plus signs the middle terms can't cancel.</dd>
+          <dt>Ex.</dt><dd class="example"><code>9y<sup>2</sup> − 25x<sup>2</sup></code>: roots are <code>3y</code> and <code>5x</code>, so it's <code>(3y − 5x)(3y + 5x)</code>. FOIL it to check: the <code>15xy</code> terms cancel.</dd>
           </dl>
         </div>
       </section>

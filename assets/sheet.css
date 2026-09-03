@@ -319,7 +319,7 @@ code {
 }
 
 /* ============================================================
-   "I ALREADY KNOW THIS" — per-device state (see assets/sheet.js)
+   "I ALREADY KNOW THIS" — state synced via state.php (see assets/sheet.js)
    Progressive enhancement: without JS the .js class is never set,
    the controls stay hidden, and the sheet renders exactly as before.
    ============================================================ */

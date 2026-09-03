@@ -39,7 +39,7 @@ def print_pdf(url, out, port=2829):
         f.write('user_pref("marionette.port", %d);\n' % port)
         f.write('user_pref("marionette.enabled", true);\n')
         f.write('user_pref("browser.shell.checkDefaultBrowser", false);\n')
-    log = open('/private/tmp/claude-501/-Users-jonwise-Projects-math-cheatsheet/9aab7e9f-9db3-4129-ac2a-2efadf9f6230/scratchpad/ff.log','w')
+    log = open(os.path.join(prof, 'ff.log'), 'w')
     p = subprocess.Popen([FF, '--headless', '--marionette', '--profile', prof,
                           '--new-instance', 'about:blank'],
                          stdout=log, stderr=log)

@@ -2,8 +2,9 @@
 # deploy.sh — rebuild, then sync the repo to the web server.
 #
 # The repo root is the webroot: index.html and assets/ sit where the server wants
-# them, so syncing the repo IS the deploy. Nothing is built on the server, and no
-# PHP runs at request time.
+# them, so syncing the repo IS the deploy. Nothing is built on the server; the
+# only request-time code is state.php, which keeps the "I know this" marks in
+# data/state.json so they follow you between devices.
 #
 # Set TARGET to your host and webroot, e.g.
 #   TARGET=jon@example.com:/var/www/math/
@@ -29,8 +30,10 @@ node build.js
 # Nothing in this repo is secret -- it is a static maths reference -- so this is
 # tidiness, not security. content/rules.json is deliberately kept: it is the
 # source of truth and it is useful to be able to curl it.
+# data/ holds the live state file. It is excluded so --delete never wipes it.
 rsync -avz --delete \
   --exclude '.git/' \
+  --exclude 'data/' \
   --exclude '.DS_Store' \
   --exclude 'build/' \
   --exclude 'tools/' \

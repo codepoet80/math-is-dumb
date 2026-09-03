@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 /* build.js — renders content/rules.json into static HTML.
  *
- * Static on purpose: no request-time PHP, no JS on the device. The same file
- * prints correctly, serves from any host, and opens on the TouchPad browser.
+ * Static on purpose: the sheet itself needs no request-time code and no JS.
+ * The same file prints correctly, serves from any host, and opens on the
+ * TouchPad browser. The one server-side piece, state.php, is an enhancement
+ * the page works without.
  *
  *   node build.js
  *

@@ -1,0 +1,5 @@
+# Runtime state written by state.php. Never committed: a tracked file here
+# would block `git pull` on the server the moment PHP wrote to it.
+*
+!.gitignore
+!.htaccess
