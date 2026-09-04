@@ -487,8 +487,8 @@ html.hiding .section.all-known { display: none; }
         <p class="sub">Pre-algebra and algebra fundamentals. Every rule carries its reason.</p>
       </div>
       <div class="stamp">
-        Rev. 2026-09-03<br>
-        82 rules &middot; 16 sections<br>
+        Rev. 2026-09-04<br>
+        83 rules &middot; 16 sections<br>
         Prints to letter, 2 col.
       </div>
     </header>
@@ -816,6 +816,15 @@ html.hiding .section.all-known { display: none; }
           <dl>
           <dt>Why</dt><dd class="why">Wrapping a gift you go box → paper → ribbon. Unwrapping goes ribbon → paper → box. Solving is unwrapping.</dd>
           <dt>Ex.</dt><dd class="example"><code>3x + 5 = 20</code> → subtract 5 → <code>3x = 15</code> → divide by 3 → <code>x = 5</code></dd>
+          </dl>
+        </div>
+        <div class="rule star" data-id="sv-clear-fractions-lcd">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r">Fractions in an equation? Either multiply <strong>every term</strong> on both sides by the <strong>LCD</strong> first — or keep the fractions, get <code>x</code> down to one fraction coefficient, and multiply both sides by its <strong>flip</strong>.<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">Both are “do the same thing to both sides.” The LCD deletes every denominator in one move; the flip undoes a fraction the same way ÷ undoes × (03).</dd>
+          <dt>Trap</dt><dd class="trap">LCD route: multiply every term, including the ones with no fraction. Forgetting the lone <code>7</code> is the classic error.</dd>
+          <dt>Ex.</dt><dd class="example"><code>x/3 + x/4 = 7</code>. <strong>LCD:</strong> ×12 everywhere → <code>4x + 3x = 84</code> → <code>x = 12</code>. <strong>Flip:</strong> combine → <code>(7/12)x = 7</code> → ×<code>12/7</code> both sides → <code>x = 12</code>.</dd>
           </dl>
         </div>
         <div class="rule" data-id="sv-move-something-do">

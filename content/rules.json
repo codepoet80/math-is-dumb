@@ -246,6 +246,14 @@
           "star": true
         },
         {
+          "id": "sv-clear-fractions-lcd",
+          "rule": "Fractions in an equation? Either multiply **every term** on both sides by the **LCD** first — or keep the fractions, get `x` down to one fraction coefficient, and multiply both sides by its **flip**.",
+          "why": "Both are “do the same thing to both sides.” The LCD deletes every denominator in one move; the flip undoes a fraction the same way ÷ undoes × (#{fractions}).",
+          "example": "`x/3 + x/4 = 7`. **LCD:** ×12 everywhere → `4x + 3x = 84` → `x = 12`. **Flip:** combine → `(7/12)x = 7` → ×`12/7` both sides → `x = 12`.",
+          "trap": "LCD route: multiply every term, including the ones with no fraction. Forgetting the lone `7` is the classic error.",
+          "star": true
+        },
+        {
           "id": "sv-move-something-do",
           "rule": "To move something, do the **opposite** operation.",
           "why": "`+` and `−` undo each other; `×` and `÷` undo each other. That's the only reason it works.",
