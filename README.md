@@ -169,13 +169,16 @@ curl -sI https://apps.jonandnic.com/math/assets/ | head -1   # want 403/404, not
 between the phone, the TouchPad and the desktop. One-time setup on the server:
 
 ```sh
-cd /path/to/webroot && mkdir -p data && chmod 775 data   # or chown to the PHP user
-curl -s https://apps.jonandnic.com/math/state.php        # want {"known":{},"hide":false,...}
+cd /path/to/webroot
+mkdir -p data && chown www-data data                 # PHP runs as www-data on this host
+curl -s https://apps.jonandnic.com/math/state.php    # want {"known":{},"hide":false,...}
 ```
 
-`state.php` creates `data/` itself if it can, but on most hosts the PHP user can't
-write to the webroot, so the `chmod`/`chown` is the step that matters. If it isn't
-writable, the page still works and the tally says *not synced*.
+The `chown` is the step that matters. `git pull` creates `data/` owned by whoever
+ran it, and PHP runs as `www-data`, which can't write there until it owns the folder
+(a `chmod 775` alone wasn't enough). `state.php` will create `data/` itself on a host
+where the PHP user can already write to the webroot, but that isn't this one. If the
+folder isn't writable, the page still works and the tally says *not synced*.
 
 The protocol is deliberately delta-based. `GET` returns the whole state; `POST` sends
 only what changed — `{"set":{"rule-id":1}}`, `{"hide":true}` or `{"reset":true}` — and

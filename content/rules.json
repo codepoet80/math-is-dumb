@@ -171,6 +171,12 @@
           "why": "`x^{1/2} · x^{1/2} = x^1` by the add rule — so `x^{1/2}` is the thing that gives x when multiplied by itself. That's the square root."
         },
         {
+          "id": "ex-rational-exponent-root-power",
+          "rule": "`x^{m/n}` = `(^n√x)^m`. Bottom of the fraction is the **root**, top is the **power**.",
+          "why": "`x^{m/n} = (x^{1/n})^m` by the multiply rule, and `x^{1/n}` is the nth root for the same reason `x^{1/2}` is the square root.",
+          "example": "`8^{2/3}` = `(^3√8)^2` = `2^2` = `4`. Take the root first so the numbers stay small."
+        },
+        {
           "id": "ex-but",
           "rule": "`(ab)^n` = `a^n b^n`, but `(a+b)^n` is **NOT** `a^n + b^n`.",
           "why": "Exponents distribute over multiplication only. `(2+3)^2 = 25`, while `2^2 + 3^2 = 13`.",
