@@ -161,8 +161,9 @@
         },
         {
           "id": "ex-negative-exponent-means",
-          "rule": "`x^{-a}` = `1/x^a`. A negative exponent means **flip it**, not “make it negative.”",
-          "why": "Walk the pattern down: 8, 4, 2, 1, ½, ¼. Each step down divides by 2 — nothing ever turns negative.",
+          "rule": "`x^{-a}` = `1/x^a`, and `1/x^{-a}` = `x^a`. A negative exponent means **it wants to be on the other side of the fraction bar.** Move it across and the minus goes away.",
+          "why": "`x^a` is “multiply by x, a times,” so `x^{-a}` is “divide by x, a times” — that lives on the bottom. Walk the pattern down: 8, 4, 2, 1, ½, ¼. Nothing ever turns negative.",
+          "trap": "It's one move, not two rules. Top or bottom, cross the bar and drop the sign. No fraction bar means everything is on top, over an invisible 1 — the bottom is empty until something crosses down into it. `−5z^{-5}` = `−5z^{-5}/1` = `−5/z^5`.",
           "star": true
         },
         {
@@ -175,6 +176,12 @@
           "rule": "`x^{m/n}` = `(^n√x)^m`. Bottom of the fraction is the **root**, top is the **power**.",
           "why": "`x^{m/n} = (x^{1/n})^m` by the multiply rule, and `x^{1/n}` is the nth root for the same reason `x^{1/2}` is the square root.",
           "example": "`8^{2/3}` = `(^3√8)^2` = `2^2` = `4`. Take the root first so the numbers stay small."
+        },
+        {
+          "id": "ex-grabs-only-what-it-touches",
+          "rule": "`2m^2` = `2 · (m^2)`, not `(2m)^2`. An exponent grabs **only the one thing it touches.**",
+          "why": "Exponents beat multiplication in PEMDAS, so the 2 is just standing next to `m^2`. Plug in m = 3: `2m^2` is 18, but `(2m)^2` is 36.",
+          "trap": "Same with negatives. `2m^{-2}` = `2/m^2` — only the m crosses the bar. If you want the whole `2m` raised, the parentheses are not optional."
         },
         {
           "id": "ex-but",

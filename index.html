@@ -18,7 +18,7 @@
       </div>
       <div class="stamp">
         Rev. 2026-09-22<br>
-        84 rules &middot; 16 sections<br>
+        85 rules &middot; 16 sections<br>
         Prints to letter, 2 col.
       </div>
     </header>
@@ -247,9 +247,10 @@
         </div>
         <div class="rule star" data-id="ex-negative-exponent-means">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>x<sup>-a</sup></code> = <code>1/x<sup>a</sup></code>. A negative exponent means <strong>flip it</strong>, not “make it negative.”<span class="flag">load-bearing</span></p>
+          <p class="r"><code>x<sup>-a</sup></code> = <code>1/x<sup>a</sup></code>, and <code>1/x<sup>-a</sup></code> = <code>x<sup>a</sup></code>. A negative exponent means <strong>it wants to be on the other side of the fraction bar.</strong> Move it across and the minus goes away.<span class="flag">load-bearing</span></p>
           <dl>
-          <dt>Why</dt><dd class="why">Walk the pattern down: 8, 4, 2, 1, ½, ¼. Each step down divides by 2 — nothing ever turns negative.</dd>
+          <dt>Why</dt><dd class="why"><code>x<sup>a</sup></code> is “multiply by x, a times,” so <code>x<sup>-a</sup></code> is “divide by x, a times” — that lives on the bottom. Walk the pattern down: 8, 4, 2, 1, ½, ¼. Nothing ever turns negative.</dd>
+          <dt>Trap</dt><dd class="trap">It's one move, not two rules. Top or bottom, cross the bar and drop the sign. No fraction bar means everything is on top, over an invisible 1 — the bottom is empty until something crosses down into it. <code>−5z<sup>-5</sup></code> = <code>−5z<sup>-5</sup>/1</code> = <code>−5/z<sup>5</sup></code>.</dd>
           </dl>
         </div>
         <div class="rule" data-id="ex-fractional-exponent-root">
@@ -265,6 +266,14 @@
           <dl>
           <dt>Why</dt><dd class="why"><code>x<sup>m/n</sup> = (x<sup>1/n</sup>)<sup>m</sup></code> by the multiply rule, and <code>x<sup>1/n</sup></code> is the nth root for the same reason <code>x<sup>1/2</sup></code> is the square root.</dd>
           <dt>Ex.</dt><dd class="example"><code>8<sup>2/3</sup></code> = <code>(<sup>3</sup>√8)<sup>2</sup></code> = <code>2<sup>2</sup></code> = <code>4</code>. Take the root first so the numbers stay small.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="ex-grabs-only-what-it-touches">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><code>2m<sup>2</sup></code> = <code>2 · (m<sup>2</sup>)</code>, not <code>(2m)<sup>2</sup></code>. An exponent grabs <strong>only the one thing it touches.</strong></p>
+          <dl>
+          <dt>Why</dt><dd class="why">Exponents beat multiplication in PEMDAS, so the 2 is just standing next to <code>m<sup>2</sup></code>. Plug in m = 3: <code>2m<sup>2</sup></code> is 18, but <code>(2m)<sup>2</sup></code> is 36.</dd>
+          <dt>Trap</dt><dd class="trap">Same with negatives. <code>2m<sup>-2</sup></code> = <code>2/m<sup>2</sup></code> — only the m crosses the bar. If you want the whole <code>2m</code> raised, the parentheses are not optional.</dd>
           </dl>
         </div>
         <div class="rule star" data-id="ex-but">
