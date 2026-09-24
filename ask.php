@@ -40,6 +40,25 @@ if (!$doc || empty($doc['sections'])) {
 $titles = array();
 foreach ($doc['sections'] as $s) $titles[$s['id']] = $s['title'];
 
+// Rule numbers, "section.position", counted exactly as build.js counts them,
+// so "Rule 4.8" here is the 4.8 printed on the sheet.
+$nums = array();
+foreach ($doc['sections'] as $si => $s) {
+  foreach ($s['rules'] as $ri => $r) $nums[$r['id']] = ($si + 1) . '.' . ($ri + 1);
+}
+
+// The sheet lives next to this script; every rule on it has its id as an anchor.
+$https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+  || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+$sheetUrl = ($https ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']
+  . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/') . '/';
+
+// A full-width rule header, so the number is the first thing the eye lands on.
+function ruleHeader($label) {
+  $line = "━━ $label ";
+  return $line . str_repeat('━', max(3, 64 - preg_match_all('/./u', $line))) . "\n";
+}
+
 // Sheet markup -> something readable in a terminal.
 function plain($t, $titles) {
   $t = preg_replace_callback('/#\{([a-z-]+)\}/', function ($m) use ($titles) {
@@ -149,10 +168,11 @@ $shown = $only ? $hits : array_slice($hits, 0, $n);
 $LABELS = array('why' => 'Why', 'when' => 'When', 'trap' => 'Trap', 'example' => 'Ex.', 'mnemonic' => 'Memory');
 foreach ($shown as $h) {
   list(, $s, $r) = $h;
+  echo ruleHeader("RULE {$nums[$r['id']]} · {$s['title']}");
   echo (!empty($r['star']) ? '★ ' : '') . plain($r['rule'], $titles) . "\n";
   foreach ($LABELS as $k => $label) {
     if (!empty($r[$k])) echo '  ' . str_pad($label, 7) . plain($r[$k], $titles) . "\n";
   }
-  echo "  [{$s['title']} · {$r['id']}]\n\n";
+  echo "  $sheetUrl#{$r['id']}\n\n";
 }
 if (!$only && count($hits) > $n) echo '(' . (count($hits) - $n) . " more — add &n=" . count($hits) . " to see all)\n";

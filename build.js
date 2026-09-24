@@ -38,12 +38,118 @@ const sup = t => t
   .replace(/_\{([^}]*)\}/g, '<sub>$1</sub>')
   .replace(/_(-?[A-Za-z0-9]+)/g, '<sub>$1</sub>');
 
-// inline markup: x^2, x_1, #{section-id}, `code`, **bold**, *emphasis*. Bold runs before the
+// Math in `code` is set the way a textbook sets it, because `1/(^3√125)^2` on one
+// line is exactly the notation that's hard to read while learning it:
+//   a/b, a / b   -> stacked fraction (the spaced form too: rise / run)
+//   √x, √(a+b)   -> a bar over everything under the root; the parens it replaces go
+//   ^3√x         -> the 3 sits in the crook of the radical
+//   (x+1)/(x−1)  -> parens that only group a numerator or denominator are dropped
+// Fractions inside an exponent (x^{2/3}) stay inline: stacked at superscript size
+// they're unreadable, and textbooks don't do it either. It's a tiny parser for
+// what the sheet actually writes, not a TeX engine: words, (groups), √, ^, _, /.
+function math(src) {
+  let i = 0;
+  const isWord = c => /[A-Za-z0-9.]/.test(c);
+
+  // A script after ^ or _: {anything} or a signed alphanumeric run, as in sup().
+  function script() {
+    if (src[i] === '{') {
+      const end = src.indexOf('}', i);
+      const body = src.slice(i + 1, end);
+      i = end + 1;
+      return body;
+    }
+    const m = /^-?[A-Za-z0-9]+/.exec(src.slice(i));
+    i += m ? m[0].length : 0;
+    return m ? m[0] : '';
+  }
+  function scripts(node) {
+    while (src[i] === '^' || src[i] === '_') {
+      if (src[i] === '^' && /^\^[A-Za-z0-9]+√/.test(src.slice(i))) break;  // ^3√ is a root index
+      const kind = src[i++] === '^' ? 'sup' : 'sub';
+      node[kind] = (node[kind] || '') + script();
+    }
+    return node;
+  }
+  function atom() {
+    const c = src[i];
+    const idx = /^\^([A-Za-z0-9]+)√/.exec(src.slice(i));
+    if (idx || c === '√') {
+      i += idx ? idx[0].length : 1;
+      return scripts({ t: 'rad', idx: idx && idx[1], body: atom() });
+    }
+    if (c === '(') {
+      i++;
+      const kids = seq(')');
+      i++;
+      return scripts({ t: 'group', kids });
+    }
+    if (isWord(c)) {
+      let s = '';
+      while (i < src.length && isWord(src[i])) s += src[i++];
+      return scripts({ t: 'word', s });
+    }
+    i++;
+    return { t: 'text', s: c };
+  }
+  function seq(stop) {
+    const out = [];
+    while (i < src.length && src[i] !== stop) out.push(atom());
+    return fractions(out);
+  }
+  // a/b and a / b: the atoms either side of a slash become a stacked fraction.
+  function fractions(nodes) {
+    const out = [];
+    for (let k = 0; k < nodes.length; k++) {
+      const n = nodes[k];
+      if (!(n.t === 'text' && n.s === '/')) { out.push(n); continue; }
+      const spaced = out.length && out[out.length - 1].s === ' ' && nodes[k + 1] && nodes[k + 1].s === ' ';
+      if (spaced) out.pop();
+      const left = out[out.length - 1];
+      const right = nodes[k + 1 + (spaced ? 1 : 0)];
+      if (!left || left.t === 'text' || !right || right.t === 'text') {
+        if (spaced) out.push({ t: 'text', s: ' ' });
+        out.push(n);
+        continue;
+      }
+      out[out.length - 1] = { t: 'frac', num: left, den: right };
+      k += spaced ? 2 : 1;
+    }
+    return out;
+  }
+
+  const scriptsHtml = n =>
+    (n.sub ? `<sub>${inline(n.sub)}</sub>` : '') + (n.sup ? `<sup>${inline(n.sup)}</sup>` : '');
+  // bare: drop a group's parens when a bar or fraction line already shows its extent.
+  function html(n, bare) {
+    switch (n.t) {
+      case 'text':  return esc(n.s);
+      case 'word':  return esc(n.s) + scriptsHtml(n);
+      case 'group': return bare && !n.sup && !n.sub
+        ? n.kids.map(k => html(k)).join('')
+        : '(' + n.kids.map(k => html(k)).join('') + ')' + scriptsHtml(n);
+      case 'rad':   return `<span class="rad">${n.idx ? `<sup class="ri">${esc(n.idx)}</sup>` : ''}√` +
+        `<span class="rc">${html(n.body, true)}</span></span>` + scriptsHtml(n);
+      case 'frac':  return `<span class="frac"><span class="fn">${html(n.num, true)}</span>` +
+        `<span class="fd">${html(n.den, true)}</span></span>`;
+    }
+  }
+  return seq().map(n => html(n)).join('');
+}
+// Exponent contents: same markup, but fractions stay inline.
+const inline = s => esc(s).replace(/\^([A-Za-z0-9]+)√/g, '<sup>$1</sup>√');
+
+// inline markup: x^2, x_1, #{section-id}, `code`, **bold**, *emphasis*. Code spans are
+// set aside first, so emphasis can never reach inside math. Bold runs before the
 // single-asterisk pass so emphasis only ever sees genuine emphasis.
-const md = s => xref(sup(esc(s)))
-  .replace(/`([^`]+)`/g, '<code>$1</code>')
-  .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-  .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+const md = s => {
+  const codes = [];
+  const rest = String(s).replace(/`([^`]+)`/g, (_, c) => '\u0000' + (codes.push(math(c)) - 1) + '\u0000');
+  return xref(sup(esc(rest)))
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/\u0000(\d+)\u0000/g, (_, n) => `<code>${codes[n]}</code>`);
+};
 
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const pad  = n => String(n).padStart(2, '0');
@@ -66,16 +172,20 @@ const FIELDS = [
   ['mnemonic', 'Hook'],
 ];
 
-function renderRule(r) {
+// Rules are numbered section.position ("4.8") so a rule found some other way,
+// like ask.php in a terminal, can be looked up on the sheet. Like section numbers,
+// they come from array order at build time; ask.php numbers the same way. The
+// element id is the stable rule id, so ask.php can also link straight to it.
+function renderRule(r, num) {
   const rows = FIELDS
     .filter(([key]) => r[key])
     .map(([key, label]) => `          <dt>${label}</dt><dd class="${key}">${md(r[key])}</dd>`)
     .join('\n');
   const flag = r.star ? '<span class="flag">load-bearing</span>' : '';
   if (!r.id) throw new Error('rule is missing a stable id: ' + r.rule);
-  return `        <div class="rule${r.star ? ' star' : ''}" data-id="${esc(r.id)}">
+  return `        <div class="rule${r.star ? ' star' : ''}" id="${esc(r.id)}" data-id="${esc(r.id)}">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">${md(r.rule)}${flag}</p>
+          <p class="r"><span class="rn">${num}</span>${md(r.rule)}${flag}</p>
           <dl>
 ${rows}
           </dl>
@@ -94,9 +204,9 @@ function renderSection(s, i) {
         <div class="sechead">
           <h2><span class="n">${pad(i + 1)}</span>${md(s.title)}<span class="scount"> </span></h2>
           ${s.blurb ? `<p class="blurb">${md(s.blurb)}</p>` : ''}
-${renderRule(first)}
+${renderRule(first, `${i + 1}.1`)}
         </div>
-${rest.map(renderRule).join('\n')}
+${rest.map((r, j) => renderRule(r, `${i + 1}.${j + 2}`)).join('\n')}
       </section>`;
 }
 

@@ -9,7 +9,7 @@
  * deliberately dependency-free and deployed by `git pull` into the webroot.
  */
 
-if (!isset($doc, $titles, $p)) { http_response_code(404); exit; }
+if (!isset($doc, $titles, $nums, $sheetUrl, $p)) { http_response_code(404); exit; }
 
 // Haiku: picking rules off a list is a lookup, not hard reasoning, and it's
 // the cheapest model by a wide margin.
@@ -158,11 +158,12 @@ foreach ($json['rules'] as $pick) {
   $seen[$pick['id']] = true;
   list($s, $r) = $byId[$pick['id']];
   $i++;
-  echo "$i. " . (!empty($r['star']) ? '★ ' : '') . plain($r['rule'], $titles) . "\n";
-  echo '   Here   ' . trim($pick['here']) . "\n";
-  echo '   Why    ' . plain($r['why'], $titles) . "\n";
-  if (!empty($r['trap'])) echo '   Trap   ' . plain($r['trap'], $titles) . "\n";
-  echo "   [{$s['title']} · {$r['id']}]\n\n";
+  echo ruleHeader("STEP $i · RULE {$nums[$r['id']]} · {$s['title']}");
+  echo (!empty($r['star']) ? '★ ' : '') . plain($r['rule'], $titles) . "\n";
+  echo '  Here   ' . trim($pick['here']) . "\n";
+  echo '  Why    ' . plain($r['why'], $titles) . "\n";
+  if (!empty($r['trap'])) echo '  Trap   ' . plain($r['trap'], $titles) . "\n";
+  echo "  $sheetUrl#{$r['id']}\n\n";
 }
 if (!$i) echo "No rules on the sheet apply.\n\n";
 if (trim($json['missing']) !== '') echo 'Not on the sheet: ' . trim($json['missing']) . "\n";

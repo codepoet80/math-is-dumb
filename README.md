@@ -64,6 +64,17 @@ That's the best retention-per-minute on the sheet.
 - Inline markup is deliberately tiny: `` `code` ``, `**bold**`, `*emphasis*`,
   `^`/`_` for super- and subscripts (`x^2`, `x^{a+b}`, `y_1`), and `#{section-id}`
   for a cross-reference. Nothing else.
+- Inside backticks, math is set like a textbook: `a/b` (or `a / b`) stacks into a
+  fraction, `√x` and `√(a+b)` get a bar over the radicand, `^3√x` puts the 3 in the
+  radical's crook, and parens that only group a numerator, denominator or radicand
+  are dropped. So write `(x+1)/(x−1)`, not `x+1/x−1`, because the parens are what
+  say where the fraction ends. Fractions inside exponents (`x^{2/3}`) stay inline.
+  Outside backticks, `/` is just a slash.
+- Rules are numbered `section.position` (`4.8`) on the sheet and in `ask.php`'s
+  output, counted from array order on both sides. Reordering renumbers everything,
+  which is fine: the number is for finding a rule, and the stable `id` is what
+  stores state. Each rule's element id is its `id`, so `index.html#ex-rule-id`
+  links straight to it.
 - **Cross-reference sections as `#{section-id}`, never by number.** It resolves to
   the section's position at build time, so reordering can't leave a stale "see 06"
   behind. An unknown id fails the build rather than rendering wrong.
@@ -211,12 +222,18 @@ curl https://apps.jonandnic.com/math/ask.php --data-urlencode 'p=Two trains leav
 ```
 
 ```
-1. a(b + c) = ab + ac
-   Here   the 3 multiplying (x−2)
-   Why    3 bags each holding (2 apples + 1 pear) gives you 6 apples and 3 pears...
-   [Distributing & Factoring · ds-rule]
-2. ★ Undo operations in reverse PEMDAS order...
+━━ STEP 1 · RULE 5.2 · Distributing & Factoring ━━━━━━━━━━━━━━━━
+a(b + c) = ab + ac
+  Here   the 3 multiplying (x−2)
+  Why    3 bags each holding (2 apples + 1 pear) gives you 6 apples and 3 pears...
+  https://apps.jonandnic.com/math/#ds-rule
+
+━━ STEP 2 · RULE 6.2 · Solving for x ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+★ Undo operations in reverse PEMDAS order...
 ```
+
+The rule number matches the one printed on the sheet, and the link opens the sheet
+scrolled to that rule, shown in full even if you've marked it known.
 
 If a step needs something the sheet doesn't have, it ends with a *Not on the sheet:*
 line, which tells you what rule to add next.

@@ -248,6 +248,38 @@ code {
   white-space: nowrap;
 }
 
+/* Textbook math inside code (build.js math()). inline-block + vertical-align
+   rather than flexbox or inline-grid, which WebKit 534 on the TouchPad lacks.
+   Lines are borders in the text colour, so dark mode and print follow along. */
+.frac {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  font-size: .9em;
+  margin: .1em .08em;
+}
+.frac > span { display: block; padding: 0 .2em; line-height: 1.15; }
+.frac .fn { padding-bottom: .12em; }
+/* the top padding keeps a radical's bar in the denominator off the fraction line */
+.frac .fd { border-top: 1px solid; padding-top: .22em; }
+.rad { white-space: nowrap; }
+.rad .rc { border-top: 1px solid; padding: .05em .08em 0 .04em; margin-left: .02em; }
+.rad .ri { font-size: .6em; vertical-align: .9em; margin-right: -.3em; }
+
+/* Rule number, for looking up a rule that ask.php named in a terminal. */
+.rule .rn {
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: .72em;
+  font-weight: 700;
+  letter-spacing: .04em;
+  font-variant-numeric: tabular-nums;
+  color: #8b98a3; color: var(--ink-faint);
+  margin-right: .5em;
+}
+/* A rule opened from an ask.php link (index.html#rule-id). You followed the link
+   to read it, so it shows in full even if it's marked known (see further down). */
+.rule:target { background: rgba(31,92,139,.075); background: var(--code-bg); }
+
 /* ---------- PRINT: dense, two columns, ink-cheap ---------- */
 @media print {
   @page { size: letter portrait; margin: .45in .4in; }
@@ -304,6 +336,15 @@ code {
   .when, .example, .mnemonic { color: #000; }
 
   code { background: none; padding: 0; border-bottom: .4pt dotted #888; }
+  /* Stacked fractions are twice a line's height and push lines apart; set them
+     tight so textbook math doesn't cost the sheet a page. */
+  /* white paints over code's dotted underline, which would strike the denominator */
+  .frac { font-size: .82em; margin: 0 .05em; background: #fff; }
+  .frac > span { line-height: 1; padding: 0 .1em; }
+  .frac .fn { padding-bottom: .05em; }
+  .frac .fd { border-top-width: .5pt; padding-top: .12em; }
+  .rad .rc { border-top-width: .5pt; }
+  .rule .rn { font-size: .68em; margin-right: .35em; color: #555; }
   a { color: #000; text-decoration: none; }
 }
 
@@ -446,6 +487,10 @@ html.js .rule .know { display: block; }
 
 html.hiding .rule.known,
 html.hiding .section.all-known { display: none; }
+/* Beats the two rules above on specificity. A section whose rules are all known
+   stays hidden, since CSS in WebKit 534 can't select a parent from its child. */
+html.hiding .rule.known:target { display: block; }
+.rule.known:target dl { display: block; }
 
 .toc a.muted { opacity: .45; text-decoration: line-through; }
 
@@ -523,51 +568,51 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">01</span>The Grammar Nobody Teaches<span class="scount"> </span></h2>
           <p class="blurb">These are the unstated conventions the rest of math is built on. Most “I can't do algebra” is actually “nobody told me what the notation meant.”</p>
-        <div class="rule" data-id="gr-means-both-sides">
+        <div class="rule" id="gr-means-both-sides" data-id="gr-means-both-sides">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>=</code> means “both sides weigh the same.” It is a scale, not “answer goes here.”</p>
+          <p class="r"><span class="rn">1.1</span><code>=</code> means “both sides weigh the same.” It is a scale, not “answer goes here.”</p>
           <dl>
           <dt>Why</dt><dd class="why">Every legal move in algebra is just “keep the scale level” — that one idea generates all of solving.</dd>
           <dt>Trap</dt><dd class="trap">On a calculator <code>=</code> means “go.” In algebra it never does.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule" data-id="gr-term-chunk-separated">
+        <div class="rule" id="gr-term-chunk-separated" data-id="gr-term-chunk-separated">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><strong>Term</strong> = chunk separated by <code>+</code> or <code>−</code>. <strong>Factor</strong> = chunk separated by <code>×</code>. <strong>Coefficient</strong> = the number stuck to the front.</p>
+          <p class="r"><span class="rn">1.2</span><strong>Term</strong> = chunk separated by <code>+</code> or <code>−</code>. <strong>Factor</strong> = chunk separated by <code>×</code>. <strong>Coefficient</strong> = the number stuck to the front.</p>
           <dl>
           <dt>Why</dt><dd class="why">Almost every rule cares which one you're looking at, and almost every mistake is treating a term like a factor.</dd>
           <dt>When</dt><dd class="when">Before applying any rule, ask: am I looking at terms or factors?</dd>
           <dt>Ex.</dt><dd class="example">In <code>3x<sup>2</sup> + 5x</code>, there are 2 terms. In <code>3x<sup>2</sup></code>, the factors are 3, x, and x.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="gr-number-touching-letter">
+        <div class="rule" id="gr-number-touching-letter" data-id="gr-number-touching-letter">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">A number touching a letter means multiply. <code>3x</code> = <code>3 · x</code>. <code>2(x+1)</code> = <code>2 × (x+1)</code>.</p>
+          <p class="r"><span class="rn">1.3</span>A number touching a letter means multiply. <code>3x</code> = <code>3 · x</code>. <code>2(x+1)</code> = <code>2 × (x+1)</code>.</p>
           <dl>
           <dt>Why</dt><dd class="why">The × symbol looks exactly like the letter x, so mathematicians just stopped writing it.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="gr-pemdas-parentheses-exponents">
+        <div class="rule" id="gr-pemdas-parentheses-exponents" data-id="gr-pemdas-parentheses-exponents">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><strong>PEMDAS</strong> — Parentheses, Exponents, Multiply/Divide, Add/Subtract.</p>
+          <p class="r"><span class="rn">1.4</span><strong>PEMDAS</strong> — Parentheses, Exponents, Multiply/Divide, Add/Subtract.</p>
           <dl>
           <dt>Why</dt><dd class="why">Multiplication is repeated addition, so it's the “bigger” operation and has to be collapsed into addition before you can add.</dd>
           <dt>Trap</dt><dd class="trap">M and D are the <strong>same rank</strong> — do them left to right. Same for A and S. <code>8 ÷ 2 × 4 = 16</code>, not 1.</dd>
           <dt>Hook</dt><dd class="mnemonic">Please Excuse My Dear Aunt Sally — but Mom &amp; Dad are twins, and so are Aunt &amp; Sally.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="gr-minus-sign-has">
+        <div class="rule" id="gr-minus-sign-has" data-id="gr-minus-sign-has">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">The minus sign has three different jobs: subtract (<code>5 − 3</code>), negative (<code>−3</code>), and opposite (<code>−x</code>).</p>
+          <p class="r"><span class="rn">1.5</span>The minus sign has three different jobs: subtract (<code>5 − 3</code>), negative (<code>−3</code>), and opposite (<code>−x</code>).</p>
           <dl>
           <dt>Why</dt><dd class="why"><code>−x</code> is not “a negative number” — it's “the opposite of whatever x is.” If x = −4, then −x = <strong>4</strong>.</dd>
           <dt>Trap</dt><dd class="trap">This one trips up more people than anything else on this sheet.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="gr-simplify-not-operation">
+        <div class="rule" id="gr-simplify-not-operation" data-id="gr-simplify-not-operation">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><strong>“Simplify” is not an operation.</strong> It means “write this in the shortest standard form,” and which moves that takes depends on what you're holding.</p>
+          <p class="r"><span class="rn">1.6</span><strong>“Simplify” is not an operation.</strong> It means “write this in the shortest standard form,” and which moves that takes depends on what you're holding.</p>
           <dl>
           <dt>Why</dt><dd class="why">Expanding and factoring are moves. Simplifying is a destination. That's why the same word can mean opposite moves on different problems.</dd>
           <dt>When</dt><dd class="when">First ask <em>what kind of thing is this?</em> — the type picks the tool.</dd>
@@ -581,42 +626,42 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">02</span>Negatives<span class="scount"> </span></h2>
           <p class="blurb">Think of −1 as an instruction: “flip to the other side of zero.” Everything here falls out of that.</p>
-        <div class="rule" data-id="ng-subtracting-adding-opposite">
+        <div class="rule" id="ng-subtracting-adding-opposite" data-id="ng-subtracting-adding-opposite">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Subtracting is adding the opposite. <code>a − b</code> = <code>a + (−b)</code>.</p>
+          <p class="r"><span class="rn">2.1</span>Subtracting is adding the opposite. <code>a − b</code> = <code>a + (−b)</code>.</p>
           <dl>
           <dt>Why</dt><dd class="why">It lets you stop tracking two different operations and just add signed numbers all day.</dd>
           <dt>When</dt><dd class="when">Any time a string of +/− signs is confusing you, rewrite the whole thing as addition first.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule" data-id="ng-same-signs-add">
+        <div class="rule" id="ng-same-signs-add" data-id="ng-same-signs-add">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Same signs: add and keep the sign. Different signs: subtract and take the sign of the bigger one.</p>
+          <p class="r"><span class="rn">2.2</span>Same signs: add and keep the sign. Different signs: subtract and take the sign of the bigger one.</p>
           <dl>
           <dt>Why</dt><dd class="why">Same direction = piling up. Opposite directions = tug of war, and the stronger side wins.</dd>
           <dt>Ex.</dt><dd class="example"><code>−7 + 3 = −4</code> (tug of war, 7 wins, 7−3=4, negative).</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ng-negative-negative-positive">
+        <div class="rule" id="ng-negative-negative-positive" data-id="ng-negative-negative-positive">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Negative × negative = positive. Negative × positive = negative.</p>
+          <p class="r"><span class="rn">2.3</span>Negative × negative = positive. Negative × positive = negative.</p>
           <dl>
           <dt>Why</dt><dd class="why">×(−1) means “flip across zero.” Flip twice and you're back where you started.</dd>
           <dt>Hook</dt><dd class="mnemonic">Two wrongs make a right — but only in multiplication.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ng-distributing-negative-flips">
+        <div class="rule" id="ng-distributing-negative-flips" data-id="ng-distributing-negative-flips">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Distributing a negative flips <strong>every</strong> sign inside. <code>−(a − b)</code> = <code>−a + b</code>.</p>
+          <p class="r"><span class="rn">2.4</span>Distributing a negative flips <strong>every</strong> sign inside. <code>−(a − b)</code> = <code>−a + b</code>.</p>
           <dl>
           <dt>Why</dt><dd class="why">That minus out front is really a <code>−1</code> multiplying each term separately.</dd>
           <dt>Trap</dt><dd class="trap">Forgetting the second sign. <code>−(x − 5)</code> = <code>−x + 5</code>, not <code>−x − 5</code>.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ng-different-things">
+        <div class="rule" id="ng-different-things" data-id="ng-different-things">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>−x<sup>2</sup></code> and <code>(−x)<sup>2</sup></code> are different things.</p>
+          <p class="r"><span class="rn">2.5</span><code>−x<sup>2</sup></code> and <code>(−x)<sup>2</sup></code> are different things.</p>
           <dl>
           <dt>Why</dt><dd class="why">The exponent grabs tighter than the minus sign, so <code>−3<sup>2</sup></code> = <code>−(3<sup>2</sup>)</code> = <code>−9</code>, but <code>(−3)<sup>2</sup></code> = <code>9</code>.</dd>
           <dt>When</dt><dd class="when">If you want the negative squared, the parentheses are not optional.</dd>
@@ -628,51 +673,51 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">03</span>Fractions<span class="scount"> </span></h2>
           <p class="blurb">One idea unlocks this whole section: the bottom number is a NAME, not a quantity.</p>
-        <div class="rule star" data-id="fr-denominator-names-size">
+        <div class="rule star" id="fr-denominator-names-size" data-id="fr-denominator-names-size">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">The denominator names the <strong>size</strong> of the piece. The numerator <strong>counts</strong> them.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">3.1</span>The denominator names the <strong>size</strong> of the piece. The numerator <strong>counts</strong> them.<span class="flag">load-bearing</span></p>
           <dl>
-          <dt>Why</dt><dd class="why"><code>3/4</code> is “three pieces, and the pieces are called fourths” — the 4 is a unit label, like “feet.”</dd>
+          <dt>Why</dt><dd class="why"><code><span class="frac"><span class="fn">3</span><span class="fd">4</span></span></code> is “three pieces, and the pieces are called fourths” — the 4 is a unit label, like “feet.”</dd>
           <dt>When</dt><dd class="when">Every other fraction rule below is a consequence of this. When stuck, come back here.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule" data-id="fr-multiply-straight-across">
+        <div class="rule" id="fr-multiply-straight-across" data-id="fr-multiply-straight-across">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Multiply straight across. <code>a/b × c/d</code> = <code>ac/bd</code>.</p>
+          <p class="r"><span class="rn">3.2</span>Multiply straight across. <code><span class="frac"><span class="fn">a</span><span class="fd">b</span></span> × <span class="frac"><span class="fn">c</span><span class="fd">d</span></span></code> = <code><span class="frac"><span class="fn">ac</span><span class="fd">bd</span></span></code>.</p>
           <dl>
           <dt>Why</dt><dd class="why">Multiplying fractions is taking <em>a piece of a piece</em> — half of a third is a sixth, so the pieces get smaller and the names multiply.</dd>
-          <dt>Ex.</dt><dd class="example"><code>1/2 × 1/3 = 1/6</code></dd>
+          <dt>Ex.</dt><dd class="example"><code><span class="frac"><span class="fn">1</span><span class="fd">2</span></span> × <span class="frac"><span class="fn">1</span><span class="fd">3</span></span> = <span class="frac"><span class="fn">1</span><span class="fd">6</span></span></code></dd>
           </dl>
         </div>
-        <div class="rule star" data-id="fr-adding-subtracting-needs">
+        <div class="rule star" id="fr-adding-subtracting-needs" data-id="fr-adding-subtracting-needs">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Adding or subtracting needs a <strong>common denominator</strong> first.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">3.3</span>Adding or subtracting needs a <strong>common denominator</strong> first.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">You can't count pieces of different sizes — same reason <code>3 feet + 2 meters</code> isn't 5 of anything until you convert.</dd>
-          <dt>Trap</dt><dd class="trap"><code>2/3 + 1/3 = 3/3</code>, not <code>3/6</code>. You're counting thirds; the name doesn't change.</dd>
+          <dt>Trap</dt><dd class="trap"><code><span class="frac"><span class="fn">2</span><span class="fd">3</span></span> + <span class="frac"><span class="fn">1</span><span class="fd">3</span></span> = <span class="frac"><span class="fn">3</span><span class="fd">3</span></span></code>, not <code><span class="frac"><span class="fn">3</span><span class="fd">6</span></span></code>. You're counting thirds; the name doesn't change.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="fr-dividing-multiply-reciprocal">
+        <div class="rule" id="fr-dividing-multiply-reciprocal" data-id="fr-dividing-multiply-reciprocal">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Dividing = multiply by the reciprocal (flip the second one).</p>
+          <p class="r"><span class="rn">3.4</span>Dividing = multiply by the reciprocal (flip the second one).</p>
           <dl>
           <dt>Why</dt><dd class="why">“How many halves fit into 3?” is asking how many times you multiply up — so you flip and multiply.</dd>
-          <dt>Ex.</dt><dd class="example"><code>3 ÷ 1/2</code> = <code>3 × 2/1</code> = <code>6</code></dd>
+          <dt>Ex.</dt><dd class="example"><code>3 ÷ <span class="frac"><span class="fn">1</span><span class="fd">2</span></span></code> = <code>3 × <span class="frac"><span class="fn">2</span><span class="fd">1</span></span></code> = <code>6</code></dd>
           <dt>Hook</dt><dd class="mnemonic">Keep, Change, Flip.</dd>
           </dl>
         </div>
-        <div class="rule star" data-id="fr-can-cancel-factors">
+        <div class="rule star" id="fr-can-cancel-factors" data-id="fr-can-cancel-factors">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">You can cancel <strong>factors</strong>. You can never cancel <strong>terms</strong>.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">3.5</span>You can cancel <strong>factors</strong>. You can never cancel <strong>terms</strong>.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Canceling is secretly dividing top and bottom by the same thing, which only works if that thing is multiplying <em>everything</em>.</dd>
-          <dt>Trap</dt><dd class="trap"><code>(x+2)/2</code> is NOT <code>x</code>. But <code>2x/2</code> IS <code>x</code>.</dd>
+          <dt>Trap</dt><dd class="trap"><code><span class="frac"><span class="fn">x+2</span><span class="fd">2</span></span></code> is NOT <code>x</code>. But <code><span class="frac"><span class="fn">2x</span><span class="fd">2</span></span></code> IS <code>x</code>.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="fr-cross-multiply">
+        <div class="rule" id="fr-cross-multiply" data-id="fr-cross-multiply">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>a/b = c/d</code>  →  <code>ad = bc</code> (cross-multiply).</p>
+          <p class="r"><span class="rn">3.6</span><code><span class="frac"><span class="fn">a</span><span class="fd">b</span></span> = <span class="frac"><span class="fn">c</span><span class="fd">d</span></span></code>  →  <code>ad = bc</code> (cross-multiply).</p>
           <dl>
           <dt>Why</dt><dd class="why">It isn't a trick — it's just multiplying both sides by b and then by d, and watching things cancel.</dd>
           <dt>When</dt><dd class="when">Two fractions set equal to each other. Proportions, unit conversion, scaling recipes.</dd>
@@ -684,80 +729,80 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">04</span>Exponents<span class="scount"> </span></h2>
           <p class="blurb">An exponent is a tally of how many copies got written down. Every rule here is just counting them.</p>
-        <div class="rule" data-id="ex-multiplying-so-add">
+        <div class="rule" id="ex-multiplying-so-add" data-id="ex-multiplying-so-add">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>x<sup>a</sup> · x<sup>b</sup></code> = <code>x<sup>a+b</sup></code> — multiplying, so <strong>add</strong> the exponents.</p>
+          <p class="r"><span class="rn">4.1</span><code>x<sup>a</sup> · x<sup>b</sup></code> = <code>x<sup>a+b</sup></code> — multiplying, so <strong>add</strong> the exponents.</p>
           <dl>
           <dt>Why</dt><dd class="why"><code>x<sup>2</sup> · x<sup>3</sup></code> writes down 2 x's then 3 x's. Now count them: 5.</dd>
           <dt>Trap</dt><dd class="trap">Only works when the base is the same. <code>x<sup>2</sup> · y<sup>3</sup></code> doesn't combine.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule" data-id="ex-dividing-so-subtract">
+        <div class="rule" id="ex-dividing-so-subtract" data-id="ex-dividing-so-subtract">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>x<sup>a</sup> / x<sup>b</sup></code> = <code>x<sup>a-b</sup></code> — dividing, so <strong>subtract</strong>.</p>
+          <p class="r"><span class="rn">4.2</span><code><span class="frac"><span class="fn">x<sup>a</sup></span><span class="fd">x<sup>b</sup></span></span></code> = <code>x<sup>a-b</sup></code> — dividing, so <strong>subtract</strong>.</p>
           <dl>
           <dt>Why</dt><dd class="why">Each x on the bottom cancels one on top. You're just counting the leftovers.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ex-power-power-so">
+        <div class="rule" id="ex-power-power-so" data-id="ex-power-power-so">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>(x<sup>a</sup>)<sup>b</sup></code> = <code>x<sup>ab</sup></code> — power of a power, so <strong>multiply</strong>.</p>
+          <p class="r"><span class="rn">4.3</span><code>(x<sup>a</sup>)<sup>b</sup></code> = <code>x<sup>ab</sup></code> — power of a power, so <strong>multiply</strong>.</p>
           <dl>
           <dt>Why</dt><dd class="why">b groups of (a copies of x). That's a·b copies.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ex-anything-zero">
+        <div class="rule" id="ex-anything-zero" data-id="ex-anything-zero">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>x<sup>0</sup> = 1</code>. Anything to the zero is 1.</p>
+          <p class="r"><span class="rn">4.4</span><code>x<sup>0</sup> = 1</code>. Anything to the zero is 1.</p>
           <dl>
-          <dt>Why</dt><dd class="why"><code>x<sup>3</sup>/x<sup>3</sup></code> is obviously 1, and the subtract rule says it's <code>x<sup>0</sup></code>. Both are true, so <code>x<sup>0</sup> = 1</code>.</dd>
+          <dt>Why</dt><dd class="why"><code><span class="frac"><span class="fn">x<sup>3</sup></span><span class="fd">x<sup>3</sup></span></span></code> is obviously 1, and the subtract rule says it's <code>x<sup>0</sup></code>. Both are true, so <code>x<sup>0</sup> = 1</code>.</dd>
           <dt>Trap</dt><dd class="trap">It's 1, not 0. The 1 is the multiplicative starting point, the way 0 is for addition.</dd>
           </dl>
         </div>
-        <div class="rule star" data-id="ex-negative-exponent-means">
+        <div class="rule star" id="ex-negative-exponent-means" data-id="ex-negative-exponent-means">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>x<sup>-a</sup></code> = <code>1/x<sup>a</sup></code>, and <code>1/x<sup>-a</sup></code> = <code>x<sup>a</sup></code>. A negative exponent means <strong>it wants to be on the other side of the fraction bar.</strong> Move it across and the minus goes away.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">4.5</span><code>x<sup>-a</sup></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">x<sup>a</sup></span></span></code>, and <code><span class="frac"><span class="fn">1</span><span class="fd">x<sup>-a</sup></span></span></code> = <code>x<sup>a</sup></code>. A negative exponent means <strong>it wants to be on the other side of the fraction bar.</strong> Move it across and the minus goes away.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why"><code>x<sup>a</sup></code> is “multiply by x, a times,” so <code>x<sup>-a</sup></code> is “divide by x, a times” — that lives on the bottom. Walk the pattern down: 8, 4, 2, 1, ½, ¼. Nothing ever turns negative.</dd>
-          <dt>Trap</dt><dd class="trap">It's one move, not two rules. Top or bottom, cross the bar and drop the sign. No fraction bar means everything is on top, over an invisible 1 — the bottom is empty until something crosses down into it. <code>−5z<sup>-5</sup></code> = <code>−5z<sup>-5</sup>/1</code> = <code>−5/z<sup>5</sup></code>.</dd>
+          <dt>Trap</dt><dd class="trap">It's one move, not two rules. Top or bottom, cross the bar and drop the sign. No fraction bar means everything is on top, over an invisible 1 — the bottom is empty until something crosses down into it. <code>−5z<sup>-5</sup></code> = <code>−<span class="frac"><span class="fn">5z<sup>-5</sup></span><span class="fd">1</span></span></code> = <code>−<span class="frac"><span class="fn">5</span><span class="fd">z<sup>5</sup></span></span></code>.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ex-fractional-exponent-root">
+        <div class="rule" id="ex-fractional-exponent-root" data-id="ex-fractional-exponent-root">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>x<sup>1/2</sup></code> = <code>√x</code>, <code>x<sup>1/3</sup></code> = <code><sup>3</sup>√x</code>. A fractional exponent is a root.</p>
+          <p class="r"><span class="rn">4.6</span><code>x<sup>1/2</sup></code> = <code><span class="rad">√<span class="rc">x</span></span></code>, <code>x<sup>1/3</sup></code> = <code><span class="rad"><sup class="ri">3</sup>√<span class="rc">x</span></span></code>. A fractional exponent is a root.</p>
           <dl>
           <dt>Why</dt><dd class="why"><code>x<sup>1/2</sup> · x<sup>1/2</sup> = x<sup>1</sup></code> by the add rule — so <code>x<sup>1/2</sup></code> is the thing that gives x when multiplied by itself. That's the square root. Three copies of <code>x<sup>1/3</sup></code> make <code>x<sup>1</sup></code>, so it's the cube root.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ex-rational-exponent-root-power">
+        <div class="rule" id="ex-rational-exponent-root-power" data-id="ex-rational-exponent-root-power">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>x<sup>m/n</sup></code> = <code>(<sup>n</sup>√x)<sup>m</sup></code>. Bottom of the fraction is the <strong>root</strong>, top is the <strong>power</strong>.</p>
+          <p class="r"><span class="rn">4.7</span><code>x<sup>m/n</sup></code> = <code>(<span class="rad"><sup class="ri">n</sup>√<span class="rc">x</span></span>)<sup>m</sup></code>. Bottom of the fraction is the <strong>root</strong>, top is the <strong>power</strong>.</p>
           <dl>
           <dt>Why</dt><dd class="why"><code>x<sup>m/n</sup> = (x<sup>1/n</sup>)<sup>m</sup></code> by the multiply rule, and <code>x<sup>1/n</sup></code> is the nth root for the same reason <code>x<sup>1/2</sup></code> is the square root.</dd>
-          <dt>Ex.</dt><dd class="example"><code>8<sup>2/3</sup></code> = <code>(<sup>3</sup>√8)<sup>2</sup></code> = <code>2<sup>2</sup></code> = <code>4</code>. Take the root first so the numbers stay small.</dd>
+          <dt>Ex.</dt><dd class="example"><code>8<sup>2/3</sup></code> = <code>(<span class="rad"><sup class="ri">3</sup>√<span class="rc">8</span></span>)<sup>2</sup></code> = <code>2<sup>2</sup></code> = <code>4</code>. Take the root first so the numbers stay small.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ex-negative-fractional-exponent">
+        <div class="rule" id="ex-negative-fractional-exponent" data-id="ex-negative-fractional-exponent">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>x<sup>-m/n</sup></code> = <code>1/(<sup>n</sup>√x)<sup>m</sup></code>. Three jobs, read off the exponent: the minus <strong>flips</strong>, the bottom is the <strong>root</strong>, the top is the <strong>power</strong>.</p>
+          <p class="r"><span class="rn">4.8</span><code>x<sup>-m/n</sup></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">(<span class="rad"><sup class="ri">n</sup>√<span class="rc">x</span></span>)<sup>m</sup></span></span></code>. Three jobs, read off the exponent: the minus <strong>flips</strong>, the bottom is the <strong>root</strong>, the top is the <strong>power</strong>.</p>
           <dl>
           <dt>Why</dt><dd class="why">Each part is a rule you already have: the minus sends it across the fraction bar, then <code>x<sup>m/n</sup></code> is root-then-power. The minus has nothing to do with the root or the power.</dd>
           <dt>Trap</dt><dd class="trap">A negative exponent never makes the answer negative. <code>125<sup>-2/3</sup></code> is a small positive number, not <code>−25</code>.</dd>
-          <dt>Ex.</dt><dd class="example"><code>125<sup>-2/3</sup></code> = <code>1/125<sup>2/3</sup></code> = <code>1/(<sup>3</sup>√125)<sup>2</sup></code> = <code>1/5<sup>2</sup></code> = <code>1/25</code>.</dd>
+          <dt>Ex.</dt><dd class="example"><code>125<sup>-2/3</sup></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">125<sup>2/3</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">(<span class="rad"><sup class="ri">3</sup>√<span class="rc">125</span></span>)<sup>2</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">5<sup>2</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">25</span></span></code>.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ex-grabs-only-what-it-touches">
+        <div class="rule" id="ex-grabs-only-what-it-touches" data-id="ex-grabs-only-what-it-touches">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>2m<sup>2</sup></code> = <code>2 · (m<sup>2</sup>)</code>, not <code>(2m)<sup>2</sup></code>. An exponent grabs <strong>only the one thing it touches.</strong></p>
+          <p class="r"><span class="rn">4.9</span><code>2m<sup>2</sup></code> = <code>2 · (m<sup>2</sup>)</code>, not <code>(2m)<sup>2</sup></code>. An exponent grabs <strong>only the one thing it touches.</strong></p>
           <dl>
           <dt>Why</dt><dd class="why">Exponents beat multiplication in PEMDAS, so the 2 is just standing next to <code>m<sup>2</sup></code>. Plug in m = 3: <code>2m<sup>2</sup></code> is 18, but <code>(2m)<sup>2</sup></code> is 36.</dd>
-          <dt>Trap</dt><dd class="trap">Same with negatives. <code>2m<sup>-2</sup></code> = <code>2/m<sup>2</sup></code> — only the m crosses the bar. If you want the whole <code>2m</code> raised, the parentheses are not optional.</dd>
+          <dt>Trap</dt><dd class="trap">Same with negatives. <code>2m<sup>-2</sup></code> = <code><span class="frac"><span class="fn">2</span><span class="fd">m<sup>2</sup></span></span></code> — only the m crosses the bar. If you want the whole <code>2m</code> raised, the parentheses are not optional.</dd>
           </dl>
         </div>
-        <div class="rule star" data-id="ex-but">
+        <div class="rule star" id="ex-but" data-id="ex-but">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>(ab)<sup>n</sup></code> = <code>a<sup>n</sup> b<sup>n</sup></code>, but <code>(a+b)<sup>n</sup></code> is <strong>NOT</strong> <code>a<sup>n</sup> + b<sup>n</sup></code>.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">4.10</span><code>(ab)<sup>n</sup></code> = <code>a<sup>n</sup> b<sup>n</sup></code>, but <code>(a+b)<sup>n</sup></code> is <strong>NOT</strong> <code>a<sup>n</sup> + b<sup>n</sup></code>.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Exponents distribute over multiplication only. <code>(2+3)<sup>2</sup> = 25</code>, while <code>2<sup>2</sup> + 3<sup>2</sup> = 13</code>.</dd>
           <dt>Trap</dt><dd class="trap">This is the single most common algebra error there is. <code>(a+b)<sup>2</sup> = a<sup>2</sup> + 2ab + b<sup>2</sup></code> — FOIL it, don't guess.</dd>
@@ -769,9 +814,9 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">05</span>Distributing &amp; Factoring<span class="scount"> </span></h2>
           <p class="blurb">These are the same move run in opposite directions. Distributing takes parentheses apart; factoring puts them back.</p>
-        <div class="rule star" data-id="ds-factoring-is-multiplication">
+        <div class="rule star" id="ds-factoring-is-multiplication" data-id="ds-factoring-is-multiplication">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><strong>Factoring</strong> = rewriting a sum as a <strong>multiplication</strong>. That's the whole definition. Length has nothing to do with it.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">5.1</span><strong>Factoring</strong> = rewriting a sum as a <strong>multiplication</strong>. That's the whole definition. Length has nothing to do with it.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">A product is something you can grab: it's zero only when one factor is zero (13), and you can cancel factors (03). A sum gives you neither.</dd>
           <dt>When</dt><dd class="when">Ask: is the top level of this expression things <em>added</em> or things <em>multiplied</em>? Factoring turns the first into the second.</dd>
@@ -779,42 +824,42 @@ html.hiding .section.all-known { display: none; }
           </dl>
         </div>
         </div>
-        <div class="rule" data-id="ds-rule">
+        <div class="rule" id="ds-rule" data-id="ds-rule">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>a(b + c)</code> = <code>ab + ac</code></p>
+          <p class="r"><span class="rn">5.2</span><code>a(b + c)</code> = <code>ab + ac</code></p>
           <dl>
           <dt>Why</dt><dd class="why">3 bags each holding (2 apples + 1 pear) gives you 6 apples and 3 pears. The 3 reaches everything inside.</dd>
           <dt>Trap</dt><dd class="trap">It has to reach <em>every</em> term. <code>2(x + 3)</code> = <code>2x + 6</code>, not <code>2x + 3</code>.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ds-foil">
+        <div class="rule" id="ds-foil" data-id="ds-foil">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><strong>FOIL</strong> — <code>(a+b)(c+d)</code> = <code>ac + ad + bc + bd</code></p>
+          <p class="r"><span class="rn">5.3</span><strong>FOIL</strong> — <code>(a+b)(c+d)</code> = <code>ac + ad + bc + bd</code></p>
           <dl>
           <dt>Why</dt><dd class="why">It's just distributing twice: every term on the left has to meet every term on the right.</dd>
           <dt>When</dt><dd class="when">Two binomials multiplied. For anything bigger than 2×2 terms, forget FOIL and just make sure everything meets everything.</dd>
           <dt>Hook</dt><dd class="mnemonic">First, Outside, Inside, Last.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ds-combine-like-terms">
+        <div class="rule" id="ds-combine-like-terms" data-id="ds-combine-like-terms">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Combine like terms only: <strong>same letter, same exponent</strong>.</p>
+          <p class="r"><span class="rn">5.4</span>Combine like terms only: <strong>same letter, same exponent</strong>.</p>
           <dl>
           <dt>Why</dt><dd class="why"><code>3x + 2x<sup>2</sup></code> is like <code>3 feet + 2 square feet</code> — different units, so it doesn't collapse.</dd>
           <dt>Ex.</dt><dd class="example"><code>3x + 5x = 8x</code>. But <code>3x + 5x<sup>2</sup></code> stays as it is.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ds-factor-out-greatest">
+        <div class="rule" id="ds-factor-out-greatest" data-id="ds-factor-out-greatest">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Factor out the greatest common factor: <code>ab + ac</code> = <code>a(b + c)</code></p>
+          <p class="r"><span class="rn">5.5</span>Factor out the greatest common factor: <code>ab + ac</code> = <code>a(b + c)</code></p>
           <dl>
           <dt>Why</dt><dd class="why">Distribution running backwards. You're pulling the shared piece out front.</dd>
           <dt>When</dt><dd class="when">First thing to try on any factoring problem, always.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ds-difference-squares">
+        <div class="rule" id="ds-difference-squares" data-id="ds-difference-squares">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Difference of squares: <code>a<sup>2</sup> − b<sup>2</sup></code> = <code>(a − b)(a + b)</code>. Take the root of each term; one bracket subtracts them, the other adds them.</p>
+          <p class="r"><span class="rn">5.6</span>Difference of squares: <code>a<sup>2</sup> − b<sup>2</sup></code> = <code>(a − b)(a + b)</code>. Take the root of each term; one bracket subtracts them, the other adds them.</p>
           <dl>
           <dt>Why</dt><dd class="why">FOIL it back: the middle terms are <code>+ab</code> and <code>−ab</code>, which cancel, and <code>(−b)(+b)</code> is what makes <code>b<sup>2</sup></code> come out negative. Only the mixed-sign pair does both.</dd>
           <dt>When</dt><dd class="when">Two perfect squares with a minus between them. Recognize it on sight — it shows up constantly.</dd>
@@ -828,50 +873,50 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">06</span>Solving for x<span class="scount"> </span></h2>
           <p class="blurb">You are unwrapping a package. Whatever was wrapped last comes off first.</p>
-        <div class="rule star" data-id="sv-whatever-do-one">
+        <div class="rule star" id="sv-whatever-do-one" data-id="sv-whatever-do-one">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Whatever you do to one side, do to the other.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">6.1</span>Whatever you do to one side, do to the other.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">The <code>=</code> is a balance scale. Change one pan without the other and it stops being true.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule star" data-id="sv-undo-operations-reverse">
+        <div class="rule star" id="sv-undo-operations-reverse" data-id="sv-undo-operations-reverse">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Undo operations in <strong>reverse</strong> PEMDAS order: A/S first, then M/D, then exponents, then parentheses.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">6.2</span>Undo operations in <strong>reverse</strong> PEMDAS order: A/S first, then M/D, then exponents, then parentheses.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Wrapping a gift you go box → paper → ribbon. Unwrapping goes ribbon → paper → box. Solving is unwrapping.</dd>
           <dt>Ex.</dt><dd class="example"><code>3x + 5 = 20</code> → subtract 5 → <code>3x = 15</code> → divide by 3 → <code>x = 5</code></dd>
           </dl>
         </div>
-        <div class="rule star" data-id="sv-clear-fractions-lcd">
+        <div class="rule star" id="sv-clear-fractions-lcd" data-id="sv-clear-fractions-lcd">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Fractions in an equation? Either multiply <strong>every term</strong> on both sides by the <strong>LCD</strong> first — or keep the fractions, get <code>x</code> down to one fraction coefficient, and multiply both sides by its <strong>flip</strong>.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">6.3</span>Fractions in an equation? Either multiply <strong>every term</strong> on both sides by the <strong>LCD</strong> first — or keep the fractions, get <code>x</code> down to one fraction coefficient, and multiply both sides by its <strong>flip</strong>.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Both are “do the same thing to both sides.” The LCD deletes every denominator in one move; the flip undoes a fraction the same way ÷ undoes × (03).</dd>
           <dt>Trap</dt><dd class="trap">LCD route: multiply every term, including the ones with no fraction. Forgetting the lone <code>7</code> is the classic error.</dd>
-          <dt>Ex.</dt><dd class="example"><code>x/3 + x/4 = 7</code>. <strong>LCD:</strong> ×12 everywhere → <code>4x + 3x = 84</code> → <code>x = 12</code>. <strong>Flip:</strong> combine → <code>(7/12)x = 7</code> → ×<code>12/7</code> both sides → <code>x = 12</code>.</dd>
+          <dt>Ex.</dt><dd class="example"><code><span class="frac"><span class="fn">x</span><span class="fd">3</span></span> + <span class="frac"><span class="fn">x</span><span class="fd">4</span></span> = 7</code>. <strong>LCD:</strong> ×12 everywhere → <code>4x + 3x = 84</code> → <code>x = 12</code>. <strong>Flip:</strong> combine → <code>(<span class="frac"><span class="fn">7</span><span class="fd">12</span></span>)x = 7</code> → ×<code><span class="frac"><span class="fn">12</span><span class="fd">7</span></span></code> both sides → <code>x = 12</code>.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="sv-move-something-do">
+        <div class="rule" id="sv-move-something-do" data-id="sv-move-something-do">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">To move something, do the <strong>opposite</strong> operation.</p>
+          <p class="r"><span class="rn">6.4</span>To move something, do the <strong>opposite</strong> operation.</p>
           <dl>
           <dt>Why</dt><dd class="why"><code>+</code> and <code>−</code> undo each other; <code>×</code> and <code>÷</code> undo each other. That's the only reason it works.</dd>
           <dt>Trap</dt><dd class="trap">You're not “moving it to the other side and flipping the sign” — you're doing the same thing to both sides and one side cancels. Same result, but the second story is the one you can rebuild when you forget.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="sv-flip-inequality-when">
+        <div class="rule" id="sv-flip-inequality-when" data-id="sv-flip-inequality-when">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><strong>Flip the inequality</strong> when you multiply or divide by a negative.</p>
+          <p class="r"><span class="rn">6.5</span><strong>Flip the inequality</strong> when you multiply or divide by a negative.</p>
           <dl>
           <dt>Why</dt><dd class="why">Multiplying by a negative mirrors the number line, so bigger becomes smaller. <code>2 &lt; 3</code>, but <code>−2 &gt; −3</code>.</dd>
           <dt>Trap</dt><dd class="trap">Only for × and ÷ by a negative. Adding or subtracting a negative doesn't flip anything.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="sv-substitute-answer-back">
+        <div class="rule" id="sv-substitute-answer-back" data-id="sv-substitute-answer-back">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Substitute your answer back in and check.</p>
+          <p class="r"><span class="rn">6.6</span>Substitute your answer back in and check.</p>
           <dl>
           <dt>Why</dt><dd class="why">It's the only step that catches a sign error, and sign errors are what actually cost you points.</dd>
           <dt>When</dt><dd class="when">Always. Especially on a test.</dd>
@@ -883,27 +928,27 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">07</span>Roots<span class="scount"> </span></h2>
           
-        <div class="rule" data-id="rt-but">
+        <div class="rule" id="rt-but" data-id="rt-but">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>√a · √b</code> = <code>√(ab)</code>, but <code>√(a+b)</code> is <strong>NOT</strong> <code>√a + √b</code>.</p>
+          <p class="r"><span class="rn">7.1</span><code><span class="rad">√<span class="rc">a</span></span> · <span class="rad">√<span class="rc">b</span></span></code> = <code><span class="rad">√<span class="rc">ab</span></span></code>, but <code><span class="rad">√<span class="rc">a+b</span></span></code> is <strong>NOT</strong> <code><span class="rad">√<span class="rc">a</span></span> + <span class="rad">√<span class="rc">b</span></span></code>.</p>
           <dl>
           <dt>Why</dt><dd class="why">Roots are just exponents in a hat — they distribute over multiplication only, same as every exponent rule.</dd>
-          <dt>Ex.</dt><dd class="example"><code>√(9+16) = √25 = 5</code>, but <code>√9 + √16 = 3 + 4 = 7</code>.</dd>
+          <dt>Ex.</dt><dd class="example"><code><span class="rad">√<span class="rc">9+16</span></span> = <span class="rad">√<span class="rc">25</span></span> = 5</code>, but <code><span class="rad">√<span class="rc">9</span></span> + <span class="rad">√<span class="rc">16</span></span> = 3 + 4 = 7</code>.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule" data-id="rt-simplify-pulling-out">
+        <div class="rule" id="rt-simplify-pulling-out" data-id="rt-simplify-pulling-out">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Simplify by pulling out perfect-square factors. <code>√50</code> = <code>√(25·2)</code> = <code>5√2</code>.</p>
+          <p class="r"><span class="rn">7.2</span>Simplify by pulling out perfect-square factors. <code><span class="rad">√<span class="rc">50</span></span></code> = <code><span class="rad">√<span class="rc">25·2</span></span></code> = <code>5<span class="rad">√<span class="rc">2</span></span></code>.</p>
           <dl>
           <dt>Why</dt><dd class="why">The multiply rule run backwards: split off the part that has a clean root and walk it out from under the radical.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="rt-rule">
+        <div class="rule" id="rt-rule" data-id="rt-rule">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>√(x<sup>2</sup>)</code> = <code>|x|</code></p>
+          <p class="r"><span class="rn">7.3</span><code><span class="rad">√<span class="rc">x<sup>2</sup></span></span></code> = <code>|x|</code></p>
           <dl>
-          <dt>Why</dt><dd class="why">The radical symbol means “the positive one.” <code>√((−3)<sup>2</sup>)</code> = <code>√9</code> = <code>3</code>, not <code>−3</code>.</dd>
+          <dt>Why</dt><dd class="why">The radical symbol means “the positive one.” <code><span class="rad">√<span class="rc">(−3)<sup>2</sup></span></span></code> = <code><span class="rad">√<span class="rc">9</span></span></code> = <code>3</code>, not <code>−3</code>.</dd>
           </dl>
         </div>
       </section>
@@ -912,40 +957,40 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">08</span>Percents, Decimals &amp; Ratios<span class="scount"> </span></h2>
           
-        <div class="rule star" data-id="pc-percent-means-per">
+        <div class="rule star" id="pc-percent-means-per" data-id="pc-percent-means-per">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Percent means <strong>per hundred</strong>. <code>35%</code> = <code>35/100</code> = <code>0.35</code>.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">8.1</span>Percent means <strong>per hundred</strong>. <code>35%</code> = <code><span class="frac"><span class="fn">35</span><span class="fd">100</span></span></code> = <code>0.35</code>.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">“cent” = hundred, same root as century and cents-per-dollar. A percent is always a fraction wearing a hat.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule" data-id="pc-decimal-percent-move">
+        <div class="rule" id="pc-decimal-percent-move" data-id="pc-decimal-percent-move">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Decimal → percent: move the point 2 places <strong>right</strong>. Percent → decimal: 2 places <strong>left</strong>.</p>
+          <p class="r"><span class="rn">8.2</span>Decimal → percent: move the point 2 places <strong>right</strong>. Percent → decimal: 2 places <strong>left</strong>.</p>
           <dl>
           <dt>Why</dt><dd class="why">That's multiplying or dividing by 100, which is the entire definition of percent.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="pc-x-y-means">
+        <div class="rule" id="pc-x-y-means" data-id="pc-x-y-means">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">“x% <strong>of</strong> y” means multiply.</p>
+          <p class="r"><span class="rn">8.3</span>“x% <strong>of</strong> y” means multiply.</p>
           <dl>
           <dt>Why</dt><dd class="why">“Of” is the English word for multiplication. It never means anything else.</dd>
           <dt>Ex.</dt><dd class="example">20% of 60 = <code>0.20 × 60</code> = <code>12</code></dd>
           </dl>
         </div>
-        <div class="rule" data-id="pc-percent-change">
+        <div class="rule" id="pc-percent-change" data-id="pc-percent-change">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Percent change = <code>(new − old) / old</code></p>
+          <p class="r"><span class="rn">8.4</span>Percent change = <code><span class="frac"><span class="fn">new − old</span><span class="fd">old</span></span></code></p>
           <dl>
           <dt>Why</dt><dd class="why">You're measuring the change against <strong>where you started</strong>, so the starting value always goes on the bottom.</dd>
           <dt>Trap</dt><dd class="trap">Going 100 → 150 is +50%. Going 150 → 100 is −33%, not −50%. The denominator changed.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="pc-ratio-just-fraction">
+        <div class="rule" id="pc-ratio-just-fraction" data-id="pc-ratio-just-fraction">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">A ratio <code>a : b</code> is just the fraction <code>a/b</code>.</p>
+          <p class="r"><span class="rn">8.5</span>A ratio <code>a : b</code> is just the fraction <code><span class="frac"><span class="fn">a</span><span class="fd">b</span></span></code>.</p>
           <dl>
           <dt>Why</dt><dd class="why">Different notation, same object. If ratios feel hard, rewrite them as fractions and use the fraction rules.</dd>
           </dl>
@@ -956,50 +1001,50 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">09</span>Functions &amp; f(x) Notation<span class="scount"> </span></h2>
           <p class="blurb">A function is a machine: put a number in, get exactly one number out. Nearly all the difficulty here is notation, not concept.</p>
-        <div class="rule star" data-id="fn-not-times">
+        <div class="rule star" id="fn-not-times" data-id="fn-not-times">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>f(x)</code> does <strong>not</strong> mean f times x. It means "the machine f, applied to x."<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">9.1</span><code>f(x)</code> does <strong>not</strong> mean f times x. It means "the machine f, applied to x."<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">This is the one place in algebra where parentheses don't mean multiply — they mean "fed into."</dd>
           <dt>Trap</dt><dd class="trap">You spent all of section 05 learning that <code>2(x+1)</code> means multiply. <code>f(x+1)</code> does not. The rule changed and nobody said so.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule" data-id="fn-same-as-y">
+        <div class="rule" id="fn-same-as-y" data-id="fn-same-as-y">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>f(x)</code> and <code>y</code> are the same thing.</p>
+          <p class="r"><span class="rn">9.2</span><code>f(x)</code> and <code>y</code> are the same thing.</p>
           <dl>
           <dt>Why</dt><dd class="why">Both name the output. <code>y = 2x + 1</code> and <code>f(x) = 2x + 1</code> are identical; the f version just tells you which machine made it.</dd>
           <dt>When</dt><dd class="when">When a problem switches between them mid-question, nothing has changed. Keep going.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="fn-evaluate-replace">
+        <div class="rule" id="fn-evaluate-replace" data-id="fn-evaluate-replace">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">To find <code>f(3)</code>, replace <strong>every</strong> x with 3.</p>
+          <p class="r"><span class="rn">9.3</span>To find <code>f(3)</code>, replace <strong>every</strong> x with 3.</p>
           <dl>
           <dt>Why</dt><dd class="why">x is a blank to be filled, not a value. The function is a recipe with a hole in it.</dd>
           <dt>Ex.</dt><dd class="example">If <code>f(x) = x<sup>2</sup> + 1</code>, then <code>f(3) = 3<sup>2</sup> + 1 = 10</code>.</dd>
           </dl>
         </div>
-        <div class="rule star" data-id="fn-whole-thing-in">
+        <div class="rule star" id="fn-whole-thing-in" data-id="fn-whole-thing-in">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>f(x+1)</code> means put <code>x+1</code> into every blank. It is <strong>not</strong> <code>f(x) + 1</code>.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">9.4</span><code>f(x+1)</code> means put <code>x+1</code> into every blank. It is <strong>not</strong> <code>f(x) + 1</code>.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Whatever sits in the parentheses is the input, however complicated it looks.</dd>
           <dt>Trap</dt><dd class="trap">If <code>f(x) = x<sup>2</sup></code>, then <code>f(x+1) = (x+1)<sup>2</sup></code>, not <code>x<sup>2</sup> + 1</code>.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="fn-domain-range">
+        <div class="rule" id="fn-domain-range" data-id="fn-domain-range">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><strong>Domain</strong> = what you're allowed to put in. <strong>Range</strong> = what can come out.</p>
+          <p class="r"><span class="rn">9.5</span><strong>Domain</strong> = what you're allowed to put in. <strong>Range</strong> = what can come out.</p>
           <dl>
           <dt>Why</dt><dd class="why">Only two things ever break a function at this level: dividing by zero, and even roots of negatives. Check for those and the domain is everything else.</dd>
           <dt>Hook</dt><dd class="mnemonic">Domain is the Door (in). Range is the Result (out).</dd>
           </dl>
         </div>
-        <div class="rule" data-id="fn-vertical-line">
+        <div class="rule" id="fn-vertical-line" data-id="fn-vertical-line">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">A graph is a function if no vertical line crosses it twice.</p>
+          <p class="r"><span class="rn">9.6</span>A graph is a function if no vertical line crosses it twice.</p>
           <dl>
           <dt>Why</dt><dd class="why">One input must give exactly one output — two crossings means one x produced two y's, so it isn't a machine.</dd>
           </dl>
@@ -1010,56 +1055,56 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">10</span>The Coordinate Plane &amp; Straight Lines<span class="scount"> </span></h2>
           <p class="blurb">This section pays off later: a regression line in statistics is exactly y = mx + b wearing different letters.</p>
-        <div class="rule" data-id="ln-point-order">
+        <div class="rule" id="ln-point-order" data-id="ln-point-order">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">A point is <code>(x, y)</code> — always across first, then up.</p>
+          <p class="r"><span class="rn">10.1</span>A point is <code>(x, y)</code> — always across first, then up.</p>
           <dl>
           <dt>Why</dt><dd class="why">Alphabetical order, x before y. That's the whole reason; there isn't a deeper one.</dd>
           <dt>Hook</dt><dd class="mnemonic">Into the house, then up the stairs.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule star" data-id="ln-slope-formula">
+        <div class="rule star" id="ln-slope-formula" data-id="ln-slope-formula">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Slope <code>m = rise / run = (y<sub>2</sub> - y<sub>1</sub>) / (x<sub>2</sub> - x<sub>1</sub>)</code><span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">10.2</span>Slope <code>m = <span class="frac"><span class="fn">rise</span><span class="fd">run</span></span> = <span class="frac"><span class="fn">y<sub>2</sub> - y<sub>1</sub></span><span class="fd">x<sub>2</sub> - x<sub>1</sub></span></span></code><span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Slope is a rate: how much y changes for every 1 that x moves. Every other line rule follows from that one sentence.</dd>
           <dt>Trap</dt><dd class="trap">Keep the points in the same order top and bottom. If y<sub>2</sub> came first, x<sub>2</sub> comes first too.</dd>
           </dl>
         </div>
-        <div class="rule star" data-id="ln-slope-intercept">
+        <div class="rule star" id="ln-slope-intercept" data-id="ln-slope-intercept">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>y = mx + b</code> — m is the slope, b is where the line crosses the y-axis.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">10.3</span><code>y = mx + b</code> — m is the slope, b is where the line crosses the y-axis.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Set x to 0: the <code>mx</code> term vanishes and you're left with <code>y = b</code>. So b is literally the value at the crossing.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ln-slope-signs">
+        <div class="rule" id="ln-slope-signs" data-id="ln-slope-signs">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Positive slope climbs left-to-right. Negative falls. Zero is flat. Vertical is <strong>undefined</strong>.</p>
+          <p class="r"><span class="rn">10.4</span>Positive slope climbs left-to-right. Negative falls. Zero is flat. Vertical is <strong>undefined</strong>.</p>
           <dl>
           <dt>Why</dt><dd class="why">It's rise over run: no rise gives 0, and no run gives division by zero, which isn't a number.</dd>
           <dt>Trap</dt><dd class="trap">Zero slope and undefined slope are opposites, not synonyms. Flat line: <code>m = 0</code>. Vertical line: no m at all.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ln-parallel-perp">
+        <div class="rule" id="ln-parallel-perp" data-id="ln-parallel-perp">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Parallel lines have the <strong>same</strong> slope. Perpendicular slopes are <strong>negative reciprocals</strong>.</p>
+          <p class="r"><span class="rn">10.5</span>Parallel lines have the <strong>same</strong> slope. Perpendicular slopes are <strong>negative reciprocals</strong>.</p>
           <dl>
-          <dt>Why</dt><dd class="why">Turning a line 90° swaps rise and run and flips the direction — so <code>2/3</code> becomes <code>-3/2</code>.</dd>
-          <dt>Ex.</dt><dd class="example">Perpendicular to <code>m = 2</code> is <code>m = -1/2</code>.</dd>
+          <dt>Why</dt><dd class="why">Turning a line 90° swaps rise and run and flips the direction — so <code><span class="frac"><span class="fn">2</span><span class="fd">3</span></span></code> becomes <code>-<span class="frac"><span class="fn">3</span><span class="fd">2</span></span></code>.</dd>
+          <dt>Ex.</dt><dd class="example">Perpendicular to <code>m = 2</code> is <code>m = -<span class="frac"><span class="fn">1</span><span class="fd">2</span></span></code>.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ln-graph-from-b">
+        <div class="rule" id="ln-graph-from-b" data-id="ln-graph-from-b">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">To graph it: plot <code>b</code> first, then count the slope as rise-over-run to get the next point.</p>
+          <p class="r"><span class="rn">10.6</span>To graph it: plot <code>b</code> first, then count the slope as rise-over-run to get the next point.</p>
           <dl>
           <dt>Why</dt><dd class="why">b hands you one free point, and the slope is a set of directions from any point to another.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="ln-x-intercept">
+        <div class="rule" id="ln-x-intercept" data-id="ln-x-intercept">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">y-intercept: set <code>x = 0</code>. x-intercept: set <code>y = 0</code>.</p>
+          <p class="r"><span class="rn">10.7</span>y-intercept: set <code>x = 0</code>. x-intercept: set <code>y = 0</code>.</p>
           <dl>
           <dt>Why</dt><dd class="why">An intercept is where the <em>other</em> coordinate is zero — that's what touching an axis means.</dd>
           </dl>
@@ -1070,33 +1115,33 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">11</span>Systems of Equations<span class="scount"> </span></h2>
           <p class="blurb">Two equations, two unknowns. The answer is the one point that satisfies both — which on a graph is where the lines cross.</p>
-        <div class="rule star" data-id="sy-crossing-point">
+        <div class="rule star" id="sy-crossing-point" data-id="sy-crossing-point">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">A solution must make <strong>both</strong> equations true at once.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">11.1</span>A solution must make <strong>both</strong> equations true at once.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">That's why the answer is the crossing point: it's the only place that sits on both lines.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule" data-id="sy-substitution">
+        <div class="rule" id="sy-substitution" data-id="sy-substitution">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><strong>Substitution</strong>: solve one equation for one variable, then put that into the other.</p>
+          <p class="r"><span class="rn">11.2</span><strong>Substitution</strong>: solve one equation for one variable, then put that into the other.</p>
           <dl>
           <dt>Why</dt><dd class="why">It converts a two-unknown problem into a one-unknown problem, which you already know how to solve.</dd>
           <dt>When</dt><dd class="when">Best when a variable is already alone, or has a coefficient of 1.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="sy-elimination">
+        <div class="rule" id="sy-elimination" data-id="sy-elimination">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><strong>Elimination</strong>: add or subtract the two equations so one variable cancels.</p>
+          <p class="r"><span class="rn">11.3</span><strong>Elimination</strong>: add or subtract the two equations so one variable cancels.</p>
           <dl>
           <dt>Why</dt><dd class="why">You're allowed to add equals to equals — both scales stay balanced, so the combined statement is still true.</dd>
           <dt>When</dt><dd class="when">Best when the same variable has matching or opposite coefficients. Multiply one equation through to make that happen.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="sy-no-solution">
+        <div class="rule" id="sy-no-solution" data-id="sy-no-solution">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Variables all vanish? A <strong>false</strong> statement (<code>0 = 5</code>) means no solution. A <strong>true</strong> one (<code>0 = 0</code>) means infinitely many.</p>
+          <p class="r"><span class="rn">11.4</span>Variables all vanish? A <strong>false</strong> statement (<code>0 = 5</code>) means no solution. A <strong>true</strong> one (<code>0 = 0</code>) means infinitely many.</p>
           <dl>
           <dt>Why</dt><dd class="why">No solution means the lines are parallel and never meet. Infinite means they're the same line drawn twice.</dd>
           <dt>Trap</dt><dd class="trap">Getting <code>0 = 0</code> feels like you did something wrong. You didn't — it's an answer.</dd>
@@ -1108,48 +1153,48 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">12</span>Inequalities &amp; Absolute Value<span class="scount"> </span></h2>
           <p class="blurb">Absolute value means distance from zero. Every rule here is that one idea applied to a number line.</p>
-        <div class="rule star" data-id="iq-distance-from-zero">
+        <div class="rule star" id="iq-distance-from-zero" data-id="iq-distance-from-zero">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>|x|</code> is the <strong>distance</strong> from zero, so it's never negative.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">12.1</span><code>|x|</code> is the <strong>distance</strong> from zero, so it's never negative.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Distance has no direction. Going 5 left and 5 right are both a trip of 5.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule star" data-id="iq-two-answers">
+        <div class="rule star" id="iq-two-answers" data-id="iq-two-answers">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>|x| = 5</code> has <strong>two</strong> answers: <code>5</code> and <code>-5</code>.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">12.2</span><code>|x| = 5</code> has <strong>two</strong> answers: <code>5</code> and <code>-5</code>.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Both sit 5 units from zero, and the bars threw away which side you were on.</dd>
           <dt>Trap</dt><dd class="trap">Losing the negative answer is the single most common absolute-value mistake.</dd>
           </dl>
         </div>
-        <div class="rule star" data-id="iq-less-thand">
+        <div class="rule star" id="iq-less-thand" data-id="iq-less-thand">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>|x| &lt; 5</code> means <code>-5 &lt; x &lt; 5</code> (a band). <code>|x| &gt; 5</code> means <code>x &lt; -5</code> <strong>or</strong> <code>x &gt; 5</code> (two pieces).<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">12.3</span><code>|x| &lt; 5</code> means <code>-5 &lt; x &lt; 5</code> (a band). <code>|x| &gt; 5</code> means <code>x &lt; -5</code> <strong>or</strong> <code>x &gt; 5</code> (two pieces).<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">"Less than 5 away from zero" is the stretch around zero. "More than 5 away" is everything outside it.</dd>
           <dt>Hook</dt><dd class="mnemonic">Less thAND, greatOR.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="iq-isolate-bars-first">
+        <div class="rule" id="iq-isolate-bars-first" data-id="iq-isolate-bars-first">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Get the absolute value alone <strong>before</strong> you split it into two cases.</p>
+          <p class="r"><span class="rn">12.4</span>Get the absolute value alone <strong>before</strong> you split it into two cases.</p>
           <dl>
           <dt>Why</dt><dd class="why">The bars apply to whatever is inside them, so anything still stuck outside hasn't been dealt with yet.</dd>
           <dt>Ex.</dt><dd class="example"><code>2|x| + 1 = 11</code> becomes <code>|x| = 5</code> first, then <code>x = 5</code> or <code>x = -5</code>.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="iq-open-closed">
+        <div class="rule" id="iq-open-closed" data-id="iq-open-closed">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Graphing: open circle for <code>&lt;</code> and <code>&gt;</code>, filled circle for <code>&lt;=</code> and <code>&gt;=</code>.</p>
+          <p class="r"><span class="rn">12.5</span>Graphing: open circle for <code>&lt;</code> and <code>&gt;</code>, filled circle for <code>&lt;=</code> and <code>&gt;=</code>.</p>
           <dl>
           <dt>Why</dt><dd class="why">Filled means the endpoint itself counts. Open means "up to here but not this."</dd>
           </dl>
         </div>
-        <div class="rule" data-id="iq-negative-flip-ref">
+        <div class="rule" id="iq-negative-flip-ref" data-id="iq-negative-flip-ref">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Multiplying or dividing an inequality by a negative still flips it — see 06.</p>
+          <p class="r"><span class="rn">12.6</span>Multiplying or dividing an inequality by a negative still flips it — see 06.</p>
           <dl>
           <dt>Why</dt><dd class="why">Same reason as before: multiplying by a negative mirrors the number line, so bigger becomes smaller.</dd>
           <dt>When</dt><dd class="when">It applies inside absolute-value cases too, and that's where people forget it.</dd>
@@ -1161,50 +1206,50 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">13</span>Quadratics<span class="scount"> </span></h2>
           <p class="blurb">Anything with an <code>x<sup>2</sup></code>. It graphs as a parabola — a U — because squaring turns negatives positive, so the curve has to turn around.</p>
-        <div class="rule star" data-id="qd-zero-product">
+        <div class="rule star" id="qd-zero-product" data-id="qd-zero-product">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><strong>Zero Product Property</strong>: if <code>A · B = 0</code>, then <code>A = 0</code> or <code>B = 0</code>.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">13.1</span><strong>Zero Product Property</strong>: if <code>A · B = 0</code>, then <code>A = 0</code> or <code>B = 0</code>.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">The only way to multiply to zero is for something to already be zero. This is the entire reason factoring solves equations.</dd>
           <dt>Trap</dt><dd class="trap">It only works against <strong>zero</strong>. <code>A · B = 6</code> tells you nothing about A or B — get everything to one side first.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule star" data-id="qd-factor-trinomial">
+        <div class="rule star" id="qd-factor-trinomial" data-id="qd-factor-trinomial">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">To factor <code>x<sup>2</sup> + bx + c</code>: find two numbers that <strong>multiply to c</strong> and <strong>add to b</strong>.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">13.2</span>To factor <code>x<sup>2</sup> + bx + c</code>: find two numbers that <strong>multiply to c</strong> and <strong>add to b</strong>.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">It's FOIL backwards — the Last terms multiply to c, and the Outside plus Inside add to b.</dd>
           <dt>Ex.</dt><dd class="example"><code>x<sup>2</sup> + 5x + 6</code>: 2 and 3 multiply to 6, add to 5. So <code>(x+2)(x+3)</code>.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="qd-formula">
+        <div class="rule" id="qd-formula" data-id="qd-formula">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Quadratic formula: <code>x = (-b ± √(b<sup>2</sup> - 4ac)) / (2a)</code></p>
+          <p class="r"><span class="rn">13.3</span>Quadratic formula: <code>x = <span class="frac"><span class="fn">-b ± <span class="rad">√<span class="rc">b<sup>2</sup> - 4ac</span></span></span><span class="fd">2a</span></span></code></p>
           <dl>
           <dt>Why</dt><dd class="why">It's completing the square done once, in general, so nobody ever has to do it by hand again.</dd>
           <dt>When</dt><dd class="when">When factoring doesn't work — which is most of the time outside a textbook.</dd>
-          <dt>Trap</dt><dd class="trap">The whole <code>-b ± √(b<sup>2</sup> - 4ac)</code> sits over <code>2a</code> — the <code>-b</code> included, not just the root.</dd>
+          <dt>Trap</dt><dd class="trap">The whole <code>-b ± <span class="rad">√<span class="rc">b<sup>2</sup> - 4ac</span></span></code> sits over <code>2a</code> — the <code>-b</code> included, not just the root.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="qd-plus-minus">
+        <div class="rule" id="qd-plus-minus" data-id="qd-plus-minus">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>±</code> means work it twice: once with <code>+</code>, once with <code>-</code>.</p>
+          <p class="r"><span class="rn">13.4</span><code>±</code> means work it twice: once with <code>+</code>, once with <code>-</code>.</p>
           <dl>
           <dt>Why</dt><dd class="why">A square root has two answers, so the formula hands you both at once.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="qd-discriminant">
+        <div class="rule" id="qd-discriminant" data-id="qd-discriminant">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">The discriminant <code>b<sup>2</sup> - 4ac</code> counts the real answers: positive → 2, zero → 1, negative → 0.</p>
+          <p class="r"><span class="rn">13.5</span>The discriminant <code>b<sup>2</sup> - 4ac</code> counts the real answers: positive → 2, zero → 1, negative → 0.</p>
           <dl>
           <dt>Why</dt><dd class="why">It lives under the square root. A negative under a root has no real answer, so the parabola never crosses the x-axis.</dd>
           <dt>When</dt><dd class="when">Useful when a question only asks <em>how many</em> solutions — you can skip the rest of the formula.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="qd-standard-form">
+        <div class="rule" id="qd-standard-form" data-id="qd-standard-form">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Get it to <code>ax<sup>2</sup> + bx + c = 0</code> before doing anything else.</p>
+          <p class="r"><span class="rn">13.6</span>Get it to <code>ax<sup>2</sup> + bx + c = 0</code> before doing anything else.</p>
           <dl>
           <dt>Why</dt><dd class="why">Both factoring and the formula assume one side is zero. Neither works otherwise.</dd>
           </dl>
@@ -1215,33 +1260,33 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">14</span>Rational Expressions<span class="scount"> </span></h2>
           <p class="blurb">Fractions with letters in them. There are no new rules here — section 03 already covers all of it. The only new skill is factoring first.</p>
-        <div class="rule" data-id="re-same-rules">
+        <div class="rule" id="re-same-rules" data-id="re-same-rules">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Every fraction rule from 03 applies unchanged. Letters change nothing.</p>
+          <p class="r"><span class="rn">14.1</span>Every fraction rule from 03 applies unchanged. Letters change nothing.</p>
           <dl>
-          <dt>Why</dt><dd class="why">A fraction is a fraction. <code>x/y · a/b</code> multiplies straight across for exactly the same reason <code>1/2 · 1/3</code> does.</dd>
+          <dt>Why</dt><dd class="why">A fraction is a fraction. <code><span class="frac"><span class="fn">x</span><span class="fd">y</span></span> · <span class="frac"><span class="fn">a</span><span class="fd">b</span></span></code> multiplies straight across for exactly the same reason <code><span class="frac"><span class="fn">1</span><span class="fd">2</span></span> · <span class="frac"><span class="fn">1</span><span class="fd">3</span></span></code> does.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule star" data-id="re-factor-then-cancel">
+        <div class="rule star" id="re-factor-then-cancel" data-id="re-factor-then-cancel">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><strong>Factor first, then cancel.</strong> Never cancel before factoring.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">14.2</span><strong>Factor first, then cancel.</strong> Never cancel before factoring.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">You can only cancel factors, never terms — and factoring is the operation that turns terms into factors.</dd>
-          <dt>Ex.</dt><dd class="example"><code>(x<sup>2</sup> - 4)/(x + 2)</code> → <code>((x+2)(x-2))/(x+2)</code> → <code>x - 2</code>.</dd>
+          <dt>Ex.</dt><dd class="example"><code><span class="frac"><span class="fn">x<sup>2</sup> - 4</span><span class="fd">x + 2</span></span></code> → <code><span class="frac"><span class="fn">(x+2)(x-2)</span><span class="fd">x+2</span></span></code> → <code>x - 2</code>.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="re-cannot-be-zero">
+        <div class="rule" id="re-cannot-be-zero" data-id="re-cannot-be-zero">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">The denominator can never be zero. Note which x values are banned.</p>
+          <p class="r"><span class="rn">14.3</span>The denominator can never be zero. Note which x values are banned.</p>
           <dl>
           <dt>Why</dt><dd class="why">Division by zero is undefined, so those inputs are removed from the domain — even if they cancel away later.</dd>
           <dt>Trap</dt><dd class="trap">In the example above, <code>x = -2</code> stays banned even though the <code>(x+2)</code> cancelled. The cancelling doesn't un-ban it.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="re-common-denominator">
+        <div class="rule" id="re-common-denominator" data-id="re-common-denominator">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Adding or subtracting still needs a common denominator — factor to find it.</p>
+          <p class="r"><span class="rn">14.4</span>Adding or subtracting still needs a common denominator — factor to find it.</p>
           <dl>
           <dt>Why</dt><dd class="why">Same reason as numbers: you can't count pieces of different sizes. The factored form shows you what's missing.</dd>
           </dl>
@@ -1252,25 +1297,25 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">15</span>Scientific Notation<span class="scount"> </span></h2>
           <p class="blurb">Short section, but you will need it the moment you meet a p-value.</p>
-        <div class="rule" data-id="sn-form">
+        <div class="rule" id="sn-form" data-id="sn-form">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>a × 10<sup>n</sup></code>, where a is at least 1 and less than 10.</p>
+          <p class="r"><span class="rn">15.1</span><code>a × 10<sup>n</sup></code>, where a is at least 1 and less than 10.</p>
           <dl>
           <dt>Why</dt><dd class="why">Forcing exactly one digit before the decimal makes any two numbers instantly comparable by their exponent.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule" data-id="sn-sign-of-exponent">
+        <div class="rule" id="sn-sign-of-exponent" data-id="sn-sign-of-exponent">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Positive exponent → big number. Negative exponent → small number.</p>
+          <p class="r"><span class="rn">15.2</span>Positive exponent → big number. Negative exponent → small number.</p>
           <dl>
           <dt>Why</dt><dd class="why">The exponent counts how many places the decimal moves, and negative exponents mean divide — see 04.</dd>
           <dt>Ex.</dt><dd class="example"><code>1.2 × 10<sup>-5</sup></code> is <code>0.000012</code>. That's a very small p-value.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="sn-move-decimal">
+        <div class="rule" id="sn-move-decimal" data-id="sn-move-decimal">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Move the decimal <code>n</code> places: right for positive n, left for negative.</p>
+          <p class="r"><span class="rn">15.3</span>Move the decimal <code>n</code> places: right for positive n, left for negative.</p>
           <dl>
           <dt>Why</dt><dd class="why">Multiplying by 10 shifts every digit one column up. Doing it n times shifts n columns.</dd>
           </dl>
@@ -1281,25 +1326,25 @@ html.hiding .section.all-known { display: none; }
         <div class="sechead">
           <h2><span class="n">16</span>Word Problem Translation<span class="scount"> </span></h2>
           <p class="blurb">Word problems are a translation exercise, not a math exercise. Convert to symbols first, then solve.</p>
-        <div class="rule" data-id="tr-was-per-each">
+        <div class="rule" id="tr-was-per-each" data-id="tr-was-per-each">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><strong>of</strong> = <code>×</code> · <strong>is / are / was</strong> = <code>=</code> · <strong>per / for each</strong> = <code>÷</code> · <strong>and / more than / sum</strong> = <code>+</code> · <strong>difference / less</strong> = <code>−</code></p>
+          <p class="r"><span class="rn">16.1</span><strong>of</strong> = <code>×</code> · <strong>is / are / was</strong> = <code>=</code> · <strong>per / for each</strong> = <code>÷</code> · <strong>and / more than / sum</strong> = <code>+</code> · <strong>difference / less</strong> = <code>−</code></p>
           <dl>
           <dt>Why</dt><dd class="why">These are fixed. They never mean anything else, which makes them the one part of word problems you can do mechanically.</dd>
           </dl>
         </div>
         </div>
-        <div class="rule star" data-id="tr-less-than-x">
+        <div class="rule star" id="tr-less-than-x" data-id="tr-less-than-x">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">“5 <strong>less than</strong> x” is <code>x − 5</code>. <strong>Backwards from how you read it.</strong><span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">16.2</span>“5 <strong>less than</strong> x” is <code>x − 5</code>. <strong>Backwards from how you read it.</strong><span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">“Less than” and “more than” describe a change <em>to</em> the thing named after them, so that thing comes first.</dd>
           <dt>Trap</dt><dd class="trap">This wording is chosen specifically to trip you up. Slow down every single time you see it.</dd>
           </dl>
         </div>
-        <div class="rule" data-id="tr-name-unknown-out">
+        <div class="rule" id="tr-name-unknown-out" data-id="tr-name-unknown-out">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r">Name the unknown out loud before you write anything. “Let x = the number of hours.”</p>
+          <p class="r"><span class="rn">16.3</span>Name the unknown out loud before you write anything. “Let x = the number of hours.”</p>
           <dl>
           <dt>Why</dt><dd class="why">Half of word-problem failure is solving correctly for the wrong quantity. Writing the units down prevents it.</dd>
           </dl>

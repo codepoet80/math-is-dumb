@@ -244,6 +244,38 @@ code {
   white-space: nowrap;
 }
 
+/* Textbook math inside code (build.js math()). inline-block + vertical-align
+   rather than flexbox or inline-grid, which WebKit 534 on the TouchPad lacks.
+   Lines are borders in the text colour, so dark mode and print follow along. */
+.frac {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  font-size: .9em;
+  margin: .1em .08em;
+}
+.frac > span { display: block; padding: 0 .2em; line-height: 1.15; }
+.frac .fn { padding-bottom: .12em; }
+/* the top padding keeps a radical's bar in the denominator off the fraction line */
+.frac .fd { border-top: 1px solid; padding-top: .22em; }
+.rad { white-space: nowrap; }
+.rad .rc { border-top: 1px solid; padding: .05em .08em 0 .04em; margin-left: .02em; }
+.rad .ri { font-size: .6em; vertical-align: .9em; margin-right: -.3em; }
+
+/* Rule number, for looking up a rule that ask.php named in a terminal. */
+.rule .rn {
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: .72em;
+  font-weight: 700;
+  letter-spacing: .04em;
+  font-variant-numeric: tabular-nums;
+  color: #8b98a3; color: var(--ink-faint);
+  margin-right: .5em;
+}
+/* A rule opened from an ask.php link (index.html#rule-id). You followed the link
+   to read it, so it shows in full even if it's marked known (see further down). */
+.rule:target { background: rgba(31,92,139,.075); background: var(--code-bg); }
+
 /* ---------- PRINT: dense, two columns, ink-cheap ---------- */
 @media print {
   @page { size: letter portrait; margin: .45in .4in; }
@@ -300,6 +332,15 @@ code {
   .when, .example, .mnemonic { color: #000; }
 
   code { background: none; padding: 0; border-bottom: .4pt dotted #888; }
+  /* Stacked fractions are twice a line's height and push lines apart; set them
+     tight so textbook math doesn't cost the sheet a page. */
+  /* white paints over code's dotted underline, which would strike the denominator */
+  .frac { font-size: .82em; margin: 0 .05em; background: #fff; }
+  .frac > span { line-height: 1; padding: 0 .1em; }
+  .frac .fn { padding-bottom: .05em; }
+  .frac .fd { border-top-width: .5pt; padding-top: .12em; }
+  .rad .rc { border-top-width: .5pt; }
+  .rule .rn { font-size: .68em; margin-right: .35em; color: #555; }
   a { color: #000; text-decoration: none; }
 }
 
@@ -442,6 +483,10 @@ html.js .rule .know { display: block; }
 
 html.hiding .rule.known,
 html.hiding .section.all-known { display: none; }
+/* Beats the two rules above on specificity. A section whose rules are all known
+   stays hidden, since CSS in WebKit 534 can't select a parent from its child. */
+html.hiding .rule.known:target { display: block; }
+.rule.known:target dl { display: block; }
 
 .toc a.muted { opacity: .45; text-decoration: line-through; }
 
