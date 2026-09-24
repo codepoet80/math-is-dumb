@@ -182,8 +182,10 @@ body {
 }
 
 /* ---------- the rule block ---------- */
+/* 1.6rem apart on screen so rules read as separate blocks; print keeps its own
+   tight spacing below, since the printed sheet has to stay at 4 pages. */
 .rule {
-  margin: 0 0 1rem;
+  margin: 0 0 1.6rem;
   padding: 0 0 0 .85rem;
   border-left: 2px solid #dde4e9; border-left-color: var(--hair);
   page-break-inside: avoid;
