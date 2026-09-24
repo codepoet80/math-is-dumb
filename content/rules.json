@@ -118,6 +118,12 @@
           "example": "`3 ÷ 1/2` = `3 × 2/1` = `6`"
         },
         {
+          "id": "fr-one-over-fraction-flips",
+          "rule": "`1/(a/b)` = `b/a` — one over a fraction is that fraction flipped upside down.",
+          "why": "It's Keep, Change, Flip with a 1 on top: `1 ÷ a/b` = `1 × b/a`, and multiplying by 1 changes nothing.",
+          "example": "`1/(2/3)` = `3/2`. Check: `3/2 · 2/3 = 1`."
+        },
+        {
           "id": "fr-can-cancel-factors",
           "rule": "You can cancel **factors**. You can never cancel **terms**.",
           "why": "Canceling is secretly dividing top and bottom by the same thing, which only works if that thing is multiplying *everything*.",
@@ -189,6 +195,12 @@
           "rule": "`2m^2` = `2 · (m^2)`, not `(2m)^2`. An exponent grabs **only the one thing it touches.**",
           "why": "Exponents beat multiplication in PEMDAS, so the 2 is just standing next to `m^2`. Plug in m = 3: `2m^2` is 18, but `(2m)^2` is 36.",
           "trap": "Same with negatives. `2m^{-2}` = `2/m^2` — only the m crosses the bar. If you want the whole `2m` raised, the parentheses are not optional."
+        },
+        {
+          "id": "ex-power-of-quotient",
+          "rule": "`(a/b)^n` = `a^n/b^n`. A power on a fraction goes to the **top and the bottom**.",
+          "why": "`(a/b)^3` = `a/b · a/b · a/b`, and fractions multiply straight across: `(a·a·a)/(b·b·b)`.",
+          "example": "`(1/8)^{4/3}` = `1^{4/3}/8^{4/3}` = `1/(^3√8)^4` = `1/2^4` = `1/16`. 1 to any power is 1, so the top just stays 1."
         },
         {
           "id": "ex-but",

@@ -535,7 +535,7 @@ html.hiding .rule.known:target { display: block; }
       </div>
       <div class="stamp">
         Rev. 2026-09-24<br>
-        86 rules &middot; 16 sections<br>
+        88 rules &middot; 16 sections<br>
         Prints to letter, 2 col.
       </div>
     </header>
@@ -709,9 +709,17 @@ html.hiding .rule.known:target { display: block; }
           <dt>Hook</dt><dd class="mnemonic">Keep, Change, Flip.</dd>
           </dl>
         </div>
+        <div class="rule" id="fr-one-over-fraction-flips" data-id="fr-one-over-fraction-flips">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><span class="rn">3.5</span><code><span class="frac"><span class="fn">1</span><span class="fd"><span class="frac"><span class="fn">a</span><span class="fd">b</span></span></span></span></code> = <code><span class="frac"><span class="fn">b</span><span class="fd">a</span></span></code> — one over a fraction is that fraction flipped upside down.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">It's Keep, Change, Flip with a 1 on top: <code>1 ÷ <span class="frac"><span class="fn">a</span><span class="fd">b</span></span></code> = <code>1 × <span class="frac"><span class="fn">b</span><span class="fd">a</span></span></code>, and multiplying by 1 changes nothing.</dd>
+          <dt>Ex.</dt><dd class="example"><code><span class="frac"><span class="fn">1</span><span class="fd"><span class="frac"><span class="fn">2</span><span class="fd">3</span></span></span></span></code> = <code><span class="frac"><span class="fn">3</span><span class="fd">2</span></span></code>. Check: <code><span class="frac"><span class="fn">3</span><span class="fd">2</span></span> · <span class="frac"><span class="fn">2</span><span class="fd">3</span></span> = 1</code>.</dd>
+          </dl>
+        </div>
         <div class="rule star" id="fr-can-cancel-factors" data-id="fr-can-cancel-factors">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><span class="rn">3.5</span>You can cancel <strong>factors</strong>. You can never cancel <strong>terms</strong>.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">3.6</span>You can cancel <strong>factors</strong>. You can never cancel <strong>terms</strong>.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Canceling is secretly dividing top and bottom by the same thing, which only works if that thing is multiplying <em>everything</em>.</dd>
           <dt>Trap</dt><dd class="trap"><code><span class="frac"><span class="fn">x+2</span><span class="fd">2</span></span></code> is NOT <code>x</code>. But <code><span class="frac"><span class="fn">2x</span><span class="fd">2</span></span></code> IS <code>x</code>.</dd>
@@ -719,7 +727,7 @@ html.hiding .rule.known:target { display: block; }
         </div>
         <div class="rule" id="fr-cross-multiply" data-id="fr-cross-multiply">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><span class="rn">3.6</span><code><span class="frac"><span class="fn">a</span><span class="fd">b</span></span> = <span class="frac"><span class="fn">c</span><span class="fd">d</span></span></code>  →  <code>ad = bc</code> (cross-multiply).</p>
+          <p class="r"><span class="rn">3.7</span><code><span class="frac"><span class="fn">a</span><span class="fd">b</span></span> = <span class="frac"><span class="fn">c</span><span class="fd">d</span></span></code>  →  <code>ad = bc</code> (cross-multiply).</p>
           <dl>
           <dt>Why</dt><dd class="why">It isn't a trick — it's just multiplying both sides by b and then by d, and watching things cancel.</dd>
           <dt>When</dt><dd class="when">Two fractions set equal to each other. Proportions, unit conversion, scaling recipes.</dd>
@@ -802,9 +810,17 @@ html.hiding .rule.known:target { display: block; }
           <dt>Trap</dt><dd class="trap">Same with negatives. <code>2m<sup>-2</sup></code> = <code><span class="frac"><span class="fn">2</span><span class="fd">m<sup>2</sup></span></span></code> — only the m crosses the bar. If you want the whole <code>2m</code> raised, the parentheses are not optional.</dd>
           </dl>
         </div>
+        <div class="rule" id="ex-power-of-quotient" data-id="ex-power-of-quotient">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><span class="rn">4.10</span><code>(<span class="frac"><span class="fn">a</span><span class="fd">b</span></span>)<sup>n</sup></code> = <code><span class="frac"><span class="fn">a<sup>n</sup></span><span class="fd">b<sup>n</sup></span></span></code>. A power on a fraction goes to the <strong>top and the bottom</strong>.</p>
+          <dl>
+          <dt>Why</dt><dd class="why"><code>(<span class="frac"><span class="fn">a</span><span class="fd">b</span></span>)<sup>3</sup></code> = <code><span class="frac"><span class="fn">a</span><span class="fd">b</span></span> · <span class="frac"><span class="fn">a</span><span class="fd">b</span></span> · <span class="frac"><span class="fn">a</span><span class="fd">b</span></span></code>, and fractions multiply straight across: <code><span class="frac"><span class="fn">a·a·a</span><span class="fd">b·b·b</span></span></code>.</dd>
+          <dt>Ex.</dt><dd class="example"><code>(<span class="frac"><span class="fn">1</span><span class="fd">8</span></span>)<sup>4/3</sup></code> = <code><span class="frac"><span class="fn">1<sup>4/3</sup></span><span class="fd">8<sup>4/3</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">(<span class="rad"><sup class="ri">3</sup>√<span class="rc">8</span></span>)<sup>4</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">2<sup>4</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">16</span></span></code>. 1 to any power is 1, so the top just stays 1.</dd>
+          </dl>
+        </div>
         <div class="rule star" id="ex-but" data-id="ex-but">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><span class="rn">4.10</span><code>(ab)<sup>n</sup></code> = <code>a<sup>n</sup> b<sup>n</sup></code>, but <code>(a+b)<sup>n</sup></code> is <strong>NOT</strong> <code>a<sup>n</sup> + b<sup>n</sup></code>.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">4.11</span><code>(ab)<sup>n</sup></code> = <code>a<sup>n</sup> b<sup>n</sup></code>, but <code>(a+b)<sup>n</sup></code> is <strong>NOT</strong> <code>a<sup>n</sup> + b<sup>n</sup></code>.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Exponents distribute over multiplication only. <code>(2+3)<sup>2</sup> = 25</code>, while <code>2<sup>2</sup> + 3<sup>2</sup> = 13</code>.</dd>
           <dt>Trap</dt><dd class="trap">This is the single most common algebra error there is. <code>(a+b)<sup>2</sup> = a<sup>2</sup> + 2ab + b<sup>2</sup></code> — FOIL it, don't guess.</dd>
