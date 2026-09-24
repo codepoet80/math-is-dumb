@@ -168,14 +168,21 @@
         },
         {
           "id": "ex-fractional-exponent-root",
-          "rule": "`x^{1/2}` = `√x`. A fractional exponent is a root.",
-          "why": "`x^{1/2} · x^{1/2} = x^1` by the add rule — so `x^{1/2}` is the thing that gives x when multiplied by itself. That's the square root."
+          "rule": "`x^{1/2}` = `√x`, `x^{1/3}` = `^3√x`. A fractional exponent is a root.",
+          "why": "`x^{1/2} · x^{1/2} = x^1` by the add rule — so `x^{1/2}` is the thing that gives x when multiplied by itself. That's the square root. Three copies of `x^{1/3}` make `x^1`, so it's the cube root."
         },
         {
           "id": "ex-rational-exponent-root-power",
           "rule": "`x^{m/n}` = `(^n√x)^m`. Bottom of the fraction is the **root**, top is the **power**.",
           "why": "`x^{m/n} = (x^{1/n})^m` by the multiply rule, and `x^{1/n}` is the nth root for the same reason `x^{1/2}` is the square root.",
           "example": "`8^{2/3}` = `(^3√8)^2` = `2^2` = `4`. Take the root first so the numbers stay small."
+        },
+        {
+          "id": "ex-negative-fractional-exponent",
+          "rule": "`x^{-m/n}` = `1/(^n√x)^m`. Three jobs, read off the exponent: the minus **flips**, the bottom is the **root**, the top is the **power**.",
+          "why": "Each part is a rule you already have: the minus sends it across the fraction bar, then `x^{m/n}` is root-then-power. The minus has nothing to do with the root or the power.",
+          "example": "`125^{-2/3}` = `1/125^{2/3}` = `1/(^3√125)^2` = `1/5^2` = `1/25`.",
+          "trap": "A negative exponent never makes the answer negative. `125^{-2/3}` is a small positive number, not `−25`."
         },
         {
           "id": "ex-grabs-only-what-it-touches",

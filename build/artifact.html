@@ -487,8 +487,8 @@ html.hiding .section.all-known { display: none; }
         <p class="sub">Pre-algebra and algebra fundamentals. Every rule carries its reason.</p>
       </div>
       <div class="stamp">
-        Rev. 2026-09-22<br>
-        85 rules &middot; 16 sections<br>
+        Rev. 2026-09-24<br>
+        86 rules &middot; 16 sections<br>
         Prints to letter, 2 col.
       </div>
     </header>
@@ -725,9 +725,9 @@ html.hiding .section.all-known { display: none; }
         </div>
         <div class="rule" data-id="ex-fractional-exponent-root">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><code>x<sup>1/2</sup></code> = <code>√x</code>. A fractional exponent is a root.</p>
+          <p class="r"><code>x<sup>1/2</sup></code> = <code>√x</code>, <code>x<sup>1/3</sup></code> = <code><sup>3</sup>√x</code>. A fractional exponent is a root.</p>
           <dl>
-          <dt>Why</dt><dd class="why"><code>x<sup>1/2</sup> · x<sup>1/2</sup> = x<sup>1</sup></code> by the add rule — so <code>x<sup>1/2</sup></code> is the thing that gives x when multiplied by itself. That's the square root.</dd>
+          <dt>Why</dt><dd class="why"><code>x<sup>1/2</sup> · x<sup>1/2</sup> = x<sup>1</sup></code> by the add rule — so <code>x<sup>1/2</sup></code> is the thing that gives x when multiplied by itself. That's the square root. Three copies of <code>x<sup>1/3</sup></code> make <code>x<sup>1</sup></code>, so it's the cube root.</dd>
           </dl>
         </div>
         <div class="rule" data-id="ex-rational-exponent-root-power">
@@ -736,6 +736,15 @@ html.hiding .section.all-known { display: none; }
           <dl>
           <dt>Why</dt><dd class="why"><code>x<sup>m/n</sup> = (x<sup>1/n</sup>)<sup>m</sup></code> by the multiply rule, and <code>x<sup>1/n</sup></code> is the nth root for the same reason <code>x<sup>1/2</sup></code> is the square root.</dd>
           <dt>Ex.</dt><dd class="example"><code>8<sup>2/3</sup></code> = <code>(<sup>3</sup>√8)<sup>2</sup></code> = <code>2<sup>2</sup></code> = <code>4</code>. Take the root first so the numbers stay small.</dd>
+          </dl>
+        </div>
+        <div class="rule" data-id="ex-negative-fractional-exponent">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><code>x<sup>-m/n</sup></code> = <code>1/(<sup>n</sup>√x)<sup>m</sup></code>. Three jobs, read off the exponent: the minus <strong>flips</strong>, the bottom is the <strong>root</strong>, the top is the <strong>power</strong>.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Each part is a rule you already have: the minus sends it across the fraction bar, then <code>x<sup>m/n</sup></code> is root-then-power. The minus has nothing to do with the root or the power.</dd>
+          <dt>Trap</dt><dd class="trap">A negative exponent never makes the answer negative. <code>125<sup>-2/3</sup></code> is a small positive number, not <code>−25</code>.</dd>
+          <dt>Ex.</dt><dd class="example"><code>125<sup>-2/3</sup></code> = <code>1/125<sup>2/3</sup></code> = <code>1/(<sup>3</sup>√125)<sup>2</sup></code> = <code>1/5<sup>2</sup></code> = <code>1/25</code>.</dd>
           </dl>
         </div>
         <div class="rule" data-id="ex-grabs-only-what-it-touches">

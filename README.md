@@ -13,7 +13,9 @@ standalone.html       GENERATED — CSS+JS inlined, one file, works offline
 build/artifact.html   GENERATED — fragment for the Claude Code Artifact publisher
 serve.sh              rebuild + serve on the LAN for phone/TouchPad testing
 deploy.sh             rebuild + rsync the repo to the web server
-state.php             the one server-side piece: reads/writes the "I know this" marks
+state.php             server-side: reads/writes the "I know this" marks
+ask.php               server-side: find rules from curl — by keyword, or paste a problem
+ask-problem.php       ask.php's problem mode: asks Claude which rules a problem needs
 data/                 state.json lives here at runtime; never committed
 tools/                print-verification harness; never deployed
 ```
@@ -114,7 +116,8 @@ CSS custom properties and no modern flexbox. That's what the fallbacks in
 
 **The deploy is `git pull` on the server.** The repo root is the webroot:
 `index.html` and `assets/` sit exactly where the server wants them. Nothing is built
-on the server. The only request-time code is `state.php` (see *Cross-device state*).
+on the server. The only request-time code is `state.php` (see *Cross-device state*) and `ask.php`
+(see *Asking from a terminal*).
 
 ```sh
 # on the server
@@ -143,6 +146,9 @@ reachable over HTTP. Verified against the live site:
 | `.git/HEAD`, `.git/config`, `.git/index` | **403** — blocked by an existing server rule |
 | `index.html`, `assets/`, `content/rules.json` | 200 — intended |
 | `state.php` | 200 — intended; the sync endpoint |
+| `ask.php` | 200 — intended; rule search, and problem mode (calls the Claude API) |
+| `ask-problem.php` | 404 — only runs when `ask.php` includes it |
+| `data/anthropic-key.php` | 200 with an empty body — it's PHP, so running it prints nothing |
 | `data/state.json` | should be **403** (`data/.htaccess`, Apache only) — not secret either way |
 | `README.md`, `build.js`, `tools/`, `*.sh` | 200 — served but unused |
 
@@ -191,6 +197,88 @@ Rule ids are validated against `content/rules.json` on the server, so nothing th
 isn't a rule can be stored. There is no login on purpose: the state is a list of
 which rules Jon knows. That isn't worth a password, and the validation caps what a
 stranger could do to "toggle some marks".
+
+## Asking from a terminal
+
+Paste a problem and `ask.php` lists the rules it needs, in the order you'd use them,
+each with a line pointing at where it applies in *this* problem. It never gives the
+answer or works a step, because the point is that you do the work:
+
+```sh
+curl https://apps.jonandnic.com/math/ask.php --data-urlencode 'p=3(x-2) = 12'
+curl https://apps.jonandnic.com/math/ask.php --data-urlencode 'p=125^(-2/3)'
+curl https://apps.jonandnic.com/math/ask.php --data-urlencode 'p=Two trains leave...'
+```
+
+```
+1. a(b + c) = ab + ac
+   Here   the 3 multiplying (x−2)
+   Why    3 bags each holding (2 apples + 1 pear) gives you 6 apples and 3 pears...
+   [Distributing & Factoring · ds-rule]
+2. ★ Undo operations in reverse PEMDAS order...
+```
+
+If a step needs something the sheet doesn't have, it ends with a *Not on the sheet:*
+line, which tells you what rule to add next.
+
+Problem mode asks Claude (`claude-haiku-4-5`) which rules apply, because a
+problem like `3(x-2) = 12` has no keywords to search for. Recognising "distribute,
+then undo" means reading the problem's structure. Claude can't rewrite the sheet:
+its answer is limited by a schema to rule ids that exist, and the rule, why and trap
+are printed from `rules.json`. Only the *Here* line is Claude's own writing, and the
+prompt tells it to point at the problem, not solve it. Haiku is enough for this:
+picking rules off a list is a lookup, not hard reasoning. For better picks, change
+`ASK_MODEL` in `ask-problem.php` (`claude-sonnet-5` costs about 2× as much).
+
+It calls the API with PHP's curl extension instead of the Anthropic PHP SDK,
+because the SDK needs Composer and a `vendor/` tree, and this repo stays
+dependency-free.
+
+**Server setup (once).** Put the API key where `ask-problem.php` looks for it:
+
+```sh
+cd /path/to/webroot
+printf "<?php return '%s';\n" 'sk-ant-...' > data/anthropic-key.php
+chown www-data data/anthropic-key.php && chmod 600 data/anthropic-key.php
+```
+
+`data/` is already gitignored and excluded from `deploy.sh`'s `rsync --delete`, so
+the key is never committed and a deploy never wipes it. The key file is PHP rather
+than plain text so that if the server ever serves `data/`, requesting it runs the
+file and prints nothing, where a `.txt` would print the key. An `ANTHROPIC_API_KEY`
+environment variable also works and takes precedence. Without a key, problem mode
+answers 503 and keyword mode still works.
+
+**Cost and the cap.** The endpoint is public, so `ASK_DAILY_LIMIT` (100 problems a
+day, shared by everyone, reset at midnight UTC) caps what a stranger could spend.
+The count lives in `data/ask-usage.json`. If that file can't be written, problem
+mode refuses to call the API: it fails closed because the cap is a spending guard.
+A question costs about half a cent. Most of that is the ~13 KB rule catalog (about
+3.5k tokens), which goes out with every request. It carries a cache marker, but Haiku
+only caches prompts of 4096+ tokens, so the marker does nothing until the sheet grows
+past that. At the cap, the most a day can cost is about 60¢. It's worth also
+setting a monthly spend limit on the key in the Claude Console.
+
+**Keyword mode** finds the rules that match some keywords and prints them as plain
+text, with their why, trap and example:
+
+```sh
+curl 'https://apps.jonandnic.com/math/ask.php?q=negative+exponent'
+curl -G https://apps.jonandnic.com/math/ask.php --data-urlencode 'q=125^(-2/3)'
+curl 'https://apps.jonandnic.com/math/ask.php?q=exponents'      # a section name lists the whole section
+curl 'https://apps.jonandnic.com/math/ask.php?q=fraction&n=10'  # more results (default 5)
+```
+
+Use `--data-urlencode` for pasted math, because a raw `^`, `/` or `+` in a URL gets mangled.
+Pasted math also gets translated into the sheet's words: `^` searches exponents, `^-`
+adds negative, and `^(2/3)` adds fractional/root, so `125^(-2/3)` finds the
+negative-fractional-exponent rule first.
+
+The scoring is plain keyword counting, weighted by where the word appears (the rule
+line beats the section title, which beats the why). It's kept that simple so the
+ranking is predictable. It reads `content/rules.json` on every request, so a new
+rule is searchable as soon as it's pulled, with no build step. It's read-only and
+writes nothing.
 
 ## Print
 

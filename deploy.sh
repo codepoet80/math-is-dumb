@@ -4,7 +4,9 @@
 # The repo root is the webroot: index.html and assets/ sit where the server wants
 # them, so syncing the repo IS the deploy. Nothing is built on the server; the
 # only request-time code is state.php, which keeps the "I know this" marks in
-# data/state.json so they follow you between devices.
+# data/state.json so they follow you between devices, and ask.php, which finds
+# rules from curl (its problem mode reads the API key from data/, so the
+# exclude below also keeps the key from being deleted).
 #
 # Set TARGET to your host and webroot, e.g.
 #   TARGET=jon@example.com:/var/www/math/
