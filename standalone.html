@@ -541,8 +541,8 @@ html.hiding .rule.known:target { display: block; }
         <p class="sub">Pre-algebra and algebra fundamentals. Every rule carries its reason.</p>
       </div>
       <div class="stamp">
-        Rev. 2026-09-24<br>
-        88 rules &middot; 16 sections<br>
+        Rev. 2026-09-25<br>
+        91 rules &middot; 16 sections<br>
         Prints to letter, 2 col.
       </div>
     </header>
@@ -696,6 +696,7 @@ html.hiding .rule.known:target { display: block; }
           <p class="r"><span class="rn">3.2</span>Multiply straight across. <code><span class="frac"><span class="fn">a</span><span class="fd">b</span></span> × <span class="frac"><span class="fn">c</span><span class="fd">d</span></span></code> = <code><span class="frac"><span class="fn">ac</span><span class="fd">bd</span></span></code>.</p>
           <dl>
           <dt>Why</dt><dd class="why">Multiplying fractions is taking <em>a piece of a piece</em> — half of a third is a sixth, so the pieces get smaller and the names multiply.</dd>
+          <dt>Trap</dt><dd class="trap">A whole number sits over an invisible 1, so it only multiplies the <strong>top</strong>. <code>a · <span class="frac"><span class="fn">b</span><span class="fd">c</span></span></code> = <code><span class="frac"><span class="fn">a</span><span class="fd">1</span></span> · <span class="frac"><span class="fn">b</span><span class="fd">c</span></span></code> = <code><span class="frac"><span class="fn">ab</span><span class="fd">c</span></span></code>, not <code><span class="frac"><span class="fn">ab</span><span class="fd">ac</span></span></code>.</dd>
           <dt>Ex.</dt><dd class="example"><code><span class="frac"><span class="fn">1</span><span class="fd">2</span></span> × <span class="frac"><span class="fn">1</span><span class="fd">3</span></span> = <span class="frac"><span class="fn">1</span><span class="fd">6</span></span></code></dd>
           </dl>
         </div>
@@ -760,6 +761,7 @@ html.hiding .rule.known:target { display: block; }
           <p class="r"><span class="rn">4.2</span><code><span class="frac"><span class="fn">x<sup>a</sup></span><span class="fd">x<sup>b</sup></span></span></code> = <code>x<sup>a-b</sup></code> — dividing, so <strong>subtract</strong>.</p>
           <dl>
           <dt>Why</dt><dd class="why">Each x on the bottom cancels one on top. You're just counting the leftovers.</dd>
+          <dt>Ex.</dt><dd class="example"><code><span class="frac"><span class="fn">v<sup>2/7</sup></span><span class="fd">v<sup>3/5</sup></span></span></code> = <code>v<sup>2/7 − 3/5</sup></code>. Those are fractions being subtracted, so they need a common denominator (03): <code><span class="frac"><span class="fn">10</span><span class="fd">35</span></span> − <span class="frac"><span class="fn">21</span><span class="fd">35</span></span></code> = <code>−<span class="frac"><span class="fn">11</span><span class="fd">35</span></span></code>, giving <code>v<sup>−11/35</sup></code>.</dd>
           </dl>
         </div>
         <div class="rule" id="ex-power-power-so" data-id="ex-power-power-so">
@@ -825,12 +827,21 @@ html.hiding .rule.known:target { display: block; }
           <dt>Ex.</dt><dd class="example"><code>(<span class="frac"><span class="fn">1</span><span class="fd">8</span></span>)<sup>4/3</sup></code> = <code><span class="frac"><span class="fn">1<sup>4/3</sup></span><span class="fd">8<sup>4/3</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">(<span class="rad"><sup class="ri">3</sup>√<span class="rc">8</span></span>)<sup>4</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">2<sup>4</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">16</span></span></code>. 1 to any power is 1, so the top just stays 1.</dd>
           </dl>
         </div>
+        <div class="rule" id="ex-negative-power-of-fraction" data-id="ex-negative-power-of-fraction">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><span class="rn">4.11</span><code>(<span class="frac"><span class="fn">a</span><span class="fd">b</span></span>)<sup>-n</sup></code> = <code>(<span class="frac"><span class="fn">b</span><span class="fd">a</span></span>)<sup>n</sup></code>. A negative power on a whole fraction: <strong>flip the fraction</strong> and drop the minus.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">The minus sends the top down and the bottom up, all at once. That's the same as flipping the fraction.</dd>
+          <dt>Ex.</dt><dd class="example"><code>(<span class="frac"><span class="fn">2x<sup>2</sup></span><span class="fd">3x<sup>6</sup></span></span>)<sup>-3</sup></code> = <code>(<span class="frac"><span class="fn">3x<sup>6</sup></span><span class="fd">2x<sup>2</sup></span></span>)<sup>3</sup></code>. Flip it first so every exponent after that is positive.</dd>
+          </dl>
+        </div>
         <div class="rule star" id="ex-but" data-id="ex-but">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><span class="rn">4.11</span><code>(ab)<sup>n</sup></code> = <code>a<sup>n</sup> b<sup>n</sup></code>, but <code>(a+b)<sup>n</sup></code> is <strong>NOT</strong> <code>a<sup>n</sup> + b<sup>n</sup></code>.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">4.12</span><code>(ab)<sup>n</sup></code> = <code>a<sup>n</sup> b<sup>n</sup></code>, but <code>(a+b)<sup>n</sup></code> is <strong>NOT</strong> <code>a<sup>n</sup> + b<sup>n</sup></code>.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Exponents distribute over multiplication only. <code>(2+3)<sup>2</sup> = 25</code>, while <code>2<sup>2</sup> + 3<sup>2</sup> = 13</code>.</dd>
           <dt>Trap</dt><dd class="trap">This is the single most common algebra error there is. <code>(a+b)<sup>2</sup> = a<sup>2</sup> + 2ab + b<sup>2</sup></code> — FOIL it, don't guess.</dd>
+          <dt>Ex.</dt><dd class="example"><code>(3x<sup>4</sup>)<sup>3</sup></code> = <code>3<sup>3</sup> · (x<sup>4</sup>)<sup>3</sup></code> = <code>27x<sup>12</sup></code>, not <code>3x<sup>12</sup></code>. The coefficient is a factor too, so it gets cubed.</dd>
           </dl>
         </div>
       </section>
@@ -969,9 +980,27 @@ html.hiding .rule.known:target { display: block; }
           <dt>Why</dt><dd class="why">The multiply rule run backwards: split off the part that has a clean root and walk it out from under the radical.</dd>
           </dl>
         </div>
+        <div class="rule" id="rt-variable-exponents" data-id="rt-variable-exponents">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><span class="rn">7.3</span><code><span class="rad">√<span class="rc">x<sup>8</sup></span></span></code> = <code>x<sup>4</sup></code>: an even exponent gets <strong>halved</strong>. An odd exponent leaves one copy inside: <code><span class="rad">√<span class="rc">y<sup>5</sup></span></span></code> = <code><span class="rad">√<span class="rc">y<sup>4</sup> · y</span></span></code> = <code>y<sup>2</sup><span class="rad">√<span class="rc">y</span></span></code>.</p>
+          <dl>
+          <dt>Why</dt><dd class="why"><code><span class="rad">√<span class="rc"></span></span></code> is the <code><span class="frac"><span class="fn">1</span><span class="fd">2</span></span></code> power (04), so it halves the exponent. Halving only works cleanly on even numbers, so split off the biggest even part and leave one copy under the radical.</dd>
+          <dt>Trap</dt><dd class="trap">These problems assume the variables are positive, which is why no <code>|x|</code> shows up in the answer (see <code><span class="rad">√<span class="rc">x<sup>2</sup></span></span></code> = <code>|x|</code> below).</dd>
+          <dt>Ex.</dt><dd class="example"><code><span class="rad">√<span class="rc">75x<sup>8</sup>y<sup>5</sup></span></span></code> = <code><span class="rad">√<span class="rc">25·3 · x<sup>8</sup> · y<sup>4</sup>·y</span></span></code> = <code>5x<sup>4</sup>y<sup>2</sup><span class="rad">√<span class="rc">3y</span></span></code>. Everything that halves comes out, and the leftovers stay inside together.</dd>
+          </dl>
+        </div>
+        <div class="rule" id="rt-combine-like-radicals" data-id="rt-combine-like-radicals">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><span class="rn">7.4</span><code>a<span class="rad">√<span class="rc">n</span></span> + b<span class="rad">√<span class="rc">n</span></span></code> = <code>(a+b)<span class="rad">√<span class="rc">n</span></span></code>. Same root: add the numbers in front. Different roots: <strong>simplify each one first</strong>, because they often turn out to match.</p>
+          <dl>
+          <dt>Why</dt><dd class="why"><code><span class="rad">√<span class="rc">3</span></span></code> is a unit, like x. <code>2<span class="rad">√<span class="rc">3</span></span> + 5<span class="rad">√<span class="rc">3</span></span></code> is 2 of them plus 5 of them, the same as combining like terms (05).</dd>
+          <dt>Trap</dt><dd class="trap"><code><span class="rad">√<span class="rc">a</span></span> + <span class="rad">√<span class="rc">b</span></span></code> is <strong>NOT</strong> <code><span class="rad">√<span class="rc">a+b</span></span></code>, so <code><span class="rad">√<span class="rc">2</span></span> + <span class="rad">√<span class="rc">3</span></span></code> stays as it is. With no shared root after simplifying, there's nothing to combine.</dd>
+          <dt>Ex.</dt><dd class="example"><code><span class="rad">√<span class="rc">75</span></span> + 5<span class="rad">√<span class="rc">27</span></span></code> = <code>5<span class="rad">√<span class="rc">3</span></span> + 5·3<span class="rad">√<span class="rc">3</span></span></code> = <code>5<span class="rad">√<span class="rc">3</span></span> + 15<span class="rad">√<span class="rc">3</span></span></code> = <code>20<span class="rad">√<span class="rc">3</span></span></code>.</dd>
+          </dl>
+        </div>
         <div class="rule" id="rt-rule" data-id="rt-rule">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><span class="rn">7.3</span><code><span class="rad">√<span class="rc">x<sup>2</sup></span></span></code> = <code>|x|</code></p>
+          <p class="r"><span class="rn">7.5</span><code><span class="rad">√<span class="rc">x<sup>2</sup></span></span></code> = <code>|x|</code></p>
           <dl>
           <dt>Why</dt><dd class="why">The radical symbol means “the positive one.” <code><span class="rad">√<span class="rc">(−3)<sup>2</sup></span></span></code> = <code><span class="rad">√<span class="rc">9</span></span></code> = <code>3</code>, not <code>−3</code>.</dd>
           </dl>
