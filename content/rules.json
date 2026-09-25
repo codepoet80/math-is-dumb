@@ -154,7 +154,8 @@
           "id": "ex-dividing-so-subtract",
           "rule": "`x^a / x^b` = `x^{a-b}` — dividing, so **subtract**.",
           "why": "Each x on the bottom cancels one on top. You're just counting the leftovers.",
-          "example": "`v^{2/7}/v^{3/5}` = `v^{2/7 − 3/5}`. Those are fractions being subtracted, so they need a common denominator (#{fractions}): `10/35 − 21/35` = `−11/35`, giving `v^{−11/35}`."
+          "example": "`v^{2/7}/v^{3/5}` = `v^{2/7 − 3/5}`. Those are fractions being subtracted, so they need a common denominator (#{fractions}): `10/35 − 21/35` = `−11/35`, giving `v^{−11/35}`.",
+          "star": true
         },
         {
           "id": "ex-power-power-so",
