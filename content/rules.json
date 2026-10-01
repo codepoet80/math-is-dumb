@@ -206,6 +206,15 @@
           "example": "`(1/8)^{4/3}` = `1^{4/3}/8^{4/3}` = `1/(^3√8)^4` = `1/2^4` = `1/16`. 1 to any power is 1, so the top just stays 1."
         },
         {
+          "id": "ex-order",
+          "rule": "Messy exponent expression? Three passes, one job each: **distribute** every outer exponent inward, **flip** every negative exponent across the bar, then **combine** like bases.",
+          "why": "Each pass applies one rule to the whole expression, so you're never holding a sign rule and an exponent rule at the same time. Doing them in this order means nothing you flip in pass 2 can still be hiding inside a bracket.",
+          "when": "Any time there's a bracket with an exponent on it, or a mix of positive and negative exponents.",
+          "trap": "Pass 1 multiplies exponents *including their signs*. `(x^-2)^-3` is `x^6`, not `x^-6` — two negatives make a positive, and this is the single most likely slip in the whole method.",
+          "example": "`(3x^3/x^-2)^-3` → distribute: `(3^-3 x^-9)/x^6` → flip: `1/(3^3 x^9 x^6)` → combine: `1/(27x^15)`",
+          "star": true
+        },
+        {
           "id": "ex-negative-power-of-fraction",
           "rule": "`(a/b)^{-n}` = `(b/a)^n`. A negative power on a whole fraction: **flip the fraction** and drop the minus.",
           "why": "The minus sends the top down and the bottom up, all at once. That's the same as flipping the fraction.",
@@ -252,6 +261,12 @@
           "rule": "Combine like terms only: **same letter, same exponent**.",
           "why": "`3x + 2x^2` is like `3 feet + 2 square feet` — different units, so it doesn't collapse.",
           "example": "`3x + 5x = 8x`. But `3x + 5x^2` stays as it is."
+        },
+        {
+          "rule": "Standard form = terms in order of descending exponent. `12u^8 + u^9 - 7u` becomes `u^9 + 12u^8 - 7u`.",
+          "why": "Terms are added, so reordering changes nothing — and the highest power first means the degree is readable at a glance, and two polynomials line up term-by-term when you add, subtract or divide them.",
+          "trap": "A bare `u` is `u^1`, so it goes near the end, not wherever it started. Each term keeps its own sign when it moves.",
+          "when": "The last step of simplifying any polynomial."
         },
         {
           "id": "ds-factor-out-greatest",
