@@ -21,11 +21,20 @@ function bail($code, $msg) {
 // `<?php return 'sk-ant-...';`. It's a .php file on purpose: if the web server
 // ever serves data/, running it prints nothing, where a .txt would print the key.
 // data/ is already gitignored and excluded from deploy.sh's rsync --delete.
+//
+// The include runs inside an output buffer that is always thrown away. A key
+// file without a working `<?php` tag (a bare key, or `<?` with short tags off)
+// isn't run as PHP -- include just prints it, which put the key on screen.
 function apiKey() {
   $key = getenv('ANTHROPIC_API_KEY');
+  if ($key) return $key;
   $keyFile = __DIR__ . '/data/anthropic-key.php';
-  if (!$key && is_file($keyFile)) $key = include $keyFile;
-  return is_string($key) && $key !== '' ? $key : null;
+  if (!is_file($keyFile)) return null;
+  ob_start();
+  $key = include $keyFile;
+  ob_end_clean();
+  if (is_string($key) && trim($key) !== '') return trim($key);
+  bail(503, "data/anthropic-key.php isn't returning the key. It must contain exactly:\n<?php return 'sk-ant-...';\n(See README: Server setup.)");
 }
 
 // Daily cap. The endpoint is public and every call costs money, so this fails
