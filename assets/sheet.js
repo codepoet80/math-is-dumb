@@ -233,4 +233,171 @@
   window.onfocus = function () {
     if (sync === 'ok' && +new Date() - lastFetch > 5000) pull();
   };
+
+  /* ---------- chat: work a problem with ask.php?chat ---------- */
+
+  // The server keeps nothing between turns: the whole conversation is sent
+  // each time and kept here. localStorage holds it only so a reload doesn't
+  // lose a problem half-worked; it's per device on purpose, unlike the marks.
+  var KEY_CHAT  = 'dmr.chat.v1';
+  var chatBox   = document.getElementById('chat');
+  var chatLog   = document.getElementById('chat-log');
+  var chatForm  = document.getElementById('chat-form');
+  var chatInput = document.getElementById('chat-input');
+  var chatSend  = document.getElementById('chat-send');
+  var chatStat  = document.getElementById('chat-status');
+  var chatNew   = document.getElementById('chat-new');
+
+  // file:// and standalone.html have no ask.php behind them, so the box stays
+  // hidden there rather than failing on the first message.
+  if (!chatBox || sync === 'local') return;
+  addClass(root, 'chat-on');
+
+  var convo = [];
+  try { convo = JSON.parse(window.localStorage.getItem(KEY_CHAT)) || []; } catch (e) { convo = []; }
+  if (!(convo instanceof Array)) convo = [];
+  var waiting = false;
+
+  function saveChat() {
+    try { window.localStorage.setItem(KEY_CHAT, JSON.stringify(convo)); } catch (e) { /* in-memory only */ }
+  }
+
+  // Rule numbers as printed on the sheet ("4.8") -> the rule element.
+  var byNum = {};
+  each(rules, function (el) {
+    var rn = el.getElementsByClassName('rn')[0];
+    if (rn) byNum[rn.firstChild.nodeValue] = el;
+  });
+
+  // A copy of the rule, opened in place under the reply, so checking a rule
+  // doesn't scroll you away from the problem. Shown in full even if it's
+  // marked known, since you asked to read it.
+  function toggleRule(link, el) {
+    var open = link.openRule;
+    if (open) { open.parentNode.removeChild(open); link.openRule = null; return; }
+    var copy = el.cloneNode(true);
+    copy.removeAttribute('id');
+    var btn = copy.getElementsByTagName('button')[0];
+    if (btn) btn.parentNode.removeChild(btn);
+    removeClass(copy, 'known');
+    var msg = link.parentNode;
+    msg.appendChild(copy);
+    link.openRule = copy;
+  }
+
+  // Plain text in, with "Rule 4.8" turned into a link wherever 4.8 exists.
+  // Text nodes only -- a reply is never parsed as HTML.
+  function fill(node, text) {
+    var re = /Rule (\d+\.\d+)/g, last = 0, m;
+    while ((m = re.exec(text))) {
+      var el = byNum[m[1]];
+      if (!el) continue;
+      node.appendChild(document.createTextNode(text.slice(last, m.index)));
+      var a = document.createElement('a');
+      a.className = 'rlink';
+      a.href = '#' + el.getAttribute('data-id');
+      a.appendChild(document.createTextNode(m[0]));
+      a.onclick = (function (a, el) {
+        return function () { toggleRule(a, el); return false; };
+      })(a, el);
+      node.appendChild(a);
+      last = m.index + m[0].length;
+    }
+    node.appendChild(document.createTextNode(text.slice(last)));
+  }
+
+  function addMsg(role, text) {
+    var div = document.createElement('div');
+    div.className = 'msg ' + (role === 'user' ? 'you' : 'tutor');
+    var who = document.createElement('span');
+    who.className = 'who';
+    who.appendChild(document.createTextNode(role === 'user' ? 'You' : 'Tutor'));
+    div.appendChild(who);
+    fill(div, text);
+    chatLog.appendChild(div);
+    return div;
+  }
+
+  function status(text, isErr) {
+    chatStat.firstChild.nodeValue = text || ' ';
+    setClass(chatStat, 'err', !!isErr);
+  }
+
+  function renderChat() {
+    while (chatLog.firstChild) chatLog.removeChild(chatLog.firstChild);
+    each(convo, function (m) { addMsg(m.role, m.content); });
+    chatNew.style.display = convo.length ? '' : 'none';
+    chatInput.placeholder = convo.length ? 'Your next step, or a question' : 'e.g. 3(x - 2) = 12';
+  }
+
+  function sendChat() {
+    var text = chatInput.value.replace(/^\s+|\s+$/g, '');
+    if (!text || waiting) return;
+    convo.push({ role: 'user', content: text });
+    var mine = addMsg('user', text);
+    chatInput.value = '';
+    waiting = true;
+    chatSend.disabled = true;
+    chatNew.style.display = '';
+    status('Thinking…');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'ask.php?chat', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) return;
+      waiting = false;
+      chatSend.disabled = false;
+      var data = null;
+      if (xhr.status === 200) {
+        try { data = JSON.parse(xhr.responseText); } catch (e) { data = null; }
+      }
+      if (data && data.reply) {
+        convo.push({ role: 'assistant', content: data.reply });
+        saveChat();
+        addMsg('assistant', data.reply).scrollIntoView(false);
+        status('');
+        return;
+      }
+      // Failed turn: take it back out so the conversation still alternates,
+      // and give the text back to edit or resend.
+      convo.pop();
+      mine.parentNode.removeChild(mine);
+      chatInput.value = text;
+      var err = xhr.responseText || '';
+      // The server's own errors are short plain text; anything else (a PHP
+      // source dump, an HTML error page, nothing at all) isn't worth showing.
+      status(xhr.status && xhr.status !== 200 && err.length < 400 && err.charAt(0) !== '<'
+        ? err : 'Couldn\u2019t reach ask.php. Try again in a moment.', true);
+    };
+    try { xhr.send(JSON.stringify({ messages: convo })); }
+    catch (e) {
+      xhr.onreadystatechange = null;
+      waiting = false;
+      chatSend.disabled = false;
+      convo.pop();
+      mine.parentNode.removeChild(mine);
+      chatInput.value = text;
+      status('Couldn\u2019t send.', true);
+    }
+  }
+
+  chatForm.onsubmit = function () { sendChat(); return false; };
+
+  // Enter sends; Shift+Enter is a new line for a multi-line problem.
+  chatInput.onkeydown = function (e) {
+    e = e || window.event;
+    if (e.keyCode === 13 && !e.shiftKey) { sendChat(); return false; }
+  };
+
+  chatNew.onclick = function () {
+    if (waiting) return;
+    convo = [];
+    saveChat();
+    renderChat();
+    status('');
+    chatInput.focus();
+  };
+
+  renderChat();
 })();

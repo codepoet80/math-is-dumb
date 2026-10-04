@@ -530,6 +530,122 @@ html.hiding .rule.known:target { display: block; }
   .controls > * { margin-right: .8rem; }
 }
 
+/* ============================================================
+   CHAT — work a problem with ask.php?chat (see assets/sheet.js)
+   Needs JS and the PHP server, so it stays hidden until sheet.js
+   sets html.chat-on: on paper, file:// and standalone.html it
+   would only be a dead box.
+   ============================================================ */
+
+.chat { display: none; }
+html.chat-on .chat { display: block; }
+
+.chat {
+  margin-top: 2.4rem;
+  padding-top: .2rem;
+  border-top: 2px solid #14181c; border-top-color: var(--ink);
+}
+.chat h2 {
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: .85rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin: .5rem 0 .2rem;
+}
+.chat .blurb {
+  font-size: .85rem;
+  font-style: italic;
+  color: #5b6772; color: var(--ink-soft);
+  margin: 0 0 1rem;
+}
+
+.chat-log .msg {
+  margin: 0 0 .8rem;
+  padding: .45rem .75rem;
+  white-space: pre-wrap;       /* replies are plain text with line breaks */
+  word-wrap: break-word;
+  border-left: 3px solid #c6d0d8; border-left-color: var(--rule);
+}
+.chat-log .msg.you {
+  font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+  font-size: .86em;
+  background: rgba(31,92,139,.075); background: var(--code-bg);
+}
+.chat-log .msg.tutor { border-left-color: #1f5c8b; border-left-color: var(--accent); }
+.chat-log .who {
+  display: block;
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: .62rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #8b98a3; color: var(--ink-faint);
+}
+.chat-log .rlink { color: #1f5c8b; color: var(--accent); font-weight: 600; }
+/* A rule opened from a reply, copied in under it so you never leave the chat. */
+.chat-log .rule {
+  white-space: normal;
+  margin: .5rem 0 .2rem;
+  padding: .4rem .6rem;
+  background: #fbfcfd; background: var(--surface);
+  border: 1px solid #dde4e9; border-color: var(--hair);
+}
+
+.chat-form textarea {
+  display: block;
+  width: 100%;
+  font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+  font-size: 16px;             /* 16px+ stops iOS zooming the page on focus */
+  line-height: 1.4;
+  padding: .55rem .65rem;
+  color: #14181c; color: var(--ink);
+  background: #fbfcfd; background: var(--surface);
+  border: 1px solid #c6d0d8; border-color: var(--rule);
+  border-radius: 0;
+  resize: vertical;
+  -webkit-appearance: none;
+}
+.chat-form textarea:focus { outline: 2px solid #1f5c8b; outline-color: var(--accent); outline-offset: 0; }
+.chat-actions {
+  display: block;              /* WebKit 534 fallback */
+  display: flex;
+  align-items: center;
+  margin-top: .5rem;
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: .78rem;
+}
+.chat-send {
+  font: inherit;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  padding: .45rem 1.2rem;
+  color: #fbfcfd; color: var(--surface);
+  background: #1f5c8b; background: var(--accent);
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+.chat-send[disabled] { opacity: .5; cursor: default; }
+.chat-status {
+  flex: 1 1 auto;
+  margin: 0 .8rem;
+  color: #5b6772; color: var(--ink-soft);
+}
+.chat-status.err { color: #a3391e; color: var(--caution); }
+
+@media print {
+  /* Its own page, so it can be left out of a print run (pages 1-N). */
+  .chat {
+    page-break-before: always;
+    break-before: page;
+    border-top: 0;
+    margin-top: 0;
+  }
+  .chat-form { display: none; }
+  .chat-log .msg { background: none; border-left-color: #999; }
+}
+
 </style>
 <script>document.documentElement.className += ' js';</script>
 </head>
@@ -541,8 +657,8 @@ html.hiding .rule.known:target { display: block; }
         <p class="sub">Pre-algebra and algebra fundamentals. Every rule carries its reason.</p>
       </div>
       <div class="stamp">
-        Rev. 2026-09-25<br>
-        91 rules &middot; 16 sections<br>
+        Rev. 2026-10-04<br>
+        93 rules &middot; 16 sections<br>
         Prints to letter, 2 col.
       </div>
     </header>
@@ -827,9 +943,19 @@ html.hiding .rule.known:target { display: block; }
           <dt>Ex.</dt><dd class="example"><code>(<span class="frac"><span class="fn">1</span><span class="fd">8</span></span>)<sup>4/3</sup></code> = <code><span class="frac"><span class="fn">1<sup>4/3</sup></span><span class="fd">8<sup>4/3</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">(<span class="rad"><sup class="ri">3</sup>√<span class="rc">8</span></span>)<sup>4</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">2<sup>4</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">16</span></span></code>. 1 to any power is 1, so the top just stays 1.</dd>
           </dl>
         </div>
+        <div class="rule star" id="ex-order" data-id="ex-order">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><span class="rn">4.11</span>Messy exponent expression? Three passes, one job each: <strong>distribute</strong> every outer exponent inward, <strong>flip</strong> every negative exponent across the bar, then <strong>combine</strong> like bases.<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">Each pass applies one rule to the whole expression, so you're never holding a sign rule and an exponent rule at the same time. Doing them in this order means nothing you flip in pass 2 can still be hiding inside a bracket.</dd>
+          <dt>When</dt><dd class="when">Any time there's a bracket with an exponent on it, or a mix of positive and negative exponents.</dd>
+          <dt>Trap</dt><dd class="trap">Pass 1 multiplies exponents <em>including their signs</em>. <code>(x<sup>-2</sup>)<sup>-3</sup></code> is <code>x<sup>6</sup></code>, not <code>x<sup>-6</sup></code> — two negatives make a positive, and this is the single most likely slip in the whole method.</dd>
+          <dt>Ex.</dt><dd class="example"><code>(<span class="frac"><span class="fn">3x<sup>3</sup></span><span class="fd">x<sup>-2</sup></span></span>)<sup>-3</sup></code> → distribute: <code><span class="frac"><span class="fn">3<sup>-3</sup> x<sup>-9</sup></span><span class="fd">x<sup>6</sup></span></span></code> → flip: <code><span class="frac"><span class="fn">1</span><span class="fd">3<sup>3</sup> x<sup>9</sup> x<sup>6</sup></span></span></code> → combine: <code><span class="frac"><span class="fn">1</span><span class="fd">27x<sup>15</sup></span></span></code></dd>
+          </dl>
+        </div>
         <div class="rule" id="ex-negative-power-of-fraction" data-id="ex-negative-power-of-fraction">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><span class="rn">4.11</span><code>(<span class="frac"><span class="fn">a</span><span class="fd">b</span></span>)<sup>-n</sup></code> = <code>(<span class="frac"><span class="fn">b</span><span class="fd">a</span></span>)<sup>n</sup></code>. A negative power on a whole fraction: <strong>flip the fraction</strong> and drop the minus.</p>
+          <p class="r"><span class="rn">4.12</span><code>(<span class="frac"><span class="fn">a</span><span class="fd">b</span></span>)<sup>-n</sup></code> = <code>(<span class="frac"><span class="fn">b</span><span class="fd">a</span></span>)<sup>n</sup></code>. A negative power on a whole fraction: <strong>flip the fraction</strong> and drop the minus.</p>
           <dl>
           <dt>Why</dt><dd class="why">The minus sends the top down and the bottom up, all at once. That's the same as flipping the fraction.</dd>
           <dt>Ex.</dt><dd class="example"><code>(<span class="frac"><span class="fn">2x<sup>2</sup></span><span class="fd">3x<sup>6</sup></span></span>)<sup>-3</sup></code> = <code>(<span class="frac"><span class="fn">3x<sup>6</sup></span><span class="fd">2x<sup>2</sup></span></span>)<sup>3</sup></code>. Flip it first so every exponent after that is positive.</dd>
@@ -837,7 +963,7 @@ html.hiding .rule.known:target { display: block; }
         </div>
         <div class="rule star" id="ex-but" data-id="ex-but">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><span class="rn">4.12</span><code>(ab)<sup>n</sup></code> = <code>a<sup>n</sup> b<sup>n</sup></code>, but <code>(a+b)<sup>n</sup></code> is <strong>NOT</strong> <code>a<sup>n</sup> + b<sup>n</sup></code>.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">4.13</span><code>(ab)<sup>n</sup></code> = <code>a<sup>n</sup> b<sup>n</sup></code>, but <code>(a+b)<sup>n</sup></code> is <strong>NOT</strong> <code>a<sup>n</sup> + b<sup>n</sup></code>.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Exponents distribute over multiplication only. <code>(2+3)<sup>2</sup> = 25</code>, while <code>2<sup>2</sup> + 3<sup>2</sup> = 13</code>.</dd>
           <dt>Trap</dt><dd class="trap">This is the single most common algebra error there is. <code>(a+b)<sup>2</sup> = a<sup>2</sup> + 2ab + b<sup>2</sup></code> — FOIL it, don't guess.</dd>
@@ -885,9 +1011,18 @@ html.hiding .rule.known:target { display: block; }
           <dt>Ex.</dt><dd class="example"><code>3x + 5x = 8x</code>. But <code>3x + 5x<sup>2</sup></code> stays as it is.</dd>
           </dl>
         </div>
+        <div class="rule" id="ds-standard-form" data-id="ds-standard-form">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><span class="rn">5.5</span>Standard form = terms in order of descending exponent. <code>12u<sup>8</sup> + u<sup>9</sup> - 7u</code> becomes <code>u<sup>9</sup> + 12u<sup>8</sup> - 7u</code>.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Terms are added, so reordering changes nothing — and the highest power first means the degree is readable at a glance, and two polynomials line up term-by-term when you add, subtract or divide them.</dd>
+          <dt>When</dt><dd class="when">The last step of simplifying any polynomial.</dd>
+          <dt>Trap</dt><dd class="trap">A bare <code>u</code> is <code>u<sup>1</sup></code>, so it goes near the end, not wherever it started. Each term keeps its own sign when it moves.</dd>
+          </dl>
+        </div>
         <div class="rule" id="ds-factor-out-greatest" data-id="ds-factor-out-greatest">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><span class="rn">5.5</span>Factor out the greatest common factor: <code>ab + ac</code> = <code>a(b + c)</code></p>
+          <p class="r"><span class="rn">5.6</span>Factor out the greatest common factor: <code>ab + ac</code> = <code>a(b + c)</code></p>
           <dl>
           <dt>Why</dt><dd class="why">Distribution running backwards. You're pulling the shared piece out front.</dd>
           <dt>When</dt><dd class="when">First thing to try on any factoring problem, always.</dd>
@@ -895,7 +1030,7 @@ html.hiding .rule.known:target { display: block; }
         </div>
         <div class="rule" id="ds-difference-squares" data-id="ds-difference-squares">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><span class="rn">5.6</span>Difference of squares: <code>a<sup>2</sup> − b<sup>2</sup></code> = <code>(a − b)(a + b)</code>. Take the root of each term; one bracket subtracts them, the other adds them.</p>
+          <p class="r"><span class="rn">5.7</span>Difference of squares: <code>a<sup>2</sup> − b<sup>2</sup></code> = <code>(a − b)(a + b)</code>. Take the root of each term; one bracket subtracts them, the other adds them.</p>
           <dl>
           <dt>Why</dt><dd class="why">FOIL it back: the middle terms are <code>+ab</code> and <code>−ab</code>, which cancel, and <code>(−b)(+b)</code> is what makes <code>b<sup>2</sup></code> come out negative. Only the mixed-sign pair does both.</dd>
           <dt>When</dt><dd class="when">Two perfect squares with a minus between them. Recognize it on sight — it shows up constantly.</dd>
@@ -1405,6 +1540,20 @@ html.hiding .rule.known:target { display: block; }
         </div>
       </section>
     </div>
+
+    <section class="chat" id="chat">
+      <h2>Work a problem</h2>
+      <p class="blurb">Paste a problem and work it through. You'll be pointed at the rules; you do the math. Say <em>show me</em> when you want a step worked out.</p>
+      <div class="chat-log" id="chat-log" aria-live="polite"></div>
+      <form class="chat-form" id="chat-form">
+        <textarea id="chat-input" rows="3" placeholder="e.g. 3(x - 2) = 12" aria-label="Your problem or your next step"></textarea>
+        <div class="chat-actions">
+          <button type="submit" class="chat-send" id="chat-send">Send</button>
+          <span class="chat-status" id="chat-status"> </span>
+          <button type="button" class="linkish" id="chat-new">New problem</button>
+        </div>
+      </form>
+    </section>
   </div>
 <script>
 /* sheet.js — "I already know this" state, shared across devices.
@@ -1642,6 +1791,173 @@ html.hiding .rule.known:target { display: block; }
   window.onfocus = function () {
     if (sync === 'ok' && +new Date() - lastFetch > 5000) pull();
   };
+
+  /* ---------- chat: work a problem with ask.php?chat ---------- */
+
+  // The server keeps nothing between turns: the whole conversation is sent
+  // each time and kept here. localStorage holds it only so a reload doesn't
+  // lose a problem half-worked; it's per device on purpose, unlike the marks.
+  var KEY_CHAT  = 'dmr.chat.v1';
+  var chatBox   = document.getElementById('chat');
+  var chatLog   = document.getElementById('chat-log');
+  var chatForm  = document.getElementById('chat-form');
+  var chatInput = document.getElementById('chat-input');
+  var chatSend  = document.getElementById('chat-send');
+  var chatStat  = document.getElementById('chat-status');
+  var chatNew   = document.getElementById('chat-new');
+
+  // file:// and standalone.html have no ask.php behind them, so the box stays
+  // hidden there rather than failing on the first message.
+  if (!chatBox || sync === 'local') return;
+  addClass(root, 'chat-on');
+
+  var convo = [];
+  try { convo = JSON.parse(window.localStorage.getItem(KEY_CHAT)) || []; } catch (e) { convo = []; }
+  if (!(convo instanceof Array)) convo = [];
+  var waiting = false;
+
+  function saveChat() {
+    try { window.localStorage.setItem(KEY_CHAT, JSON.stringify(convo)); } catch (e) { /* in-memory only */ }
+  }
+
+  // Rule numbers as printed on the sheet ("4.8") -> the rule element.
+  var byNum = {};
+  each(rules, function (el) {
+    var rn = el.getElementsByClassName('rn')[0];
+    if (rn) byNum[rn.firstChild.nodeValue] = el;
+  });
+
+  // A copy of the rule, opened in place under the reply, so checking a rule
+  // doesn't scroll you away from the problem. Shown in full even if it's
+  // marked known, since you asked to read it.
+  function toggleRule(link, el) {
+    var open = link.openRule;
+    if (open) { open.parentNode.removeChild(open); link.openRule = null; return; }
+    var copy = el.cloneNode(true);
+    copy.removeAttribute('id');
+    var btn = copy.getElementsByTagName('button')[0];
+    if (btn) btn.parentNode.removeChild(btn);
+    removeClass(copy, 'known');
+    var msg = link.parentNode;
+    msg.appendChild(copy);
+    link.openRule = copy;
+  }
+
+  // Plain text in, with "Rule 4.8" turned into a link wherever 4.8 exists.
+  // Text nodes only -- a reply is never parsed as HTML.
+  function fill(node, text) {
+    var re = /Rule (\d+\.\d+)/g, last = 0, m;
+    while ((m = re.exec(text))) {
+      var el = byNum[m[1]];
+      if (!el) continue;
+      node.appendChild(document.createTextNode(text.slice(last, m.index)));
+      var a = document.createElement('a');
+      a.className = 'rlink';
+      a.href = '#' + el.getAttribute('data-id');
+      a.appendChild(document.createTextNode(m[0]));
+      a.onclick = (function (a, el) {
+        return function () { toggleRule(a, el); return false; };
+      })(a, el);
+      node.appendChild(a);
+      last = m.index + m[0].length;
+    }
+    node.appendChild(document.createTextNode(text.slice(last)));
+  }
+
+  function addMsg(role, text) {
+    var div = document.createElement('div');
+    div.className = 'msg ' + (role === 'user' ? 'you' : 'tutor');
+    var who = document.createElement('span');
+    who.className = 'who';
+    who.appendChild(document.createTextNode(role === 'user' ? 'You' : 'Tutor'));
+    div.appendChild(who);
+    fill(div, text);
+    chatLog.appendChild(div);
+    return div;
+  }
+
+  function status(text, isErr) {
+    chatStat.firstChild.nodeValue = text || ' ';
+    setClass(chatStat, 'err', !!isErr);
+  }
+
+  function renderChat() {
+    while (chatLog.firstChild) chatLog.removeChild(chatLog.firstChild);
+    each(convo, function (m) { addMsg(m.role, m.content); });
+    chatNew.style.display = convo.length ? '' : 'none';
+    chatInput.placeholder = convo.length ? 'Your next step, or a question' : 'e.g. 3(x - 2) = 12';
+  }
+
+  function sendChat() {
+    var text = chatInput.value.replace(/^\s+|\s+$/g, '');
+    if (!text || waiting) return;
+    convo.push({ role: 'user', content: text });
+    var mine = addMsg('user', text);
+    chatInput.value = '';
+    waiting = true;
+    chatSend.disabled = true;
+    chatNew.style.display = '';
+    status('Thinking…');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'ask.php?chat', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) return;
+      waiting = false;
+      chatSend.disabled = false;
+      var data = null;
+      if (xhr.status === 200) {
+        try { data = JSON.parse(xhr.responseText); } catch (e) { data = null; }
+      }
+      if (data && data.reply) {
+        convo.push({ role: 'assistant', content: data.reply });
+        saveChat();
+        addMsg('assistant', data.reply).scrollIntoView(false);
+        status('');
+        return;
+      }
+      // Failed turn: take it back out so the conversation still alternates,
+      // and give the text back to edit or resend.
+      convo.pop();
+      mine.parentNode.removeChild(mine);
+      chatInput.value = text;
+      var err = xhr.responseText || '';
+      // The server's own errors are short plain text; anything else (a PHP
+      // source dump, an HTML error page, nothing at all) isn't worth showing.
+      status(xhr.status && xhr.status !== 200 && err.length < 400 && err.charAt(0) !== '<'
+        ? err : 'Couldn\u2019t reach ask.php. Try again in a moment.', true);
+    };
+    try { xhr.send(JSON.stringify({ messages: convo })); }
+    catch (e) {
+      xhr.onreadystatechange = null;
+      waiting = false;
+      chatSend.disabled = false;
+      convo.pop();
+      mine.parentNode.removeChild(mine);
+      chatInput.value = text;
+      status('Couldn\u2019t send.', true);
+    }
+  }
+
+  chatForm.onsubmit = function () { sendChat(); return false; };
+
+  // Enter sends; Shift+Enter is a new line for a multi-line problem.
+  chatInput.onkeydown = function (e) {
+    e = e || window.event;
+    if (e.keyCode === 13 && !e.shiftKey) { sendChat(); return false; }
+  };
+
+  chatNew.onclick = function () {
+    if (waiting) return;
+    convo = [];
+    saveChat();
+    renderChat();
+    status('');
+    chatInput.focus();
+  };
+
+  renderChat();
 })();
 
 </script>

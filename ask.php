@@ -86,6 +86,12 @@ $STOP = array_flip(array('the','and','how','what','why','when','doe','with','for
   'thi','that','are','you','can','need','rule','about','mean','get','use','work',
   'solve','simplify','problem','number','math'));
 
+// The chat box at the foot of the sheet (assets/sheet.js) posts here.
+if (isset($_GET['chat'])) {
+  require __DIR__ . '/ask-chat.php';
+  exit;
+}
+
 $p = isset($_POST['p']) ? $_POST['p'] : (isset($_GET['p']) ? $_GET['p'] : '');
 if (trim($p) !== '') {
   require __DIR__ . '/ask-problem.php';

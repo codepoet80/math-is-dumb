@@ -16,6 +16,8 @@ deploy.sh             rebuild + rsync the repo to the web server
 state.php             server-side: reads/writes the "I know this" marks
 ask.php               server-side: find rules from curl — by keyword, or paste a problem
 ask-problem.php       ask.php's problem mode: asks Claude which rules a problem needs
+ask-chat.php          ask.php's chat mode: the "Work a problem" box at the foot of the sheet
+ask-claude.php        what both share: API key, daily cap, rule catalog, the API call
 data/                 state.json lives here at runtime; never committed
 tools/                print-verification harness; never deployed
 ```
@@ -158,7 +160,7 @@ reachable over HTTP. Verified against the live site:
 | `index.html`, `assets/`, `content/rules.json` | 200 — intended |
 | `state.php` | 200 — intended; the sync endpoint |
 | `ask.php` | 200 — intended; rule search, and problem mode (calls the Claude API) |
-| `ask-problem.php` | 404 — only runs when `ask.php` includes it |
+| `ask-problem.php`, `ask-chat.php`, `ask-claude.php` | 404 — only run when `ask.php` includes them |
 | `data/anthropic-key.php` | 200 with an empty body — it's PHP, so running it prints nothing |
 | `data/state.json` | should be **403** (`data/.htaccess`, Apache only) — not secret either way |
 | `README.md`, `build.js`, `tools/`, `*.sh` | 200 — served but unused |
@@ -296,6 +298,28 @@ line beats the section title, which beats the why). It's kept that simple so the
 ranking is predictable. It reads `content/rules.json` on every request, so a new
 rule is searchable as soon as it's pulled, with no build step. It's read-only and
 writes nothing.
+
+## Working a problem on the page
+
+The "Work a problem" box at the foot of the sheet is a chat for practice: paste a
+problem, and the tutor names the rule that applies (as "Rule 4.8", which opens that
+rule under the reply) and points at where it acts, then hands the step back. Show
+your work and it checks it. It does the arithmetic only when you ask for it
+("show me", "work it out"), because doing it yourself is the practice.
+
+It posts to `ask.php?chat`, which runs `ask-chat.php`. The page keeps the
+conversation (in localStorage, per device, so a reload doesn't lose it) and sends
+all of it each turn; the server stores nothing. It uses the same API key as problem
+mode. It runs on `claude-opus-5-5` at low effort rather than Haiku, because it has to
+judge your work line by line and compute correctly when asked. It has its own cap,
+`CHAT_DAILY_LIMIT` (200 turns a day, counted in `data/chat-usage.json`, failing closed
+like problem mode's). A turn costs a cent or two, more as a conversation gets long,
+which is why a conversation is capped at 40 messages. If a safety classifier
+declines a turn, the API's server-side fallback retries it on another model.
+
+The box needs JS and the PHP server, so it only appears on the served sheet, not
+in `standalone.html` or from `file://`. In print it starts a new page, so the sheet
+prints as before and you can leave the last page out.
 
 ## Print
 

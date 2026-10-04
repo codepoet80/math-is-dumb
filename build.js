@@ -248,6 +248,20 @@ ${toc}
     <div class="columns">
 ${data.sections.map(renderSection).join('\n\n')}
     </div>
+
+    <section class="chat" id="chat">
+      <h2>Work a problem</h2>
+      <p class="blurb">Paste a problem and work it through. You'll be pointed at the rules; you do the math. Say <em>show me</em> when you want a step worked out.</p>
+      <div class="chat-log" id="chat-log" aria-live="polite"></div>
+      <form class="chat-form" id="chat-form">
+        <textarea id="chat-input" rows="3" placeholder="e.g. 3(x - 2) = 12" aria-label="Your problem or your next step"></textarea>
+        <div class="chat-actions">
+          <button type="submit" class="chat-send" id="chat-send">Send</button>
+          <span class="chat-status" id="chat-status"> </span>
+          <button type="button" class="linkish" id="chat-new">New problem</button>
+        </div>
+      </form>
+    </section>
   </div>`;
 
 const FONTS = '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'

@@ -17,8 +17,8 @@
         <p class="sub">Pre-algebra and algebra fundamentals. Every rule carries its reason.</p>
       </div>
       <div class="stamp">
-        Rev. 2026-09-25<br>
-        91 rules &middot; 16 sections<br>
+        Rev. 2026-10-04<br>
+        93 rules &middot; 16 sections<br>
         Prints to letter, 2 col.
       </div>
     </header>
@@ -303,9 +303,19 @@
           <dt>Ex.</dt><dd class="example"><code>(<span class="frac"><span class="fn">1</span><span class="fd">8</span></span>)<sup>4/3</sup></code> = <code><span class="frac"><span class="fn">1<sup>4/3</sup></span><span class="fd">8<sup>4/3</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">(<span class="rad"><sup class="ri">3</sup>√<span class="rc">8</span></span>)<sup>4</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">2<sup>4</sup></span></span></code> = <code><span class="frac"><span class="fn">1</span><span class="fd">16</span></span></code>. 1 to any power is 1, so the top just stays 1.</dd>
           </dl>
         </div>
+        <div class="rule star" id="ex-order" data-id="ex-order">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><span class="rn">4.11</span>Messy exponent expression? Three passes, one job each: <strong>distribute</strong> every outer exponent inward, <strong>flip</strong> every negative exponent across the bar, then <strong>combine</strong> like bases.<span class="flag">load-bearing</span></p>
+          <dl>
+          <dt>Why</dt><dd class="why">Each pass applies one rule to the whole expression, so you're never holding a sign rule and an exponent rule at the same time. Doing them in this order means nothing you flip in pass 2 can still be hiding inside a bracket.</dd>
+          <dt>When</dt><dd class="when">Any time there's a bracket with an exponent on it, or a mix of positive and negative exponents.</dd>
+          <dt>Trap</dt><dd class="trap">Pass 1 multiplies exponents <em>including their signs</em>. <code>(x<sup>-2</sup>)<sup>-3</sup></code> is <code>x<sup>6</sup></code>, not <code>x<sup>-6</sup></code> — two negatives make a positive, and this is the single most likely slip in the whole method.</dd>
+          <dt>Ex.</dt><dd class="example"><code>(<span class="frac"><span class="fn">3x<sup>3</sup></span><span class="fd">x<sup>-2</sup></span></span>)<sup>-3</sup></code> → distribute: <code><span class="frac"><span class="fn">3<sup>-3</sup> x<sup>-9</sup></span><span class="fd">x<sup>6</sup></span></span></code> → flip: <code><span class="frac"><span class="fn">1</span><span class="fd">3<sup>3</sup> x<sup>9</sup> x<sup>6</sup></span></span></code> → combine: <code><span class="frac"><span class="fn">1</span><span class="fd">27x<sup>15</sup></span></span></code></dd>
+          </dl>
+        </div>
         <div class="rule" id="ex-negative-power-of-fraction" data-id="ex-negative-power-of-fraction">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><span class="rn">4.11</span><code>(<span class="frac"><span class="fn">a</span><span class="fd">b</span></span>)<sup>-n</sup></code> = <code>(<span class="frac"><span class="fn">b</span><span class="fd">a</span></span>)<sup>n</sup></code>. A negative power on a whole fraction: <strong>flip the fraction</strong> and drop the minus.</p>
+          <p class="r"><span class="rn">4.12</span><code>(<span class="frac"><span class="fn">a</span><span class="fd">b</span></span>)<sup>-n</sup></code> = <code>(<span class="frac"><span class="fn">b</span><span class="fd">a</span></span>)<sup>n</sup></code>. A negative power on a whole fraction: <strong>flip the fraction</strong> and drop the minus.</p>
           <dl>
           <dt>Why</dt><dd class="why">The minus sends the top down and the bottom up, all at once. That's the same as flipping the fraction.</dd>
           <dt>Ex.</dt><dd class="example"><code>(<span class="frac"><span class="fn">2x<sup>2</sup></span><span class="fd">3x<sup>6</sup></span></span>)<sup>-3</sup></code> = <code>(<span class="frac"><span class="fn">3x<sup>6</sup></span><span class="fd">2x<sup>2</sup></span></span>)<sup>3</sup></code>. Flip it first so every exponent after that is positive.</dd>
@@ -313,7 +323,7 @@
         </div>
         <div class="rule star" id="ex-but" data-id="ex-but">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><span class="rn">4.12</span><code>(ab)<sup>n</sup></code> = <code>a<sup>n</sup> b<sup>n</sup></code>, but <code>(a+b)<sup>n</sup></code> is <strong>NOT</strong> <code>a<sup>n</sup> + b<sup>n</sup></code>.<span class="flag">load-bearing</span></p>
+          <p class="r"><span class="rn">4.13</span><code>(ab)<sup>n</sup></code> = <code>a<sup>n</sup> b<sup>n</sup></code>, but <code>(a+b)<sup>n</sup></code> is <strong>NOT</strong> <code>a<sup>n</sup> + b<sup>n</sup></code>.<span class="flag">load-bearing</span></p>
           <dl>
           <dt>Why</dt><dd class="why">Exponents distribute over multiplication only. <code>(2+3)<sup>2</sup> = 25</code>, while <code>2<sup>2</sup> + 3<sup>2</sup> = 13</code>.</dd>
           <dt>Trap</dt><dd class="trap">This is the single most common algebra error there is. <code>(a+b)<sup>2</sup> = a<sup>2</sup> + 2ab + b<sup>2</sup></code> — FOIL it, don't guess.</dd>
@@ -361,9 +371,18 @@
           <dt>Ex.</dt><dd class="example"><code>3x + 5x = 8x</code>. But <code>3x + 5x<sup>2</sup></code> stays as it is.</dd>
           </dl>
         </div>
+        <div class="rule" id="ds-standard-form" data-id="ds-standard-form">
+          <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
+          <p class="r"><span class="rn">5.5</span>Standard form = terms in order of descending exponent. <code>12u<sup>8</sup> + u<sup>9</sup> - 7u</code> becomes <code>u<sup>9</sup> + 12u<sup>8</sup> - 7u</code>.</p>
+          <dl>
+          <dt>Why</dt><dd class="why">Terms are added, so reordering changes nothing — and the highest power first means the degree is readable at a glance, and two polynomials line up term-by-term when you add, subtract or divide them.</dd>
+          <dt>When</dt><dd class="when">The last step of simplifying any polynomial.</dd>
+          <dt>Trap</dt><dd class="trap">A bare <code>u</code> is <code>u<sup>1</sup></code>, so it goes near the end, not wherever it started. Each term keeps its own sign when it moves.</dd>
+          </dl>
+        </div>
         <div class="rule" id="ds-factor-out-greatest" data-id="ds-factor-out-greatest">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><span class="rn">5.5</span>Factor out the greatest common factor: <code>ab + ac</code> = <code>a(b + c)</code></p>
+          <p class="r"><span class="rn">5.6</span>Factor out the greatest common factor: <code>ab + ac</code> = <code>a(b + c)</code></p>
           <dl>
           <dt>Why</dt><dd class="why">Distribution running backwards. You're pulling the shared piece out front.</dd>
           <dt>When</dt><dd class="when">First thing to try on any factoring problem, always.</dd>
@@ -371,7 +390,7 @@
         </div>
         <div class="rule" id="ds-difference-squares" data-id="ds-difference-squares">
           <button class="know" type="button" aria-pressed="false" aria-label="Collapse this rule"><span class="tri"></span></button>
-          <p class="r"><span class="rn">5.6</span>Difference of squares: <code>a<sup>2</sup> − b<sup>2</sup></code> = <code>(a − b)(a + b)</code>. Take the root of each term; one bracket subtracts them, the other adds them.</p>
+          <p class="r"><span class="rn">5.7</span>Difference of squares: <code>a<sup>2</sup> − b<sup>2</sup></code> = <code>(a − b)(a + b)</code>. Take the root of each term; one bracket subtracts them, the other adds them.</p>
           <dl>
           <dt>Why</dt><dd class="why">FOIL it back: the middle terms are <code>+ab</code> and <code>−ab</code>, which cancel, and <code>(−b)(+b)</code> is what makes <code>b<sup>2</sup></code> come out negative. Only the mixed-sign pair does both.</dd>
           <dt>When</dt><dd class="when">Two perfect squares with a minus between them. Recognize it on sight — it shows up constantly.</dd>
@@ -881,6 +900,20 @@
         </div>
       </section>
     </div>
+
+    <section class="chat" id="chat">
+      <h2>Work a problem</h2>
+      <p class="blurb">Paste a problem and work it through. You'll be pointed at the rules; you do the math. Say <em>show me</em> when you want a step worked out.</p>
+      <div class="chat-log" id="chat-log" aria-live="polite"></div>
+      <form class="chat-form" id="chat-form">
+        <textarea id="chat-input" rows="3" placeholder="e.g. 3(x - 2) = 12" aria-label="Your problem or your next step"></textarea>
+        <div class="chat-actions">
+          <button type="submit" class="chat-send" id="chat-send">Send</button>
+          <span class="chat-status" id="chat-status"> </span>
+          <button type="button" class="linkish" id="chat-new">New problem</button>
+        </div>
+      </form>
+    </section>
   </div>
 <script src="assets/sheet.js"></script>
 </body>

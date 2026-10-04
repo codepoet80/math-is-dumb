@@ -4,12 +4,11 @@
  * Included by ask.php with $p (the problem), $doc (rules.json) and $titles set.
  * It sits in the webroot, so a direct request just gets a 404.
  *
- * Talks to the Claude Messages API with PHP's curl extension rather than the
- * Anthropic PHP SDK: the SDK needs Composer and a vendor/ tree, and this repo is
- * deliberately dependency-free and deployed by `git pull` into the webroot.
+ * The key, the daily cap and the API call itself live in ask-claude.php.
  */
 
 if (!isset($doc, $titles, $nums, $sheetUrl, $p)) { http_response_code(404); exit; }
+require __DIR__ . '/ask-claude.php';
 
 // Haiku: picking rules off a list is a lookup, not hard reasoning, and it's
 // the cheapest model by a wide margin.
@@ -17,59 +16,17 @@ const ASK_MODEL       = 'claude-haiku-4-5';
 const ASK_DAILY_LIMIT = 100;    // problems per day, across everyone
 const ASK_MAX_CHARS   = 1000;
 
-function bail($code, $msg) {
-  http_response_code($code);
-  exit(rtrim($msg) . "\n");
-}
-
 $p = trim($p);
 if (strlen($p) > ASK_MAX_CHARS) bail(413, 'That problem is over ' . ASK_MAX_CHARS . ' characters. Paste just the part you are stuck on.');
 
-// The key comes from the environment, or from data/anthropic-key.php, which is
-// `<?php return 'sk-ant-...';`. It's a .php file on purpose: if the web server
-// ever serves data/, running it prints nothing, where a .txt would print the key.
-// data/ is already gitignored and excluded from deploy.sh's rsync --delete.
-$key = getenv('ANTHROPIC_API_KEY');
-$keyFile = __DIR__ . '/data/anthropic-key.php';
-if (!$key && is_file($keyFile)) $key = include $keyFile;
-if (!$key || !is_string($key)) bail(503, "Problem mode isn't set up on this server (no API key). Keyword search still works: ask.php?q=...");
+$key = apiKey();
+if (!$key) bail(503, "Problem mode isn't set up on this server (no API key). Keyword search still works: ask.php?q=...");
 
-// Daily cap. The endpoint is public and every call costs money, so this fails
-// closed: if the counter can't be written, no call is made.
-function countToday() {
-  $fh = @fopen(__DIR__ . '/data/ask-usage.json', 'c+');
-  if (!$fh || !flock($fh, LOCK_EX)) return false;
-  $u = json_decode(stream_get_contents($fh), true);
-  $today = gmdate('Y-m-d');
-  if (!is_array($u) || !isset($u['day']) || $u['day'] !== $today) $u = array('day' => $today, 'count' => 0);
-  $ok = $u['count'] < ASK_DAILY_LIMIT;
-  if ($ok) {
-    $u['count']++;
-    ftruncate($fh, 0); rewind($fh);
-    fwrite($fh, json_encode($u));
-  }
-  flock($fh, LOCK_UN); fclose($fh);
-  return $ok ? true : 'full';
-}
-$slot = countToday();
+$slot = countToday('ask-usage.json', ASK_DAILY_LIMIT);
 if ($slot === false) bail(503, "Can't write data/ask-usage.json, so problem mode is off (it's the spending cap). See README: chown www-data data.");
 if ($slot === 'full') bail(429, 'Daily limit of ' . ASK_DAILY_LIMIT . ' problems reached. It resets at midnight UTC. Keyword search still works: ask.php?q=...');
 
-// The catalog: every rule with the fields that say when it applies. It's the
-// same bytes on every request, so it sits in the cached system prompt; only
-// the problem changes.
-$ids = array();
-$catalog = '';
-foreach ($doc['sections'] as $s) {
-  $catalog .= "\n## {$s['title']}\n";
-  foreach ($s['rules'] as $r) {
-    $ids[] = $r['id'];
-    $catalog .= "- {$r['id']}: " . plain($r['rule'], $titles);
-    if (!empty($r['when'])) $catalog .= ' When: ' . plain($r['when'], $titles);
-    if (!empty($r['trap'])) $catalog .= ' Trap: ' . plain($r['trap'], $titles);
-    $catalog .= "\n";
-  }
-}
+list($ids, $catalog) = catalog($doc, $titles);
 
 $instructions = <<<TXT
 You help a student working through pre-algebra and algebra with their own cheat sheet. They paste a problem; you say which rules from the sheet they need to solve it.
@@ -114,31 +71,7 @@ $body = array(
   'output_config' => array('format' => array('type' => 'json_schema', 'schema' => $schema)),
 );
 
-$base = getenv('ANTHROPIC_BASE_URL') ?: 'https://api.anthropic.com';
-$ch = curl_init(rtrim($base, '/') . '/v1/messages');
-curl_setopt_array($ch, array(
-  CURLOPT_POST           => true,
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_TIMEOUT        => 120,
-  CURLOPT_HTTPHEADER     => array(
-    'content-type: application/json',
-    'x-api-key: ' . $key,
-    'anthropic-version: 2023-06-01',
-  ),
-  CURLOPT_POSTFIELDS => json_encode($body),
-));
-$raw  = curl_exec($ch);
-$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-$err  = curl_error($ch);
-
-if ($raw === false) bail(502, "Couldn't reach the Claude API: $err");
-$res = json_decode($raw, true);
-if ($code !== 200) {
-  $msg = isset($res['error']['message']) ? $res['error']['message'] : substr($raw, 0, 300);
-  bail($code === 429 || $code === 529 ? 503 : 502, "Claude API error ($code): $msg\nTry again in a minute, or use keyword search: ask.php?q=...");
-}
-if ($res['stop_reason'] === 'refusal') bail(502, "Claude declined that one. Try rewording it, or use keyword search: ask.php?q=...");
-if ($res['stop_reason'] === 'max_tokens') bail(502, "Claude's answer got cut off. Try just the part you're stuck on.");
+$res = callClaude($key, $body, array(), 'use keyword search: ask.php?q=...');
 
 $json = null;
 foreach ($res['content'] as $block) {
