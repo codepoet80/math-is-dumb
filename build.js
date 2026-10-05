@@ -222,6 +222,19 @@ const toc = data.sections
   .map((s, i) => `        <li><a id="toc-${esc(s.id || slug(s.title))}" href="#${esc(s.id || slug(s.title))}"><span class="n">${pad(i + 1)}</span>${esc(s.title)}</a></li>`)
   .join('\n');
 
+// Quick-reference formulas sit above the rules and are deliberately unnumbered:
+// they're lookups, not rules, so they stay out of the section.position scheme
+// that ask.php and state.php key on (both only ever read data.sections).
+const quickref = (data.quickref || []).length ? `    <div class="quickref">
+      <h2>Quick reference</h2>
+${data.quickref.map(q => `      <div class="qr">
+        <span class="qn">${md(q.name)}</span>
+        <span class="qf">${md(q.formula)}</span>
+        ${q.why ? `<span class="qw">${md(q.why)}</span>` : ''}
+      </div>`).join('\n')}
+    </div>
+` : '';
+
 const body = `  <div class="wrap">
     <header class="masthead">
       <div>
@@ -235,6 +248,7 @@ const body = `  <div class="wrap">
       </div>
     </header>
 
+${quickref}
     <ul class="toc">
 ${toc}
     </ul>

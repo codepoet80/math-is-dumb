@@ -1,6 +1,18 @@
 {
   "title": "Dumb Math Rules",
   "subtitle": "Pre-algebra and algebra fundamentals. Every rule carries its reason.",
+  "quickref": [
+    {
+      "name": "Rectangle perimeter",
+      "formula": "`P = 2l + 2w`",
+      "why": "Perimeter is the walk around the edge: two lengths plus two widths."
+    },
+    {
+      "name": "Rectangle area",
+      "formula": "`A = l × w`",
+      "why": "Area counts the unit squares inside: w rows of l squares each."
+    }
+  ],
   "sections": [
     {
       "id": "grammar",
